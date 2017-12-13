@@ -1,0 +1,18 @@
+{
+  "name": "tests",
+  "version": "1.0.0",
+  "description": "Collection of general JavaScript classes.",
+  "main": "./index.js",
+  "scripts": {
+    "test": "mocha ./tests/*.js"
+  },
+  "author": "Damien Golding",
+  "license": "MIT",
+  "dependencies": {
+    "js-function": "git+https://github.com/goldingdamien/js-functions.git"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "mocha": "^4.0.1"
+  }
+}
