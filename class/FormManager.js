@@ -554,7 +554,7 @@ var FormManager = function(settings){
   manager.setInputValues = function(map){
     for(let selector in map){
       const val = map[selector];
-      const elements = map.querySelectorAll(selector);
+      const elements = document.querySelectorAll(selector);
       elements.forEach((el)=>{
         manager.setInputValue(el, val);
       });
