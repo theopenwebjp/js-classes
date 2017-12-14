@@ -1,3 +1,10 @@
+/**
+ * Class for canvas drawing.
+ * No UI should be handled here.
+ * Allows for drawing with any implementation desired(Canvas, SVG, etc.)
+ * 
+ * @param {Object} settings 
+ */
 function Drawer(settings){
 
     var drawer = {};
@@ -88,9 +95,9 @@ function Drawer(settings){
             Allows for one action style setting.
             */
 
-            log("executeAction:");
-            log(action);
-            log(args);
+            console.log("executeAction:");
+            console.log(action);
+            console.log(args);
 
             //Defaults
             var styles = null;
@@ -433,4 +440,8 @@ function Drawer(settings){
     }
 
     return drawer.handleStartup(settings);
+}
+
+if(typeof module !== 'undefined'){
+    module.exports = Drawer;
 }

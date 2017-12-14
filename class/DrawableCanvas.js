@@ -1,3 +1,10 @@
+/**
+ * Abstract drawable canvas(Does not necessarily use Canvas element)
+ * Comes with a number of tools
+ * Uses the Drawer class to perform actual drawing.
+ * 
+ * @param {Object} settings 
+ */
 function DrawableCanvas(settings){
 
     /*
@@ -22,7 +29,7 @@ function DrawableCanvas(settings){
     dCanvas.current_state_index = null;
 
     //Imports
-    dCanvas.Drawer = Drawer;
+    dCanvas.Drawer = null;//Must pass Drawer
 
     //Action state
     dCanvas.current_state = {
@@ -316,6 +323,10 @@ function DrawableCanvas(settings){
         //??
     }
 
+    dCanvas.setPenSize = function(){
+        //??
+    }
+
     dCanvas.setTextSize = function(){
         //??
     }
@@ -480,4 +491,8 @@ function DrawableCanvas(settings){
     dCanvas.setup(settings);
 
     return dCanvas;
+}
+
+if(typeof module !== 'undefined'){
+    module.exports = DrawableCanvas;
 }

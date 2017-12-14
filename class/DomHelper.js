@@ -1362,5 +1362,65 @@ var DomHelper = function(){
     return table;
   }
 
+  /**
+   * Makes setting element info chainable
+   * @return {Object} chainer with functions represeting properties/functions of element all returning chainer
+   */
+  manager.elementChainer = function(el){
+    const chainer = {
+      element: el,
+      addEventListener: (event, handle, other)=>{
+        el.addEventListener(event, handle, other);
+        return chainer;
+      },
+      appendChild: (child)=>{
+        el.appendChild(child);
+        return chainer;
+      },
+      innerHTML: (html)=>{
+        el.innerHTML = html;
+        return chainer;
+      },
+      removeAttribute: (name)=>{
+        el.removeAttribute(name);
+        return chainer;
+      },
+      removeChild: (child)=>{
+        el.removeChild(child);
+        return chainer;
+      },
+      removeEventListener: (event, handle)=>{
+        el.removeEventListener(event, handle);
+        return chainer;
+      },
+      replaceChild: (newChild, oldChild)=>{
+        el.replaceChild(newChild, oldChild);
+        return chainer;
+      },
+      setAttribute: (name, val)=>{
+        el.setAttribute(name, val);
+        return chainer;
+      },
+      style: (key, val)=>{
+        el.style[key] = val;
+        return chainer;
+      },
+      textContent: (str)=>{
+        el.textContent = str;
+        return chainer;
+      },
+      title: (str)=>{
+        el.title = str;
+        return chainer;
+      }
+    };
+
+    return chainer;
+  }
+
   return manager;
+}
+
+if(typeof module !== 'undefined'){
+  module.exports = DomHelper;
 }

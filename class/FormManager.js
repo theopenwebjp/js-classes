@@ -39,7 +39,8 @@ var FormManager = function(settings){
       "tag": "input",
       "attributes": {
         "type": "number"
-      }
+      },
+      "format": Number
     },
     date: {
       "tag": "input",
@@ -52,29 +53,59 @@ var FormManager = function(settings){
       "attributes": {
         "type": "radio"
       },
-      "multiple": true
+      "multiple": true,
+      "value": (el)=>{
+        return !!el.checked;
+      },
+      "setValue": (el, val)=>{
+        el.checked = val;
+      }
     },
     checkbox: {
       "tag": "input",
       "attributes": {
         "type": "checkbox"
       },
-      "multiple": true
+      "multiple": true,
+      "value": (el)=>{
+        return !!el.checked;
+      },
+      "setValue": (el, val)=>{
+        el.checked = val;
+      }
+    },
+    password: {
+      "tag": "input",
+      "attributes": {
+        "type": "password"
+      }
     },
     select: {
       "tag": "select",
-      "multiple": true
+      "multiple": true,
+      "value": (el)=>{
+        return el.options[el.selectedIndex].value;
+      }
     }
   };
   
+  /**
+   * Object represent settings for an input type
+   */
   manager.InputType = function(){
     return {
       tag: "",
       attributes: {},
-      multiple: false
+      multiple: false,
+      value: null,//Default = use .value. If handle: (el)=>{return el.value;}.
+      setValue: null,//Default = use .value. If handle: (el, val)=>{el.value = val;}.
+      format: null//If handle: Number(val)
     };
   }
   
+  /**
+   * Object representing data of input element
+   */
   manager.InputObject = function(){
     return {
       type: "",
@@ -469,8 +500,86 @@ var FormManager = function(settings){
     
     return elements;
   }
+
+  /**
+   * Gets input type from element
+   * @return {Object} InputType
+   */
+  manager.getElementInputType = function(el){
+    const settings = manager.inputTypes;
+    let type = settings.input;
+    for(let key in settings){
+      const setting = settings[key];
+
+      //Tag
+      if(setting.tag !== el.tagName.toLowerCase()){
+        continue;
+      }
+
+      //Attributes
+      if(setting.attributes){
+        for(let kkey in setting.attributes){
+          if(el.getAttribute(key) !== setting.attributes[kkey]){
+            continue;
+          }
+        }
+      }
+
+      type = setting;
+      break;
+    }
+
+    return type;
+  }
+
+  /**
+   * Gets input value of any form element.
+   * @param {DomElement} el
+   * @return {*} input value
+   */
+  manager.getInputValue = function(el){
+    const type = manager.getElementInputType(el);
+    const val = (typeof type.value === 'function') ? type.value(el) : el.value;
+    if(type.format){
+      val = type.format(val);
+    }
+
+    return val;
+  }
+
+  /**
+   * Sets input values from a map
+   * @param {Object} map {selector1: val1, ...}
+   */
+  manager.setInputValues = function(map){
+    for(let selector in map){
+      const val = map[selector];
+      const elements = map.querySelectorAll(selector);
+      elements.forEach((el)=>{
+        manager.setInputValue(el, val);
+      });
+    }
+  }
+
+  /**
+   * Sets single input element's value
+   * @param {DomElement} el
+   * @param {*} val
+   */
+  manager.setInputValue = function(el, val){
+    const type = manager.getElementInputType(el);
+    if(type.setValue){
+      type.setValue(el, val); 
+    }else{
+      el.value = val;
+    }
+  }
   
   manager.setup(settings);
   
   return manager;
+}
+
+if(typeof module !== 'undefined'){
+  module.exports = FormManager;
 }
