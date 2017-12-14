@@ -1,4 +1,4 @@
-const Utility = require('Utility');
+const {Utility} = require('js-functions');
 
 var DomHelper = function(){
   var manager = {};
