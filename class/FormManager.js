@@ -1,6 +1,10 @@
+const DomHelper = require('./DomHelper');
+
 var FormManager = function(settings){
   
   var manager = {};
+
+  manager.domHelper = new DomHelper();
   
   manager.constants = {
     REQUIRED_ATTR: "data-required"
@@ -122,10 +126,6 @@ var FormManager = function(settings){
     
     if(!settings){
       settings = {};
-    }
-    
-    if(!settings.domHelper){
-      throw Error("Requires settings.domHelper");
     }
     
     for(var key in settings){
@@ -344,7 +344,7 @@ var FormManager = function(settings){
   }
   
   manager.createTag = function(tagName, attributes, children){
-    return manager.settings.domHelper.createElement({
+    return manager.domHelper.createElement({
       tag: tagName,
       attributes: attributes,
       children: children
@@ -352,15 +352,15 @@ var FormManager = function(settings){
   }
   
   manager.appendChildren = function(el, children){
-    manager.settings.domHelper.appendChildren(el, children);
+    manager.domHelper.appendChildren(el, children);
   }
   
   manager.setAttributes = function(el, attributes){
-    manager.settings.domHelper.setAttributes(el, attributes);
+    manager.domHelper.setAttributes(el, attributes);
   }
   
   manager.getTableHeaderValue = function(el){
-    var parentEl = manager.settings.domHelper.getClosestParent(el, "th");
+    var parentEl = manager.domHelper.getClosestParent(el, "th");
     return (!!parentEl ? parentEl.textContent : "");
   }
   
