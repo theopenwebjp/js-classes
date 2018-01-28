@@ -11,6 +11,7 @@ const classes = {
     //ImageEditor: require('./class/ImageEditor'),
     //ImagePrompter: require('./class/ImagePrompter'),
     //InputCopier: require('./class/InputCopier'),
+    Log: require('./class/Log'),
     //PageManager: require('./class/PageManager'),
     //PersistentStateManager: require('./class/PersistentStateManager'),
     //Sharer: require('./class/Sharer'),
