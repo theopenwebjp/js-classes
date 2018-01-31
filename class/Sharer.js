@@ -1,3 +1,7 @@
+/**
+ * Data sharing handling.
+ * @param {*} settings 
+ */
 function Sharer(settings){
     var sharer = {};
     sharer.sharer_settings = {

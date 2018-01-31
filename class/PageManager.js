@@ -1,11 +1,12 @@
+/**
+ * Page loading class.
+ * Functions:
+ * 1. Load dynamic page area.
+ * 2. Load based on url param.
+ * 3. Create menu based on pages info.
+ */
 var PageManager = function(settings){
-  /*
-  Page loading class.
-  Functions:
-  1. Load dynamic page area.
-  2. Load based on url param.
-  3. Create menu based on pages info.
-  */
+  
   var manager = {};
   manager.settings = {
     param: "page",

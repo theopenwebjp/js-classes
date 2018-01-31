@@ -72,4 +72,9 @@ class Log{
     }
 }
 
-module.exports = Log;
+if(typeof window === 'object'){
+    window.Log = Log;
+}
+if(typeof module === 'object'){
+    module.exports = Log;
+}

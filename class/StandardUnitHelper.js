@@ -1,3 +1,6 @@
+/**
+ * Collection of functions for handling units.
+ */
 var StandardUnitHelper = function(){
   var helper = {};
   

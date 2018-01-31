@@ -1,7 +1,11 @@
+/**
+ * Collection of static canvas functions.
+ * Should change to CanvasHelper??
+ */
 function CanvasManager(){
     var cManager = {};
     
-    if(window.Drawer){
+    if(window.Drawer){//??To remove
       cManager.CanvasDrawer = new Drawer().manager;
     }
     

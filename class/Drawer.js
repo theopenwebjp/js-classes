@@ -1,14 +1,18 @@
 /**
- * Class for canvas drawing.
- * No UI should be handled here.
+ * Class for perform actions for canvas drawing.
+ * No UI should be handled here as is often extended.
  * Allows for drawing with any implementation desired(Canvas, SVG, etc.)
+ * Returns implementation.
+ * No events done here. Must execute functions to use.
+ * 
+ * append: Appends to DOM.
  * 
  * @param {Object} settings 
  */
 function Drawer(settings){
 
     var drawer = {};
-    drawer.format = null;
+    drawer.format = 'canvas';//svg, canvas. Previous DOM was tested but removed.
 
     drawer.handleStartup = function(settings){
 
@@ -20,48 +24,39 @@ function Drawer(settings){
         //Abstract here
         if(drawer.format === "svg"){
             drawer.manager = new drawer.SVGManager();
-        }else if(drawer.format === "dom"){
-            drawer.manager = new drawer.DOMManager();
-        }else{
+        }else if(drawer.format === "canvas"){
             drawer.manager = new drawer.CanvasDrawer();
+        }else{
+            throw new Error('Invalid format');
         }
+
+        drawer.manager._setup();
         
         //Allows for direct manager returning
         return drawer.manager;
-    }
-    
-    drawer.convertDrawer = function(data, fromFormat, toFormat){
-        /*
-        SPEC:
-        
-        Implement if desired.
-        SVG/Canvas conversions useful for non-js exporting/importing.
-        */
-        
-        //Same
-        if(fromFormat === toFormat){
-            return data;
-        }
-        
-        //
     }
 
     drawer.CommonDrawer = function(settings){
         var manager = {};
         manager.element = null;
         manager.fill = false;
+        manager.format = null;
 
-        //Resettable styles
+        /**
+         * Resettable styles
+         * Uses HTML Canvas format. Should be used and converted if used for other formats.
+         * Also used for deciding getStyles keys.
+         */
         manager.default_styles = {                        
             fill_style: "#000",
             font: "10px sans-serif",
             text_align: "start",
-            text_base_line: "alphabetics",
-            direction: "inherit",
+            text_baseline: "alphabetics",
+            direction: "inherit",//experimental(https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/direction)
             line_width: 1,
             line_cap: "butt",
             line_join: "miter",
-            mite_limit: 10,
+            miter_limit: 10,
             line_dash_offset: 0,
             shadow_blur: 0,
             shadow_color: "fully-transparent black",
@@ -72,28 +67,43 @@ function Drawer(settings){
             image_smoothing_enabled: false
         };
         
-        manager.styles = {
+        /**
+         * Implement if desired.
+         * SVG/Canvas conversions useful for non-js exporting/importing.
+         */
+        manager.convertDrawer = function(data, toFormat){
+            
+            //Same
+            if(manager.format === toFormat){
+                return data;
+            }
+            
             //
-        };
+        }
+        
+        manager.append = function(parentElement){
+            
+            //Parent defaults to body
+            if(!parentElement){
+                parentElement = document.body;
+            }
 
-        manager.setup = function(){
-            manager.setupStyles();
+            //Append if can
+            if(manager.element && !manager.element.parentElement){
+                parentElement.appendChild(manager.element);
+            }
         }
 
-        manager.setupStyles = function(){
-            
-            //Reset
+        manager._setup = function(){
             manager.resetStyles();
         }
 
+        /**
+         * Allows for string based action.
+         * Allows for action with options.
+         * Allows for one action style setting.
+         */
         manager.executeAction = function(action, args, options){
-            /*
-            SPEC:
-
-            Allows for string based action.
-            Allows for action with options.
-            Allows for one action style setting.
-            */
 
             console.log("executeAction:");
             console.log(action);
@@ -123,50 +133,16 @@ function Drawer(settings){
             }
         }
 
-        manager.setStyles = function(styles, format){
-            /*
-            SPEC:
-            
-            Set as setting.
-            format: hyphen/camel_case
-            */
-            
-            var keyFormat = "hyphen";
-            if(format){
-                keyFormat = format;
-            }
-            
-            //Set
-            var fKey;
-            for(var key in styles){
-                if(keyFormat === "camel_case"){//uncamelize
-                    fKey = manager.unCamelize(key);
-                }else{
-                    fKey = key;
-                }
-                
-                //Set
-                if(manager.styles[fKey] !== undefined){
-                    manager.styles[fKey] = styles[key];
-                }
-            }
-            
-            //Apply
-            manager.applyStyles(manager.styles);
-        }
-
         manager.resetStyles = function(){
             manager.setStyles(manager.default_styles);
         }
         
-        manager.applyStyles = function(styles){
-            //Sets to canvas context if required
-            //
-        }
-        
+        /**
+         * ??Merge to other project function
+         */
         manager.camelize = function(text){
             var returnText = "";
-            var del = "-";
+            var del = "_";
             var words = text.split(del);
             var w;
             
@@ -182,6 +158,9 @@ function Drawer(settings){
             return returnText;
         }
         
+        /**
+         * ??Merge to other project function
+         */
         manager.unCamelize = function(text){
             var returnText = "";
             var del = "";
@@ -207,50 +186,69 @@ function Drawer(settings){
             return returnText;
         }
 
+        /**
+         * Full image
+         */
         manager.getSnapshot = function(){
-            //Full image
-            //
+            return manager._overrideRequired();
         }
 
+        /**
+         * Full image
+         */
         manager.applySnapshot = function(){
-            //Full Image
-            //
+            return manager._overrideRequired();
+        }
+
+        /**
+         * Sets to canvas context if required
+         */
+        manager.setStyles = function(styles){
+            return manager._overrideRequired();
+        }
+
+        manager.getStyles = function(){
+            return manager._overrideRequired();
         }
 
         manager.drawText = function(str, x, y, maxWidth){
-            //
+            return manager._overrideRequired();
         }
 
         manager.clearCanvas = function(){
-            //
+            return manager._overrideRequired();
         }
 
         manager.drawImage = function(img, x, y, width, height){
-            //
+            return manager._overrideRequired();
         }
 
         manager.drawPixel = function(x, y){
-            //
+            return manager._overrideRequired();
         }
 
         manager.drawRectangle = function(x, y, width, height){
-            //
+            return manager._overrideRequired();
         }
 
         manager.drawCircle = function(x, y, radius){
-            //
+            return manager._overrideRequired();
         }
 
         manager.drawArc = function(x, y, radius, startAngle, endAngle, antiClockwise){
-            //
+            return manager._overrideRequired();
         }
 
         manager.drawLine = function(x1, x2, y1, y2){
-            //
+            return manager._overrideRequired();
         }
         
         manager.getPixelData = function(x, y){
-            //
+            return manager._overrideRequired();
+        }
+
+        manager._overrideRequired = function(){
+            throw new Error('override required');
         }
         
         manager.convertByteToHex = function(byte){
@@ -285,19 +283,41 @@ function Drawer(settings){
         return manager;
     }
 
+    /**
+     * Drawer using canvas element.
+     * @extends CommonDrawer
+     */
     drawer.CanvasDrawer = function(settings){
-        /*
-        SPEC:
-        
-        IE9+
-        */
         var manager = new drawer.CommonDrawer(settings);
+        manager.format = 'canvas';
+
         manager.canvas = document.createElement("canvas");
+        manager.canvas.style.border = '1px solid black';
+
         manager.element = manager.canvas;
         manager.context = manager.canvas.getContext("2d");
         manager.CIRCLE_ANGLE = 2 * Math.PI;
 
-        manager.applyStyles = function(styles){
+        manager.getStyles = function(){
+            var styles = {};
+            for(var key in manager.default_styles){
+                let fKey = manager.camelize(key);
+                if(manager.context[fKey] !== undefined){
+                    styles[key] = manager.context[fKey];
+                }
+            }
+
+            return styles;
+        }
+
+        /**
+         * Sets styles and applies to context.
+         * Only effects passed styles.
+         * style keys are underscore delimited.
+         */
+        manager.setStyles = function(styles){
+            console.log('setStyles', styles);
+            
             var fKey;
             for(var styleKey in styles){
                 fKey = manager.camelize(styleKey);//Camelize
@@ -305,6 +325,8 @@ function Drawer(settings){
                 //Add
                 if(manager.context[fKey] !== undefined){
                     manager.context[fKey] = styles[styleKey];
+                }else{
+                    console.warn('invalid style key', fKey);
                 }
             }
         }
@@ -342,15 +364,12 @@ function Drawer(settings){
             return manager;
         }
 
+        /**
+         * void ctx.drawImage(image, dx, dy);
+         * void ctx.drawImage(image, dx, dy, dWidth, dHeight);
+         * void ctx.drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
+         */
         manager.drawImage = function(img, x, y, width, height){
-            /*
-            SPEC:
-
-            void ctx.drawImage(image, dx, dy);
-            void ctx.drawImage(image, dx, dy, dWidth, dHeight);
-            void ctx.drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
-            */
-
             manager.context.drawImage(img, x, y, width, height);
 
             return manager;
@@ -377,6 +396,11 @@ function Drawer(settings){
         }
 
         manager.drawArc = function(x, y, radius, startAngle, endAngle, antiClockwise){
+            if(!radius){
+                console.warn('drawArc should have radius', radius);
+            }
+
+            manager.context.beginPath();
             manager.context.arc(x, y, radius, startAngle, endAngle, antiClockwise);
             manager.context.stroke();
 
@@ -420,21 +444,14 @@ function Drawer(settings){
         return manager;
     }
 
-    drawer.SVGManager = function(){
-        /*
-        SPEC:
-        
-        IE 9+
-        Android 3+
-        */
-        
+    /**
+     * SVG handling.
+     * IE 9+
+     * Android 3+
+     */
+    drawer.SVGManager = function(){   
         var manager = new drawer.CommonDrawer();
-
-        return manager;
-    }
-
-    drawer.DOMManager = function(){
-        var manager = new drawer.CommonDrawer();
+        manager.format = 'svg';
 
         return manager;
     }
@@ -442,6 +459,9 @@ function Drawer(settings){
     return drawer.handleStartup(settings);
 }
 
+if(typeof window === 'object'){
+    window.Drawer = Drawer;
+}
 if(typeof module !== 'undefined'){
     module.exports = Drawer;
 }

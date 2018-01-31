@@ -1,3 +1,7 @@
+/**
+ * Class for handling prompting to get image.
+ * @param {*} settings 
+ */
 var ImagePrompter = function(settings){
   var prompter = {
     options: [

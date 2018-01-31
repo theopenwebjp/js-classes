@@ -1,3 +1,8 @@
+/**
+ * UI handling class.
+ * Needs fixing??
+ * @param {*} settings 
+ */
 function UIManager(settings){
     var manager = {};
     manager.default_api = "jquery_ui";

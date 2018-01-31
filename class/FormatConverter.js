@@ -1,9 +1,12 @@
+
+/**
+ * Abstract class for converting anything.
+ */
 var FormatConverter = function(formats, settings){
-  /*
-  Abstract class for converting anything.
-  */
+  
   var converter = {};
   
+  //??Should make static.
   converter.settings = {
     maxDepth: 5
   };
@@ -120,23 +123,22 @@ var FormatConverter = function(formats, settings){
     return connections;
   }
   
+  /**
+   * 1. Never go back to same node
+   * 2. Max depth needed in case many paths likely.
+   */
   converter.getConversionPaths = function(fromId, toId){
-    /*
-    1. Never go back to same node
-    2. Max depth needed in case many paths likely.
-    */
-    
     var connections = converter.getConversionIdConnections();
     var paths = converter.getPaths(fromId, toId, connections, maxDepth);
     
     return paths;
   }
   
+  /**
+   * fromNode AND toNode ARE ABSTRACT NODES. ONLY EQUALITY CHECK IMPORTANT.
+   * connections: [[nodeA, nodeB], ...]
+   */
   converter.getPaths = function(fromNode, toNode, connections, maxDepth){
-    /*
-    fromNode AND toNode ARE ABSTRACT NODES. ONLY EQUALITY CHECK IMPORTANT.
-    connections: [[nodeA, nodeB], ...]
-    */
     
     //Create objects
     var objList = [];

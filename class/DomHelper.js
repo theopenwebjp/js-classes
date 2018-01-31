@@ -1,5 +1,9 @@
 const {Utility} = require('js-functions');
 
+/**
+ * Collection of DOM helper functions.
+ * Static class.
+ */
 var DomHelper = function(){
   var manager = {};
   

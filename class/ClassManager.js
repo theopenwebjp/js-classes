@@ -1,10 +1,12 @@
+/**
+ * Handles class specific functions:
+ * 1. Class from Schema list
+ * 2. Base class inheritance
+ * 3. Applying functions
+ * 
+ * @param {*} settings 
+ */
 var ClassManager = function(settings){
-  /*
-  Handles class specific functions:
-  1. Class from Schema list
-  2. Base class inheritance
-  3. Applying functions
-  */
   var manager = {};
   manager.schemaManager = null;
   manager.dataMapper = null;
@@ -25,7 +27,17 @@ var ClassManager = function(settings){
   
   manager.SimpleDataToClassMappingOptions = function(classNames){//??test
     return [{
-        condition: {type: "key", value: function(val){ if(classNames.indexOf(val) >= 0){return true;}else{return false;} }},
+        condition: {
+          type: "key", 
+          value: function(val){
+            if(classNames.indexOf(val) >= 0){
+              return true;
+            }
+            else{
+              return false;
+            } 
+          }
+        },
         options: {capitalize: true}
       }];
   }

@@ -1,17 +1,12 @@
 /**
- * Abstract drawable canvas(Does not necessarily use Canvas element)
- * Comes with a number of tools
+ * Abstract drawable canvas(Does not necessarily use Canvas element).
+ * Event listeners used so can draw freely depending on tool.
+ * Comes with a number of tools.
  * Uses the Drawer class to perform actual drawing.
  * 
  * @param {Object} settings 
  */
 function DrawableCanvas(settings){
-
-    /*
-    SPEC:
-
-    Abstract drawable class for drawing.
-    */
 
     var dCanvas = {};
     dCanvas.format = "canvas";//svg, dom
@@ -20,20 +15,25 @@ function DrawableCanvas(settings){
     dCanvas.background_color = null;//Empty = transparent
 
     //Flags
-    dCanvas.store_states = true;
+    dCanvas.store_states = false;//In testing
     dCanvas.allow_interaction = true;
-    dCanvas.auto_append = true;
+    dCanvas.auto_append = false;//Better to allow not appending by default.
 
+    /**
+     * Drawer class.
+     * Must pass.
+     * Not imported because own implementation may be accepted.
+     */
+    dCanvas.Drawer = null;
+    
     //State
     dCanvas.states = [];
     dCanvas.current_state_index = null;
 
-    //Imports
-    dCanvas.Drawer = null;//Must pass Drawer
-
     //Action state
     dCanvas.current_state = {
-        tool: "pen",
+        tool: "pen",//use dCanvas.getTool(.tool) to get tool settings
+        tool_settings: null,
         last_coords: {
             x: 0,
             y: 0
@@ -41,19 +41,30 @@ function DrawableCanvas(settings){
         mouse_down: false
     };
 
-    //Tool for ease of use(Represent listener action)
+    /**
+     * Tool for ease of use(Represent listener action)
+     */
     dCanvas.tool_settings = {
         pen: {
             name: "Pen",
             description: "Pen",
-            listeners: {
-                mousedown: function(ev, state, lastCoords){
-                    dCanvas.executeAction("drawCircle", [lastCoords.x, lastCoords.y, dCanvas.m().styles.line_width/2]);
+            handles: {
+                circle: function(state, lastCoords){
+                    dCanvas.executeAction("drawCircle", [state.last_coords.x, state.last_coords.y, dCanvas.m().getStyles().line_width/2]);
                 },
-                mousemove: function(ev, state, lastCoords){
+                line: function(state, lastCoords){//??quick line leads to thin line but big circle, why?
                     if(state.mouse_down){
+                        state.tool_settings.handles.circle(state, lastCoords);
                         dCanvas.executeAction("drawLine", [lastCoords.x, lastCoords.y, state.last_coords.x, state.last_coords.y]);
                     }
+                }
+            },
+            listeners: {
+                mousedown: function(ev, state, lastCoords){
+                    state.tool_settings.handles.circle(state, lastCoords);
+                },
+                mousemove: function(ev, state, lastCoords){
+                    state.tool_settings.handles.line(state, lastCoords);
                 }
             }
         },
@@ -61,8 +72,39 @@ function DrawableCanvas(settings){
         eraser: {
             name: "Eraser",
             description: "Eraser",
+            handles: {
+                autoStyle: function(handle){
+                    
+                    //Clear
+                    const {stroke_style, fill_style} = dCanvas.getStyles();
+                    dCanvas.setStyles({
+                        stroke_style: '',
+                        fill_style: ''
+                    });
+
+                    //Handle
+                    handle();
+
+                    //Original style
+                    dCanvas.setStyles({
+                        stroke_style,
+                        fill_style
+                    });
+                }
+            },
             listeners: {
-                //??
+                mousedown: function(ev, state, lastCoords){
+                    const handle = ()=>{
+                        dCanvas.tool_settings.pen.handles.circle(state, lastCoords);
+                    };
+                    state.tool_settings.handles.autoStyle(handle);
+                },
+                mousemove: function(ev, state, localCoords){
+                    const handle = ()=>{
+                        dCanvas.tool_settings.pen.handles.line(state, lastCoords);
+                    };
+                    state.tool_settings.handles.autoStyle(handle);
+                }
             }
         },
 
@@ -82,14 +124,13 @@ function DrawableCanvas(settings){
             listeners: {
                 mousedown: function(ev, state, lastCoords){
                     var data = dCanvas.executeAction("getPixelData", [state.last_coords.x, state.last_coords.y]);//??
-                    //Select data
-                    //??data.color
+                    dCanvas.setColor(data.color);
                 },
                 mousemove: function(ev, state, lastCoords){
                     var data = dCanvas.executeAction("getPixelData", [state.last_coords.x, state.last_coords.y]);
                     //Show data
-                    //??data.color
-
+                    console.log(data);
+                    //
                 }
             }
         },
@@ -114,10 +155,97 @@ function DrawableCanvas(settings){
 
         fill: {
             name: "Fill",
-            description: "",
+            description: "Fills area with selected color",
+            handles: {
+                floodFill: function(x, y, color, canvas){
+                    //https://gist.github.com/binarymax/4071852
+                    var ctx = canvas.getContext('2d');
+                    var width = canvas.width;
+                    var height = canvas.height;
+                    var tolerance = 0;
+                    floodfill(x,y,color,ctx,width,height,tolerance);
+
+                    //======================
+
+                    //MIT License
+                    //Author: Max Irwin, 2011
+
+                    //Floodfill functions
+                    function floodfill(x,y,fillcolor,ctx,width,height,tolerance) {
+                        var img = ctx.getImageData(0,0,width,height);
+                        var data = img.data;
+                        var length = data.length;
+                        var Q = [];
+                        var i = (x+y*width)*4;
+                        var e = i, w = i, me, mw, w2 = width*4;
+                        var targetcolor = [data[i],data[i+1],data[i+2],data[i+3]];
+                        var targettotal = data[i]+data[i+1]+data[i+2]+data[i+3];
+
+                        if(!pixelCompare(i,targetcolor,targettotal,fillcolor,data,length,tolerance)) { return false; }
+                        Q.push(i);
+                        while(Q.length) {
+                            i = Q.pop();
+                            if(pixelCompareAndSet(i,targetcolor,targettotal,fillcolor,data,length,tolerance)) {
+                                e = i;
+                                w = i;
+                                mw = parseInt(i/w2)*w2; //left bound
+                                me = mw+w2;	//right bound			
+                                while(mw<(w-=4) && pixelCompareAndSet(w,targetcolor,targettotal,fillcolor,data,length,tolerance)); //go left until edge hit
+                                while(me>(e+=4) && pixelCompareAndSet(e,targetcolor,targettotal,fillcolor,data,length,tolerance)); //go right until edge hit
+                                for(var j=w;j<e;j+=4) {
+                                    if(j-w2>=0 		&& pixelCompare(j-w2,targetcolor,targettotal,fillcolor,data,length,tolerance)) Q.push(j-w2); //queue y-1
+                                    if(j+w2<length	&& pixelCompare(j+w2,targetcolor,targettotal,fillcolor,data,length,tolerance)) Q.push(j+w2); //queue y+1
+                                } 			
+                            }
+                        }
+                        ctx.putImageData(img,0,0);
+                    }
+
+                    function pixelCompare(i,targetcolor,targettotal,fillcolor,data,length,tolerance) {	
+                        if (i<0||i>=length) return false; //out of bounds
+                        if (data[i+3]===0)  return true;  //surface is invisible
+                        
+                        if (
+                            (targetcolor[3] === fillcolor.a) && 
+                            (targetcolor[0] === fillcolor.r) && 
+                            (targetcolor[1] === fillcolor.g) && 
+                            (targetcolor[2] === fillcolor.b)
+                        ) return false; //target is same as fill
+                        
+                        if (
+                            (targetcolor[3] === data[i+3]) &&
+                            (targetcolor[0] === data[i]  ) && 
+                            (targetcolor[1] === data[i+1]) &&
+                            (targetcolor[2] === data[i+2])
+                        ) return true; //target matches surface 
+                        
+                        if (
+                            Math.abs(targetcolor[3] - data[i+3])<=(255-tolerance) &&
+                            Math.abs(targetcolor[0] - data[i]  )<=tolerance && 
+                            Math.abs(targetcolor[1] - data[i+1])<=tolerance &&
+                            Math.abs(targetcolor[2] - data[i+2])<=tolerance
+                        ) return true; //target to surface within tolerance 
+                        
+                        return false; //no match
+                    }
+
+                    function pixelCompareAndSet(i,targetcolor,targettotal,fillcolor,data,length,tolerance) {
+                        if(pixelCompare(i,targetcolor,targettotal,fillcolor,data,length,tolerance)) {
+                            //fill the color
+                            data[i] 	 = fillcolor.r;
+                            data[i+1] = fillcolor.g;
+                            data[i+2] = fillcolor.b;
+                            data[i+3] = fillcolor.a;
+                            return true;
+                        }
+                        return false;
+                    }
+                }
+            },
             listeners: {
                 mousedown: function(ev, state, lastCoords){
-                    dCanvas.executeAction("fillColorRange", state.last_coords.x, state.last_coords.y);//??
+                    var color = dCanvas.getStyles().fill_style;
+                    floodFill(state.last_coords.x, state.last_coords.y, color, dCanvas.m().canvas);
                 }
             }
         },
@@ -151,7 +279,20 @@ function DrawableCanvas(settings){
     dCanvas.setup = function(settings){
 
         //Settings
+        const ALLOWED_SETTINGS = [
+            'Drawer',
+            'format',
+            'width',
+            'height',
+            'background_color',
+            'store_states',
+            'allow_interaction',
+            'auto_append'
+        ];
         for(var key in settings){
+            if(ALLOWED_SETTINGS.indexOf(key) < 0){
+                continue;
+            }
             dCanvas[key] = settings[key];
         }
         
@@ -182,9 +323,10 @@ function DrawableCanvas(settings){
         return dCanvas.manager;
     }
 
+    /**
+     * Abstract element used for drawing/events
+     */
     dCanvas.getCanvas = function(){
-        //SPEC: Abstract element used for drawing/events
-
         return dCanvas.manager.element;
     }
 
@@ -216,9 +358,10 @@ function DrawableCanvas(settings){
         }
     }
 
+    /**
+     * Direct action handling
+     */
     dCanvas.executeAction = function(action, args){
-        //Direct action handling
-
         var manager = dCanvas.manager;
         var returnData = null;
 
@@ -294,8 +437,10 @@ function DrawableCanvas(settings){
         return dCanvas.executeTool(toolName, listener, args);
     }
 
+    /**
+     * Abstract drawing through here
+     */
     dCanvas.executeTool = function(toolName, listener, args){
-        //Abstract drawing through here
 
         dCanvas.log("executeTool:");
         dCanvas.log(toolName);
@@ -306,11 +451,15 @@ function DrawableCanvas(settings){
         var returnData = null;
 
         //Tool
-        if(toolName && dCanvas.getTool(toolName)){
+        var toolSettings = dCanvas.getTool(toolName);
+        if(toolName && toolSettings){
+            if(){
+                //??
+            }
 
             //Execute
             var mArgs = [toolName, listener, args];
-            returnData = dCanvas.handleTool.apply(this, mArgs);
+            returnData = dCanvas.handleTool.apply(this, mArgs);//??Documentation.
 
             //State
             dCanvas.handleNewState("handleTool", args);
@@ -319,29 +468,90 @@ function DrawableCanvas(settings){
         return returnData;
     }
 
-    dCanvas.setColor = function(){
-        //??
+    /**
+     * Allows for enabling/disabling tools based on array.
+     * @param {Array} arr
+     * @return {DrawableCanvas} chainable
+     */
+    dCanvas.setUsableTools = function(arr){
+        var tools = dCanvas.tool_settings;
+        for(let key in tools){
+            tools.enabled = (arr.indexOf(key) >= 0);
+        }
+
+        return dCanvas;
     }
 
-    dCanvas.setPenSize = function(){
-        //??
+    /**
+     * Sets color of stroke and fill.
+     * @param {String} color
+     * @return {DrawableCanvas} chainable
+     */
+    dCanvas.setColor = function(color){
+        dCanvas.manager.setStyles({
+            fill_style: color,
+            stroke_style: color
+        });
+
+        return dCanvas;
     }
 
-    dCanvas.setTextSize = function(){
-        //??
+    /**
+     * Sets size of pen.
+     * @return {DrawableCanvas} chainable
+     */
+    dCanvas.setPenSize = function(px){
+        dCanvas.manager.setStyles({
+            line_width: px
+        });
+
+        return dCanvas;
     }
 
-    dCanvas.setTextFont = function(){
-        //??
+    /**
+     * Sets size of text.
+     * @return {DrawableCanvas} chainable
+     */
+    dCanvas.setTextSize = function(px){
+        var partIndex = 0;
+        var val = px + 'px';
+        dCanvas._setFontPart(partIndex, val);
+
+        return dCanvas;
     }
 
+    /**
+     * Sets text font.
+     * @return {DrawableCanvas} chainable
+     */
+    dCanvas.setTextFont = function(font){
+        var partIndex = 1;
+        var val = font;
+        dCanvas._setFontPart(partIndex, val);
+
+        return dCanvas;
+    }
+
+    /**
+     * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/font
+     */
+    dCanvas._setFontPart = function(index, val){
+        var currentFont = dCanvas.manager.getStyles().font;
+        var DELIMITER = ' ';
+        var parts = currentFont.split(DELIMITER);
+        parts[index] = val;
+        font = parts.join(DELIMITER);
+
+        dCanvas.manager.setStyles({
+            font: font
+        });
+    }
+
+    /**
+     * Represents back/forward state.
+     */
     dCanvas.State = function(options){
-        /*
-        SPEC:
-
-        Represents back/forward state.
-        */
-
+        
         var state = {};
         state.action = null;
         state.args = [];
@@ -353,16 +563,14 @@ function DrawableCanvas(settings){
         return state;
     }
 
+    /**
+     * Lose forwards on new.
+     * Two ways to save:
+     * 1. Save each separate action(Would require saving all)
+     * 2. Save snapshot(Easier, so use for now)
+     */
     dCanvas.handleNewState = function(action, args){
-        /*
-        SPEC:
-
-        Lose forwards on new.
-        2 ways to save:
-        1. Save each separate action(Would require saving all)
-        2. Save snapshot(Easier, so use for now)
-        */
-
+        
         //Check
         if(!dCanvas.store_states){
             return false;
@@ -428,9 +636,14 @@ function DrawableCanvas(settings){
         var tSetting = {};
         tSetting.name = "";
         tSetting.description = "";
-        tSetting.image_src = "";
         tSetting.image = null;
+        tSetting.enabled = true;//false to disable.
         tSetting.handle = null;
+
+        //Optional handles usually if same function needed multiple times.
+        tSetting.handles = {
+            //
+        };
 
         tSetting.listeners = {
             mousedown: null,
@@ -456,23 +669,39 @@ function DrawableCanvas(settings){
         for(var key in dCanvas.tool_settings){
             dCanvas.tool_settings[key] = new dCanvas.ToolSetting(dCanvas.tool_settings[key]);
         }
+
+        //Make sure tool settings updated.
+        dCanvas.setTool(dCanvas.current_state.tool);
     }
 
     dCanvas.getTools = function(){
         return dCanvas.tool_settings;
     }
 
+    /**
+     * Gets tool settings from tool name.
+     * Can also get tool settings from state object.
+     * 
+     * @param {String} name
+     */
     dCanvas.getTool = function(name){
         return dCanvas.tool_settings[name];
     }
     
-    dCanvas.getCurrentTool = function(){
-        var toolName = dCanvas.current_state.tool;
-        return dCanvas.getTool(toolName);
-    }
-    
+    /**
+     * Sets current tool
+     * @param {String} name
+     * @return {DrawableCanvas} chainable
+     */
     dCanvas.setTool = function(name){
         dCanvas.current_state.tool = name;
+        dCanvas.current_state.tool_settings = dCanvas.getTool(name);
+
+        return dCanvas;
+    }
+
+    dCanvas.getCurrentTool = function(){
+        return dCanvas.current_state.tool_settings;//??Need to improve naming tool vs settings.
     }
 
     dCanvas.handleTool = function(toolName, listener, args){
@@ -493,6 +722,9 @@ function DrawableCanvas(settings){
     return dCanvas;
 }
 
+if(typeof window === 'object'){
+    window.DrawableCanvas = DrawableCanvas;
+}
 if(typeof module !== 'undefined'){
     module.exports = DrawableCanvas;
 }

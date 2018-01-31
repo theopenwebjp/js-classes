@@ -1,7 +1,7 @@
+/**
+ * Copy inputs from one list to another.
+ */
 var InputCopier = function(){
-  /*
-  Copy inputs from one list to another.
-  */
   var copier = {};
   copier.elements = {
     main: null,

@@ -1,14 +1,13 @@
+/**
+ * Image editor class.
+ * Should allow:
+ * projects > Layered images
+ * multiple open images
+ * multiple layers
+ * tools
+ */
 function ImageEditor(settings){
-    /*
-    SPEC:
-
-    Should allow:
-    projects > Layered images
-    multiple open images
-    multiple layers
-    tools
-    */
-
+    
     var editor = {};
 
     editor.defaults = {
@@ -33,7 +32,7 @@ function ImageEditor(settings){
         //Tools
         pen: {
             type: "tool",
-            image: "",
+            image: "",//??images
         },
         eraser: {
             type: "tool",
@@ -374,12 +373,10 @@ function ImageEditor(settings){
         alert(str);
     }
 
+    /**
+     * Image project that can be saved at once and edited at once.
+     */
     editor.ImageProject = function(settings){
-        /*
-        SPEC:
-
-        Image project that can be saved at once and edited at once.
-        */
         var iProject = {};
         iProject.project_name = "";
         iProject.project_description = "";
@@ -404,11 +401,10 @@ function ImageEditor(settings){
         return iProject;
     }
 
+    /**
+     * Common image.
+     */
     editor.Image = function(settings){
-        /*
-        SPEC: Common image.
-        */
-
         var image = {};
         image.mime_type = "";
         image.width = 0;
@@ -431,13 +427,10 @@ function ImageEditor(settings){
         return image;
     }
 
+    /**
+     * Any image file opened
+     */
     editor.ImageFile = function(settings){
-        /*
-        SPEC:
-
-        Any image file opened
-        */
-
         var iFile = new editor.Image(settings);
 
         //File info
@@ -454,11 +447,11 @@ function ImageEditor(settings){
         iLayer.displayed = true;
 
         iLayer.show = function(){
-
+            //??
         }
 
         iLayer.hide = function(){
-
+            //??
         }
 
         return iLayer;

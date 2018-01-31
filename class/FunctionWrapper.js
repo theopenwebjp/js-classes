@@ -1,11 +1,10 @@
+/**
+ * Dependencies: utility.js
+ * Function wrapping functions.
+ * FunctionWrapper functions not allowed to be wrapped.
+ * Any function from FunctionWrapper should not be stack traced.
+ */
 var FunctionWrapper = function(){
-  /*
-  Dependencies: utility.js
-  Function wrapping functions.
-  FunctionWrapper functions not allowed to be wrapped.
-  Any function from FunctionWrapper should not be stack traced.
-  */
-  
   var wrapper = {};
   wrapper.settings = {
     events: {

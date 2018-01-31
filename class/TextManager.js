@@ -1,10 +1,12 @@
+/**
+ * Text language handling class.
+ * language/defaultLanguage:
+ * Any string allowed, but using ISO standard preferred.
+ * http://www-01.sil.org/iso639-3/codes.asp // same as wordpress and newer than many others.
+ * //Old: http://www.loc.gov/standards/iso639-2/php/English_list.php
+ * @param {*} settings 
+ */
 var TextManager = function(settings){
-  /*
-  language/defaultLanguage:
-  Any string allowed, but using ISO standard preferred.
-  http://www-01.sil.org/iso639-3/codes.asp // same as wordpress and newer than many others.
-  //Old: http://www.loc.gov/standards/iso639-2/php/English_list.php
-  */
   var manager = {};
   
   manager.settings = {

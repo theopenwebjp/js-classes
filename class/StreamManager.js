@@ -1,6 +1,10 @@
+/**
+ * Stream functions.
+ * Should change so is StreamHelper and is static.
+ */
 function StreamManager(){
   var sManager = {};
-  sManager.streams = [];//Storing    
+  sManager.streams = [];//Storing   //??Should not be stored here, instead create object for storing and handling from here. 
   
   sManager.StreamError = function(){
     return {

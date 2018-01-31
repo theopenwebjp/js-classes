@@ -1,3 +1,7 @@
+/**
+ * Saving class.
+ * Handles all possible saving methods in JavaScript.
+ */
 var PersistentStateManager = function(){
   var manager = {};
   manager.settings = {
