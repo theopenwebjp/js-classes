@@ -277,3 +277,10 @@ function CanvasManager(){
     
     return cManager;
 }
+
+if(typeof window === 'object'){
+    window.CanvasManager = CanvasManager;
+}
+if(typeof module !== 'undefined'){
+    module.exports = CanvasManager;
+}
