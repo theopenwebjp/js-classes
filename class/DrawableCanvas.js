@@ -453,10 +453,12 @@ function DrawableCanvas(settings){
         //Tool
         var toolSettings = dCanvas.getTool(toolName);
         if(toolName && toolSettings){
-            if(){
-                //??
-            }
 
+            //Enabled handling
+            if(!toolSettings.enabled){
+                return returnData;
+            }
+            
             //Execute
             var mArgs = [toolName, listener, args];
             returnData = dCanvas.handleTool.apply(this, mArgs);//??Documentation.
