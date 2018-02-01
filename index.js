@@ -1,6 +1,6 @@
 //Loop files in ./class, includes each file as [Camel case]: require('./class/CanvasManager).
 const classes = {
-    //CanvasManager: require('./class/CanvasManager'),
+    CanvasManager: require('./class/CanvasManager'),
     //ClassManager: require('./class/ClassManager'),
     DomHelper: require('./class/DomHelper'),
     DrawableCanvas: require('./class/DrawableCanvas'),
