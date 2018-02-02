@@ -306,6 +306,7 @@ function Drawer(settings){
             manager.canvas = document.createElement("canvas");
             manager.canvas.style.border = '1px solid black';        
         }
+        manager.canvas.setAttribute('data-drawer', true);
         
         manager.element = manager.canvas;
         manager.context = manager.canvas.getContext("2d");

@@ -10,7 +10,7 @@ function DrawableCanvas(settings){
 
     var dCanvas = {};
     dCanvas.drawer_args = {};//Arguments passed to Drawer abstraction.
-    dCanvas.format = "canvas";//svg, dom
+    dCanvas.format = "canvas";//canvas, svg, dom
     dCanvas.width = 100;
     dCanvas.height = 100;
     dCanvas.background_color = null;//Empty = transparent
