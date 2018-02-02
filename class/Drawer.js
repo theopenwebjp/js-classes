@@ -12,20 +12,28 @@
 function Drawer(settings){
 
     var drawer = {};
+    drawer.args = {};//Arguments passed to drawer abstraction.
     drawer.format = 'canvas';//svg, canvas. Previous DOM was tested but removed.
 
     drawer.handleStartup = function(settings){
 
         //Settings
+        const ALLOWED_SETTINGS = [
+            'format',
+            'args'
+        ];
         for(var key in settings){
+            if(ALLOWED_SETTINGS.indexOf(key) < 0){
+                continue;
+            }
             drawer[key] = settings[key];
         }
 
         //Abstract here
         if(drawer.format === "svg"){
-            drawer.manager = new drawer.SVGManager();
+            drawer.manager = new drawer.SVGManager(drawer.args);
         }else if(drawer.format === "canvas"){
-            drawer.manager = new drawer.CanvasDrawer();
+            drawer.manager = new drawer.CanvasDrawer(drawer.args);
         }else{
             throw new Error('Invalid format');
         }
@@ -291,9 +299,14 @@ function Drawer(settings){
         var manager = new drawer.CommonDrawer(settings);
         manager.format = 'canvas';
 
-        manager.canvas = document.createElement("canvas");
-        manager.canvas.style.border = '1px solid black';
-
+        //Custom canvas
+        if(settings && settings.canvas){
+            manager.canvas = settings.canvas;
+        }else{
+            manager.canvas = document.createElement("canvas");
+            manager.canvas.style.border = '1px solid black';        
+        }
+        
         manager.element = manager.canvas;
         manager.context = manager.canvas.getContext("2d");
         manager.CIRCLE_ANGLE = 2 * Math.PI;

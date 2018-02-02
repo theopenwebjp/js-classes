@@ -9,6 +9,7 @@
 function DrawableCanvas(settings){
 
     var dCanvas = {};
+    dCanvas.drawer_args = {};//Arguments passed to Drawer abstraction.
     dCanvas.format = "canvas";//svg, dom
     dCanvas.width = 100;
     dCanvas.height = 100;
@@ -281,6 +282,7 @@ function DrawableCanvas(settings){
         //Settings
         const ALLOWED_SETTINGS = [
             'Drawer',
+            'drawer_args',
             'format',
             'width',
             'height',
@@ -315,7 +317,8 @@ function DrawableCanvas(settings){
 
     dCanvas.setupFormat = function(){
         dCanvas.manager = new dCanvas.Drawer({
-            format: dCanvas.format
+            format: dCanvas.format,
+            args: dCanvas.drawer_args
         });
     }
 
@@ -356,6 +359,17 @@ function DrawableCanvas(settings){
         if(dCanvas.auto_append){
             dCanvas.append();
         }
+    }
+
+    /**
+     * Removes events so no interaction possible.
+     */
+    dCanvas.removeEvents = function(){
+        var element = dCanvas.getCanvas();
+        var l = dCanvas.listeners;
+        element.removeEventListener("mousedown", l.handleMouseDown);
+        element.removeEventListener("mouseup", l.handleMouseUp);
+        element.removeEventListener("mousemove", l.handleMouseMove);
     }
 
     /**
