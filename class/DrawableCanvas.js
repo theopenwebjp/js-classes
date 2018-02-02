@@ -379,6 +379,15 @@ function DrawableCanvas(settings){
     }
 
     /**
+     * Initializes canvas to state before using in this class.
+     * Will remove events and attributes.
+     */
+    dCanvas.initializeCanvas = function(){
+        dCanvas.removeEvents();
+        dCanvas.manager.initialize();
+    }
+
+    /**
      * Direct action handling
      */
     dCanvas.executeAction = function(action, args){

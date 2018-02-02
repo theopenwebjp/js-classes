@@ -195,6 +195,13 @@ function Drawer(settings){
         }
 
         /**
+         * Returns canvas to initial state before being used in Drawer.
+         */
+        manager.initialize = function(){
+            return manager._overrideRequired();
+        }
+
+        /**
          * Full image
          */
         manager.getSnapshot = function(){
@@ -343,6 +350,11 @@ function Drawer(settings){
                     console.warn('invalid style key', fKey);
                 }
             }
+        }
+
+        manager.initialize = function(){
+            manager.clearCanvas();
+            manager.canvas.removeAttribute('data-drawer');
         }
         
         manager.getSnapshot = function(){
