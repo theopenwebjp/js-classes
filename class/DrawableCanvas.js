@@ -265,6 +265,9 @@ function DrawableCanvas(settings){
     //Listeners
     dCanvas.listeners = {
         handleMouseDown: function(ev){
+            if(!dCanvas._checkIsClick(ev)){
+                return false;
+            }
             return dCanvas.executeCurrentTool("mousedown", ev);
         },
 
@@ -273,6 +276,9 @@ function DrawableCanvas(settings){
         },
 
         handleMouseMove: function(ev){
+            if(!dCanvas._checkIsClick(ev)){
+                return false;
+            }
             return dCanvas.executeCurrentTool("mousemove", ev);
         }
     };
@@ -416,9 +422,15 @@ function DrawableCanvas(settings){
         var rect = ev.target.getBoundingClientRect();
         var coords = {};
 
-        //Element
-        coords.x = ev.clientX - rect.left;
-        coords.y = ev.clientY - rect.top;
+        //Element(May differ with canvas internal size)
+        coords.element_x = ev.clientX - rect.left;
+        coords.element_y = ev.clientY - rect.top;
+
+        //Canvas(Element converted to canvas internal size)
+        var X_FACTOR = dCanvas.m().canvas.width / ev.currentTarget.getBoundingClientRect().width;
+        var Y_FACTOR = dCanvas.m().canvas.height / ev.currentTarget.getBoundingClientRect().height;
+        coords.x = X_FACTOR * coords.element_x;
+        coords.y = Y_FACTOR * coords.element_y;
 
         //Client
         coords.client_x = ev.clientX;
@@ -731,6 +743,17 @@ function DrawableCanvas(settings){
         if(window.console && console.log){
             console.log(data);
         }
+    }
+
+    dCanvas._checkIsClick = function(ev){
+        var WHICH_TYPES = {
+            NONE: 0,
+            LEFT: 1,
+            MIDDLE: 2,
+            RIGHT: 3
+        };
+
+        return (ev.which === undefined || ev.which === WHICH_TYPES.LEFT);
     }
 
     dCanvas.setup(settings);
