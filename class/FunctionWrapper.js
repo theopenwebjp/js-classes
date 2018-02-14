@@ -619,3 +619,10 @@ var FunctionWrapper = function(){
   
   return wrapper;
 }
+
+if(typeof window === 'object'){
+  window.FunctionWrapper = FunctionWrapper;
+}
+if(typeof module !== 'undefined'){
+  module.exports = FunctionWrapper;
+}

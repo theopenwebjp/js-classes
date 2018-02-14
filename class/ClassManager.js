@@ -104,3 +104,10 @@ var ClassManager = function(settings){
   
   return manager;
 }
+
+if(typeof window === 'object'){
+  window.ClassManager = ClassManager;
+}
+if(typeof module !== 'undefined'){
+  module.exports = ClassManager;
+}

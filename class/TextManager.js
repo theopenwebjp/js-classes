@@ -188,3 +188,10 @@ var TextManager = function(settings){
   
   return manager;
 }
+
+if(typeof window === 'object'){
+  window.TextManager = TextManager;
+}
+if(typeof module !== 'undefined'){
+  module.exports = TextManager;
+}
