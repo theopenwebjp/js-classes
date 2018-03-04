@@ -79,25 +79,6 @@ function CanvasManager(){
     }
     
     //Imaging
-    cManager.drawableToDataURL = function(drawable, format, conversionOptions){
-      var d = drawable;
-
-      var width = d.width || d.videoWidth;
-      var height = d.height || d.videoHeight;
-
-      var c = document.createElement("canvas");
-      var ctx = c.getContext("2d");
-
-      c.width = width;
-      c.height = height;
-
-      ctx.drawImage(d, 0, 0, width, height);
-
-      var dataURL = cManager.canvasToDataURL(c, format, conversionOptions);
-
-      return dataURL;
-    }
-
     cManager.drawableToImage = function(drawable){
       var dataURL = cManager.drawableToDataURL(drawable);
       var image = new Image();
@@ -115,12 +96,18 @@ function CanvasManager(){
         onLoad(dataUrl);
       }
     }
+
+    cManager.drawableToCanvas = function(drawable){
+        var canvas = document.createElement("canvas");
+        canvas.width = drawable.width || drawable.videoWidth;
+        canvas.height = drawable.height || drawable.videoHeight;
+        canvas.getContext("2d").drawImage(drawable, 0, 0);
+
+        return canvas;
+    }
     
     cManager.drawableToDataURL = function(drawable, format, conversionOptions){
-      var canvas = document.createElement("canvas");
-      canvas.width = drawable.width || drawable.videoWidth;
-      canvas.height = drawable.height || drawable.videoHeight;
-      canvas.getContext("2d").drawImage(drawable, 0, 0);
+      var canvas = cManager.drawableToCanvas(drawable);
       return cManager.canvasToDataURL(canvas, format, conversionOptions);
     }
     
