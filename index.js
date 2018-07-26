@@ -11,14 +11,14 @@ const classes = {
     //ImageEditor: require('./class/ImageEditor'),
     //ImagePrompter: require('./class/ImagePrompter'),
     //InputCopier: require('./class/InputCopier'),
+    I18n: require('./class/I18n'),
     Log: require('./class/Log'),
     //PageManager: require('./class/PageManager'),
     //PersistentStateManager: require('./class/PersistentStateManager'),
     //Sharer: require('./class/Sharer'),
     //StandardUnitHelper: require('./class/StandardUnitHelper'),
-    //StreamManager: require('./class/StreamManager'),
-    TextManager: require('./class/TextManager'),
-    //UIManager: require('./class/UIManager')
+    StreamManager: require('./class/StreamManager'),
+    TextManager: require('./class/TextManager')
 };
 
 module.exports = classes;

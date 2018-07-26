@@ -8,7 +8,7 @@ var should = require('chai').should;
 var expect = require('chai').expect;
 
 var fs = require("fs");
-eval( fs.readFileSync('./../../js-functions/utility.js', 'utf8') );
+eval( fs.readFileSync('js-functions/src/utility.js', 'utf8') );
 eval( fs.readFileSync('./../SchemaManager.js', 'utf8') );
 eval( fs.readFileSync('./../Schema.js', 'utf8') );
 var testObj = new SchemaManager(); testObj.schemaList = new Schema();

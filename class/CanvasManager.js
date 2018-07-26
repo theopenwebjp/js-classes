@@ -97,8 +97,8 @@ function CanvasManager(){
       }
     }
 
-    cManager.drawableToCanvas = function(drawable){
-        var canvas = document.createElement("canvas");
+    cManager.drawableToCanvas = function(drawable, canvas){
+        canvas = canvas || document.createElement("canvas");
         canvas.width = drawable.width || drawable.videoWidth;
         canvas.height = drawable.height || drawable.videoHeight;
         canvas.getContext("2d").drawImage(drawable, 0, 0);
@@ -131,6 +131,50 @@ function CanvasManager(){
       img.src = dataURL;
       
       return img;
+    }
+
+    /**
+     * Watches for canvas stop, usual for WebRTC connection problems in older browsers.
+     * Stops on first stop.
+     */
+    cManager.watchForCanvasStop = function(canvas, onStop, options){
+        var ms = options.interval || 2000;
+
+        var ctx = canvas.getContext('2d');
+
+        var getImageData = function(){
+            return ctx.getImageData(0, 0, canvas.width, canvas.height);
+        };
+        var prevImgData = getImageData();
+
+        var interval = window.setInterval(function(){
+            var imgData = getImageData();
+            if(cManager.isImageDataSame(imgData, prevImgData)){
+                window.clearInterval(interval);
+                onStop();
+            }
+            prevImgData = imgData;
+        }, ms);
+    }
+
+    /**
+     * Returns boolean for quick imageData checking.
+     */
+    cManager.isImageDataSame = function(imgData1, imgData2){
+        if(imgData1.data.length !== imgData2.data.length){
+            return false;
+        }
+
+        var val;
+        for(var i=0; i<imgData1.data.length; i++){
+            val1 = imgData1.data[i];
+            val2 = imgData2.data[i];
+            if(val1 !== val2){
+                return false;
+            }
+        }
+
+        return true;
     }
     
     cManager.canvasHasColorData = function(canvas, options){

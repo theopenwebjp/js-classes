@@ -96,9 +96,19 @@ var FormManager = function(settings){//??Make static.
       }
     }
   };
+
+  manager.extendedTypes = {
+    boolean: {
+      type: 'checkbox',
+      override: function(inputType){
+        inputType.multiple = false;
+      }
+    }
+  };
   
   /**
-   * Object represent settings for an input type
+   * Object representing settings for an input type in inputTypes.
+   * Used for creating inputs.
    */
   manager.InputType = function(){
     return {
@@ -123,6 +133,30 @@ var FormManager = function(settings){//??Make static.
       values: [],
       rowHeader: "",
       initialSelection: ""
+    };
+  }
+
+  /**
+   * ??Seems to be for same purpose as InputObject. CHECK!!!
+   */
+  manager.InputSettings = function(){
+    return {
+      type: "",
+      tag: "",
+      key: "",
+      values: [],
+      required: false
+    };
+  }
+
+  /**
+   * Object representing data for creating form
+   */
+  manager.FormSettings = function(){
+    return {
+      action: "",
+      actionType: "",
+      inputs: []
     };
   }
   
@@ -171,10 +205,11 @@ var FormManager = function(settings){//??Make static.
     return manager.settings.text[key];
   }
   
+  /**
+   * Input: <div><label>name</label> <div>{INPUT}</div></div>
+   * @param {Object} settings: InputSettings
+   */
   manager.createInput = function(settings){
-    /*
-    Input: <div><label>name</label> <div>{INPUT}</div></div>
-    */
     
     var children = [];
     var i;
@@ -507,11 +542,11 @@ var FormManager = function(settings){//??Make static.
 
   /**
    * Gets input type from element
-   * @return {Object} InputType
+   * @return {Object} InputType. Default if not found.
    */
   manager.getElementInputType = function(el){
     const settings = manager.inputTypes;
-    let type = settings.input;
+    let type = null;//DEFAULT
     for(let key in settings){
       const setting = settings[key];
 
@@ -577,6 +612,34 @@ var FormManager = function(settings){//??Make static.
     }else{
       el.value = val;
     }
+  }
+
+  /**
+   * Focuses on first element found.
+   * Useful for having forms that auto focus.
+   * @param {DOMElement} el
+   */
+  manager.focusOnFirstInput = function(el){
+    const getFirstInput = (el)=>{
+      const children = [...el.children];
+      for(let i=0; i<children.length; i++){
+        let child = children[i];
+  
+        if(manager.isInput(child)){
+          return child;
+        }
+      }
+      return null;
+    };
+
+    const input = getFirstInput(el);
+    if(input){
+      input.focus();
+    }
+  }
+
+  manager.isInput = function(el){
+    return !manager.getElementInputType(el);
   }
   
   manager.setup(settings);
