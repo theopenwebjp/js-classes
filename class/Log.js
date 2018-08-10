@@ -11,6 +11,8 @@ const LOG_LEVEL = constants.LOG_LEVEL.DEBUG;
 /**
  * Log handling
  * @public
+ * @see https://github.com/goldingdamien/log.git
+ * @deprecated This has been moved to a separate project. Use see link above instead.
  */
 class Log{
 

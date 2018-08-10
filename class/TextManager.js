@@ -63,6 +63,7 @@ var TextManager = function(settings){
     if(manager.settings.languageFormat === "iso639-3"){//Basic check for now to avoid likely bugs.
       var l = manager.settings.languages;
       if(l["en"] || l["jp"] || l["english"] || l["japanese"]){
+        console.error('Invalid language format. Check https://en.wikipedia.org/wiki/List_of_ISO_639-3_codes');
         return false;
       }
     }
