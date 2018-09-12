@@ -1,12 +1,12 @@
 const constants = {
-    LOG_LEVEL: {
-        'ERROR': 1,
-        'WARN': 2,
-        'INFO': 3,
-        'DEBUG': 4
-    }
-};
-const LOG_LEVEL = constants.LOG_LEVEL.DEBUG;
+  LOG_LEVEL: {
+    'ERROR': 1,
+    'WARN': 2,
+    'INFO': 3,
+    'DEBUG': 4
+  }
+}
+const LOG_LEVEL = constants.LOG_LEVEL.DEBUG
 
 /**
  * Log handling
@@ -14,69 +14,67 @@ const LOG_LEVEL = constants.LOG_LEVEL.DEBUG;
  * @see https://github.com/goldingdamien/log.git
  * @deprecated This has been moved to a separate project. Use see link above instead.
  */
-class Log{
-
-    /**
+class Log {
+  /**
      * Logging by set log level.
-     * 
+     *
      * @param {String} level Log level(constants.LOG_LEVEL key)
      * @param {Function} h Log function
      * @param {Array} args Arguments list
      */
-    static _log(level, h, args=[]){
-        const setLevel = LOG_LEVEL;
-        const setConstLevel = constants.LOG_LEVEL[setLevel];
-        const curLevel = (setConstLevel !== undefined) ? setConstLevel : constants.LOG_LEVEL.DEBUG;
-        
-        const targetLevel = constants.LOG_LEVEL[level];
+  static _log (level, h, args = []) {
+    const setLevel = LOG_LEVEL
+    const setConstLevel = constants.LOG_LEVEL[setLevel]
+    const curLevel = (setConstLevel !== undefined) ? setConstLevel : constants.LOG_LEVEL.DEBUG
 
-        if(curLevel >= targetLevel){
-            args = Array.prototype.slice.call(args);//Arguments List => array
-            args = args.map((item)=>{
+    const targetLevel = constants.LOG_LEVEL[level]
 
-                //JSON stringify => parse formats object in full format.
-                if(item instanceof Error){
-                    return JSON.parse(JSON.stringify(item));
-                }else{
-                    return item;
-                }
-            });
-            h(...args);
+    if (curLevel >= targetLevel) {
+      args = Array.prototype.slice.call(args)// Arguments List => array
+      args = args.map((item) => {
+        // JSON stringify => parse formats object in full format.
+        if (item instanceof Error) {
+          return JSON.parse(JSON.stringify(item))
+        } else {
+          return item
         }
+      })
+      h(...args)
     }
+  }
 
-    /**
+  /**
      * catch / error event logging
      */
-    static error(){
-        Log._log('ERROR', console.error, arguments);
-    }
-    
-    /**
+  static error () {
+    Log._log('ERROR', console.error, arguments)
+  }
+
+  /**
      * Deprecations, etc.
      */
-    static warn(){
-        Log._log('WARN', console.warn, arguments);
-    }
+  static warn () {
+    Log._log('WARN', console.warn, arguments)
+  }
 
-    /**
+  /**
      * Info logging. For important logging.
      */
-    static info(){
-        Log._log('INFO', console.info, arguments);
-    }
+  static info () {
+    Log._log('INFO', console.info, arguments)
+  }
 
-    /**
+  /**
      * Debug logging.
      */
-    static debug(){
-        Log._log('DEBUG', console.info, arguments);
-    }
+  static debug () {
+    Log._log('DEBUG', console.info, arguments)
+  }
 }
 
-if(typeof window === 'object'){
-    window.Log = Log;
+if (typeof window === 'object') {
+  window.Log = Log
 }
-if(typeof module === 'object'){
-    module.exports = Log;
+if (typeof module === 'object') {
+  module.exports = Log
 }

@@ -4,7 +4,7 @@ const DomHelper = require('./DomHelper');
  * Collection of functions for handling forms.
  * Static class.
  */
-var FormManager = function(settings){//??Make static.
+var FormManager = function(settings){//??Make static. 
   
   var manager = {};
 
