@@ -1,4 +1,4 @@
-const {Utility} = require('js-functions')
+const {Utility, BaseObjectHelper} = require('js-functions')
 
 /**
  * Collection of DOM helper functions.
@@ -43,7 +43,7 @@ var DomHelper = function () {
   /* public */
   manager.createElements = function (settingsArr, defaults) {
     var elements = settingsArr.map(function (settings) {
-      if (defaults) { settings = combineObjects([settingsArr, defaults]) }
+      if (defaults) { settings = Utility.combineObjects([settingsArr, defaults]) }
 
       return manager.createElement(settings)
     })
@@ -277,7 +277,7 @@ var DomHelper = function () {
 
       // Event
       if (item.type === 'file') {
-        setClickFileHandler(a, item.click)
+        manager.setClickFileHandler(a, item.click)
       } else {
         a.addEventListener('click', item.click)
       }
@@ -440,7 +440,7 @@ var DomHelper = function () {
 
     var i
     for (i = 0; i < items.length; i++) {
-      item = items[i]
+      let item = items[i]
       children.push(manager._handleChildReplacements(item, childrenSettings.format, childrenSettings.replacements))
     }
 
@@ -449,7 +449,6 @@ var DomHelper = function () {
 
   manager._handleChildReplacements = function (item, format, replacements) {
     var childSettings
-    var item
     var i, key
 
     childSettings = manager.createClass('DomElementSettings', format)// New child setting.
@@ -555,7 +554,7 @@ var DomHelper = function () {
     }
     options = fOptions
 
-    var div, input, button
+    var div, input
 
     // Wrap
     var form = document.createElement('form')
@@ -615,9 +614,9 @@ var DomHelper = function () {
   }
 
   manager.getElementPageDimensions = function (el) {
-    var rect = copyObjectData(el.getBoundingClientRect())
-    rect.top = rect.top + pageYOffset
-    rect.left = rect.left + pageXOffset
+    var rect = BaseObjectHelper.copyObjectData(el.getBoundingClientRect())
+    rect.top = rect.top + window.pageYOffset
+    rect.left = rect.left + window.pageXOffset
     rect.bottom = rect.top + rect.height
     rect.right = rect.left + rect.width
 
@@ -630,7 +629,7 @@ var DomHelper = function () {
     return manager.setStyleMeasurements(el, position, allowed)
   }
 
-  manager.setStyleDimensions = function (el, obj) {
+  manager.setStyleDimensions = function (el, dimensions) {
     var allowed = ['top', 'right', 'bottom', 'left', 'width', 'height']
     return manager.setStyleMeasurements(el, dimensions, allowed)
   }
@@ -650,7 +649,7 @@ var DomHelper = function () {
   manager.applyMarginsToDimensions = function (margins, dimensions) {
     var allowedMargins = ['top', 'left']
     for (var key in margins) {
-      if (allowedMargins.indexOf(key) >= 0 && exists(margins[key])) {
+      if (allowedMargins.indexOf(key) >= 0 && Utility.exists(margins[key])) {
         dimensions += margins[key]
       }
     }
@@ -719,14 +718,14 @@ var DomHelper = function () {
     var height = element.offsetHeight
     var width = element.offsetWidth
     document.addEventListener('DOMSubtreeModified', function () {
-      if (element.offsetHeight != height || element.offsetWidth != width) {
+      if (element.offsetHeight !== height || element.offsetWidth !== width) {
         handle(element)
       }
     })
   }
 
   manager.startWatchingHtmlElementListenerChanges = function (eventName, handle) {
-    var p = HTMLElement.prototype
+    var p = window.HTMLElement.prototype
 
     if (!p.__listenerChangeHandles) {
       p.__listenerChangeHandles = {}
@@ -762,7 +761,7 @@ var DomHelper = function () {
   }
 
   manager.stopWatchingHtmlElementListenerChanges = function (eventName, handle) {
-    var p = HTMLElement.prototype
+    var p = window.HTMLElement.prototype
 
     if (!p.__listenerChangeHandles) { return false }
     if (!p.__listenerChangeHandles[eventName]) { return false }
@@ -822,9 +821,9 @@ var DomHelper = function () {
   manager.htmlifyEvent = function (el, eventName) {
     var key = '__htmlified_event_' + (Math.random() * 10000000)
 
-    var event = new CustomEvent(eventName)
+    var event = new window.CustomEvent(eventName)
     window[key] = function () {
-      log('Sent event: ' + eventName)
+      // console.log('Sent event: ' + eventName)
       el.dispatchEvent(event)
     }
 
@@ -895,7 +894,7 @@ var DomHelper = function () {
     var element
 
     for (var i = 0; i < ids.length; i++) {
-      element = e(ids[i])
+      element = manager.e(ids[i])
       if (element) { elements.push(element) }
     }
 
@@ -919,7 +918,7 @@ var DomHelper = function () {
   }
 
   manager.getDOMImage = function (src) {
-    var image = new Image()
+    var image = new window.Image()
     image.src = src
     return image
   }
@@ -979,7 +978,7 @@ var DomHelper = function () {
 
     // Apply on click
     el.addEventListener('click', function (ev) {
-      log(ev)
+      // console.log(ev)
       if (ev.target !== el) { return false }
       ev.preventDefault()
       fileEl.click()
@@ -1009,7 +1008,7 @@ var DomHelper = function () {
     }
 
     if (p.type === 'attributeKey' || p.type === 'attributeValue') {
-      var attributes = maanger.getElementAttributes(el)
+      var attributes = manager.getElementAttributes(el)
 
       i = 0
       for (key in attributes) {
@@ -1054,7 +1053,7 @@ var DomHelper = function () {
       }
     }
 
-    var children = mananger.getAllChildren(el)
+    var children = manager.getAllChildren(el)
     var results = []
 
     var curEl
@@ -1089,7 +1088,7 @@ var DomHelper = function () {
       }
 
       if (type.attributeKey || type.attributeValue) {
-        attributes = maanger.getElementAttributes(curEl)
+        attributes = manager.getElementAttributes(curEl)
         attributeIndex = 0
 
         for (key in attributes) {
@@ -1181,7 +1180,7 @@ var DomHelper = function () {
       span = document.createElement('span')
 
       // recursive
-      if (isObject(obj[key])) {
+      if (BaseObjectHelper.isObject(obj[key])) {
         span.appendChild(manager.nestedInputter(obj[key]))
       }
 
@@ -1201,25 +1200,45 @@ var DomHelper = function () {
   }
 
   manager.textNodesUnder = function (el) {
-    var n, a = [], walk = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null, false)
-    while (n = walk.nextNode()) a.push(n)
+    var n
+    var a = []
+    var walk = document.createTreeWalker(el, window.NodeFilter.SHOW_TEXT, null, false)
+    while ((n = walk.nextNode())) a.push(n)
     return a
   }
 
   manager.getElementsBySelectors = function (selectors, baseElement) {
     // Selector:
     // https://developer.mozilla.org/en-US/docs/Learn/CSS/Introduction_to_CSS/Selectors
-    var elements = []
+    let elements = []
 
     if (!baseElement) {
       baseElement = document
     }
 
-    for (var i = 0; i < selectors.length; i++) {
-      elements = elements.concat(Array.prototype.slice.call(baseElement.querySelectorAll(selectors[i])))
-    }
+    selectors.forEach(selector => {
+      let matchedElements = baseElement.querySelectorAll(selector)
+      matchedElements = Array.prototype.slice.call(matchedElements)
+      elements = elements.concat(matchedElements)
+    })
 
     return elements
+  }
+
+  manager.getElementsMappedToSelectors = function (selectors, baseElement) {
+    let selectorMap = {}
+
+    if (!baseElement) {
+      baseElement = document
+    }
+
+    selectors.forEach(selector => {
+      let matchedElements = baseElement.querySelectorAll(selector)
+      matchedElements = Array.prototype.slice.call(matchedElements)
+      selectorMap[selector] = matchedElements
+    })
+
+    return selectorMap
   }
 
   manager.getAllElements = function () {

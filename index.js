@@ -18,7 +18,10 @@ const classes = {
   // Sharer: require('./class/Sharer'),
   // StandardUnitHelper: require('./class/StandardUnitHelper'),
   StreamManager: require('./class/StreamManager'),
-  TextManager: require('./class/TextManager')
+  StreamHelper: require('./class/StreamHelper'),
+  TextManager: require('./class/TextManager'),
+  TrackHelper: require('./class/TrackHelper'),
+  TrackManager: require('./class/TrackManager')
 }
 
 module.exports = classes
