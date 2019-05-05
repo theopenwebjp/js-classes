@@ -31,7 +31,7 @@ const polyfill = {
 
 class StreamHelper {
   static startRecordingStream (stream, dataHandle, options) {
-  // Should be abstract
+    // Should be abstract
 
     var recorder = window.MediaRecorder(stream, options)
     recorder.ondataavailable = dataHandle
@@ -44,10 +44,10 @@ class StreamHelper {
   }
 
   /**
- * Create video element from stream
- * @param {MediaStream} stream
- * @return {HTMLVideo}
- */
+   * Create video element from stream
+   * @param {MediaStream} stream
+   * @return {HTMLVideo}
+   */
   static createStreamVideoElement (stream) {
     const video = document.createElement('video')
     video.autoplay = true
@@ -57,10 +57,10 @@ class StreamHelper {
   }
 
   /**
- * Checks if video exists
- * @param {MediaStream} stream
- * @return {Boolean}
- */
+   * Checks if video exists
+   * @param {MediaStream} stream
+   * @return {Boolean}
+   */
   static streamHasVideo (stream) {
     polyfill.ensure(stream, 'getVideoTracks', polyfill.getVideoTracks)
 
@@ -70,10 +70,10 @@ class StreamHelper {
   }
 
   /**
- * Checks if audio exists
- * @param {MediaStream} stream
- * @return {Boolean}
- */
+   * Checks if audio exists
+   * @param {MediaStream} stream
+   * @return {Boolean}
+   */
   static streamHasAudio (stream) {
     polyfill.ensure(stream, 'getAudioTracks', polyfill.getAudioTracks)
 
@@ -83,8 +83,8 @@ class StreamHelper {
   }
 
   static getUserMedia (callback, constraints) {
-  // Be careful of argument order change: navigator.getUserMedia(constraints, onSuccess, onError)
-  // Order changed due to constraints being optional
+    // Be careful of argument order change: navigator.getUserMedia(constraints, onSuccess, onError)
+    // Order changed due to constraints being optional
 
     if (!constraints) {
       constraints = {
@@ -110,10 +110,14 @@ class StreamHelper {
   }
 
   static handleCameraStream (stream, object) {
-    if (!stream) { return false }
+    if (!stream || stream.isError) {
+      return false
+    }
 
     var o = object
-    if (!o) { o = StreamHelper.StreamObject() }
+    if (!o) {
+      o = StreamHelper.StreamObject()
+    }
 
     // Set
     o.stream = stream
@@ -140,7 +144,7 @@ class StreamHelper {
   }
 
   static stopCameraStreamObject (o) {
-  // Stop Stream
+    // Stop Stream
     StreamHelper.stopCameraStream(o.stream)
 
     // Destroy video
@@ -171,13 +175,13 @@ class StreamHelper {
   }
 
   static getTracksByStatus (stream, status) {
-  /*
-    SPEC:
+    /*
+      SPEC:
 
-    Enabled/Disabled:
-    enabled = true
-    muted = false
-    */
+      Enabled/Disabled:
+      enabled = true
+      muted = false
+      */
 
     var tracks = StreamHelper.getTracks(stream)
     var fTracks = []
@@ -194,10 +198,10 @@ class StreamHelper {
       // ReadyState
       if (
         track.readyState !== undefined &&
-            (
-              (track.readyState === 'live' && !status) ||
-                (track.readyState === 'ended' && status)
-            )
+        (
+          (track.readyState === 'live' && !status) ||
+          (track.readyState === 'ended' && status)
+        )
       ) {
         continue
       }
@@ -252,17 +256,19 @@ class StreamHelper {
   static polyfillGetUserMedia () {
     navigator.getUserMedia = (
       navigator.getUserMedia ||
-    navigator.mozGetUserMedia ||
-    navigator.webkitGetUserMedia
+      navigator.mozGetUserMedia ||
+      navigator.webkitGetUserMedia
     )
   }
 
   static webcamToElement (constraints, element, callback) {
-  // Quick method to get webcam and show in element
+    // Quick method to get webcam and show in element
 
     StreamHelper.getUserMedia(function (data) {
       if (!data || data.isError) {
-        if (callback) { callback(data) }
+        if (callback) {
+          callback(data)
+        }
         return false
       } else {
         var stream = data
@@ -270,21 +276,25 @@ class StreamHelper {
 
       var streamObj = StreamHelper.handleCameraStream(stream)
 
-      if (!element) { element = document.body }
+      if (!element) {
+        element = document.body
+      }
       element.appendChild(streamObj.video)
 
-      if (callback) { callback(streamObj) }
+      if (callback) {
+        callback(streamObj)
+      }
     }, constraints)
   }
 
   static getUserMediaWithWorkingConstraints (constraints, onSuccess, onError) {
-  /*
-  Falls back to simpler constraints on fail.
-  Safe => Not safe
-  1. {video: true, audio: false} OR {video: false, audio: true}
-  2. {video: true, audio: true}
-  3. {video: {...}, audio: {...}
-  */
+    /*
+    Falls back to simpler constraints on fail.
+    Safe => Not safe
+    1. {video: true, audio: false} OR {video: false, audio: true}
+    2. {video: true, audio: true}
+    3. {video: {...}, audio: {...}
+    */
 
     var onErrorHandle = (err) => {
       var isError = false
@@ -318,7 +328,7 @@ class StreamHelper {
     // Firefox stream error bug fix
     // [Exception... "Component not initialized"  nsresult: "0xc1f30001 (NS_ERROR_NOT_INITIALIZED)"
     canvas.getContext('2d').fillRect(1, 1, 1, 1)
-    stream = canvas.captureStream()// Error above can possibly be fixed by passing value here.
+    stream = canvas.captureStream() // Error above can possibly be fixed by passing value here.
 
     return stream
   }
