@@ -50,7 +50,8 @@ var ImagePrompter = function (settings) {
     ],
 
     classes: {
-      streamManager: null
+      streamManager: null,
+      canvasManager: null
     },
 
     objects: {
@@ -146,8 +147,8 @@ var ImagePrompter = function (settings) {
     },
 
     setup: function (settings) {
-      if (!settings.classes.CanvasManager) {
-        throw new Error('REQUIRES CanvasManager')
+      if (!settings.classes.canvasManager) {
+        throw new Error('REQUIRES canvasManager')
       }
       if (!settings.classes.streamManager) {
         throw new Error('REQUIRES streamManager')
