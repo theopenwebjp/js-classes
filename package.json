@@ -10,6 +10,7 @@
   "author": "Damien Golding",
   "license": "MIT",
   "dependencies": {
+    "object-traverser": "git+https://github.com/goldingdamien/object-traverser.git",
     "js-functions": "git+https://github.com/goldingdamien/js-functions.git",
     "sweetalert2": "^8.10.0"
   },
