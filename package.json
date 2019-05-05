@@ -10,7 +10,8 @@
   "author": "Damien Golding",
   "license": "MIT",
   "dependencies": {
-    "js-functions": "git+https://github.com/goldingdamien/js-functions.git"
+    "js-functions": "git+https://github.com/goldingdamien/js-functions.git",
+    "sweetalert2": "^8.10.0"
   },
   "devDependencies": {
     "browserify": "^16.2.0",
