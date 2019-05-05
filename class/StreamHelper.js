@@ -130,10 +130,6 @@ class StreamHelper {
   }
 
   static stopCameraStream (stream) {
-    if (stream) {
-      return false
-    }
-
     // Stop tracks
     var tracks = StreamHelper.getStreamTracks(stream)
     for (var i = 0; i < tracks.length; i++) {
