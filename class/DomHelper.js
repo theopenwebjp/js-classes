@@ -1,4 +1,7 @@
-const {Utility, BaseObjectHelper} = require('js-functions')
+const {
+  Utility,
+  BaseObjectHelper
+} = require('js-functions')
 
 /**
  * Collection of DOM helper functions.
@@ -43,7 +46,9 @@ var DomHelper = function () {
   /* public */
   manager.createElements = function (settingsArr, defaults) {
     var elements = settingsArr.map(function (settings) {
-      if (defaults) { settings = Utility.combineObjects([settingsArr, defaults]) }
+      if (defaults) {
+        settings = Utility.combineObjects([settingsArr, defaults])
+      }
 
       return manager.createElement(settings)
     })
@@ -167,7 +172,11 @@ var DomHelper = function () {
     </div>
     */
 
-    if (!handle) { handle = function (arr) { return arr } }
+    if (!handle) {
+      handle = function (arr) {
+        return arr
+      }
+    }
 
     var div = document.createElement('div')
 
@@ -307,9 +316,12 @@ var DomHelper = function () {
 
   /* public */
   manager.createBreadcrumbList = function (links, separator) {
-    if (!separator) { separator = ' > ' }
+    if (!separator) {
+      separator = ' > '
+    }
 
-    var list = document.createElement('span'); var link, span, a
+    var list = document.createElement('span')
+    var link, span, a
     for (var i = 0; i < links.length; i++) {
       link = links[i]
 
@@ -451,8 +463,8 @@ var DomHelper = function () {
     var childSettings
     var i, key
 
-    childSettings = manager.createClass('DomElementSettings', format)// New child setting.
-    childSettings.children = []// Initialize because overwritten by format replacements.
+    childSettings = manager.createClass('DomElementSettings', format) // New child setting.
+    childSettings.children = [] // Initialize because overwritten by format replacements.
 
     // Replaceable: tag, attribute values, textContent, innerHTML
     manager._applyObjectReplacement(childSettings, item, 'tag', replacements)
@@ -604,7 +616,8 @@ var DomHelper = function () {
       }
 
       form.appendChild(div)
-    }window.f = form
+    }
+    window.f = form
 
     return form
   }
@@ -624,7 +637,6 @@ var DomHelper = function () {
   }
 
   manager.setStylePosition = function (el, position) {
-    console.log(el, position)
     var allowed = ['top', 'right', 'bottom', 'left']
     return manager.setStyleMeasurements(el, position, allowed)
   }
@@ -635,10 +647,14 @@ var DomHelper = function () {
   }
 
   manager.setStyleMeasurements = function (el, obj, allowed, unit) {
-    if (!unit) { unit = 'px' }
+    if (!unit) {
+      unit = 'px'
+    }
     var s = el.style
     for (var key in obj) {
-      if (obj[key] === null) { continue }
+      if (obj[key] === null) {
+        continue
+      }
 
       if (!allowed || allowed.indexOf(key) >= 0) {
         s[key] = obj[key] + unit
@@ -669,7 +685,9 @@ var DomHelper = function () {
 
     // Continuous
     var handle = function () {
-      if (!el.parentElement) { window.removeEventListener('scroll', handle) } else {
+      if (!el.parentElement) {
+        window.removeEventListener('scroll', handle)
+      } else {
         manager.displayElementAtScreenDimensions(el, dimensions)
       }
     }
@@ -681,7 +699,9 @@ var DomHelper = function () {
   manager.displayElementAtPageDimensions = function (el, dimensions) {
     // Must be added to DOM body
     if (el.parentElement !== document.body) {
-      if (el.parentElement) { el.parentElement.removeChild(el) }
+      if (el.parentElement) {
+        el.parentElement.removeChild(el)
+      }
 
       document.body.appendChild(el)
     }
@@ -697,7 +717,7 @@ var DomHelper = function () {
 
   manager.showAboveElement = function (shownElement, targetElement, options) {
     if (!options) {
-      options = {// Margins
+      options = { // Margins
         top: null,
         left: null
       }
@@ -707,8 +727,8 @@ var DomHelper = function () {
     shownElement.style.position = 'fixed'
 
     // Dimensions
-    var dimensions = manager.getElementPageDimensions(targetElement); console.log(dimensions)
-    manager.applyMarginsToDimensions(options, dimensions); console.log(dimensions)
+    var dimensions = manager.getElementPageDimensions(targetElement)
+    manager.applyMarginsToDimensions(options, dimensions)
 
     // Display
     return manager.displayElementAtPageDimensions(shownElement, dimensions)
@@ -755,7 +775,9 @@ var DomHelper = function () {
       }
     }
 
-    if (!p.__listenerChangeHandles[eventName]) { p.__listenerChangeHandles[eventName] = [] }
+    if (!p.__listenerChangeHandles[eventName]) {
+      p.__listenerChangeHandles[eventName] = []
+    }
 
     p.__listenerChangeHandles[eventName].push(handle)
   }
@@ -763,8 +785,12 @@ var DomHelper = function () {
   manager.stopWatchingHtmlElementListenerChanges = function (eventName, handle) {
     var p = window.HTMLElement.prototype
 
-    if (!p.__listenerChangeHandles) { return false }
-    if (!p.__listenerChangeHandles[eventName]) { return false }
+    if (!p.__listenerChangeHandles) {
+      return false
+    }
+    if (!p.__listenerChangeHandles[eventName]) {
+      return false
+    }
 
     var index = p.__listenerChangeHandles[eventName].indexOf(handle)
     if (index >= 0) {
@@ -831,7 +857,7 @@ var DomHelper = function () {
   }
 
   manager.getParents = function (el) {
-    var parents = []// From closest to furthest
+    var parents = [] // From closest to furthest
     var nextParent = el.parentElement
     while (nextParent) {
       parents.push(nextParent)
@@ -895,7 +921,9 @@ var DomHelper = function () {
 
     for (var i = 0; i < ids.length; i++) {
       element = manager.e(ids[i])
-      if (element) { elements.push(element) }
+      if (element) {
+        elements.push(element)
+      }
     }
 
     return elements
@@ -979,7 +1007,9 @@ var DomHelper = function () {
     // Apply on click
     el.addEventListener('click', function (ev) {
       // console.log(ev)
-      if (ev.target !== el) { return false }
+      if (ev.target !== el) {
+        return false
+      }
       ev.preventDefault()
       fileEl.click()
     }, true)
@@ -997,7 +1027,9 @@ var DomHelper = function () {
     var defaultData = null
     var i, key
 
-    if (!el) { return defaultData }
+    if (!el) {
+      return defaultData
+    }
 
     if (p.type === 'tag') {
       return el.tagName
@@ -1041,7 +1073,9 @@ var DomHelper = function () {
     }
 
     */
-    if (!el) { el = document }
+    if (!el) {
+      el = document
+    }
     if (!type) {
       type = {
         tag: false,
@@ -1049,7 +1083,7 @@ var DomHelper = function () {
         attributeKey: false,
         attributeValue: false,
 
-        handle: null// function(el){return result;}//If non-falsy, adds.
+        handle: null // function(el){return result;}//If non-falsy, adds.
       }
     }
 
@@ -1179,13 +1213,9 @@ var DomHelper = function () {
       // Value
       span = document.createElement('span')
 
-      // recursive
-      if (BaseObjectHelper.isObject(obj[key])) {
+      if (BaseObjectHelper.isObject(obj[key])) { // recursive
         span.appendChild(manager.nestedInputter(obj[key]))
-      }
-
-      // input
-      else {
+      } else { // input
         input = document.createElement('input')
         input.setAttribute('type', 'text')
         input.value = obj[key]
@@ -1287,9 +1317,11 @@ var DomHelper = function () {
   }
 
   manager.getNestedAttributeListFromElement = function (el, attr) {
-    if (!el) { el = document }
+    if (!el) {
+      el = document
+    }
 
-    var elements = manager.getElementsBySelectors([ manager.getAttributeSelector(attr) ], el)
+    var elements = manager.getElementsBySelectors([manager.getAttributeSelector(attr)], el)
     var list = elements.map(function (val) {
       return val.getAttribute(attr)
     })
@@ -1325,7 +1357,7 @@ var DomHelper = function () {
   }
 
   manager.convertTableHtmlToArray = function (html) {
-    var element = document.createElement('div')// Wrapper
+    var element = document.createElement('div') // Wrapper
     element.innerHTML = html
     var table = element.getElementsByTagName('table')[0]
     var arr = manager.convertTableElementToArray(table)

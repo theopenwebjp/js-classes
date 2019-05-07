@@ -13,40 +13,40 @@ const domHelper = new DomHelper()
 var ImagePrompter = function (settings) {
   var prompter = {
     options: [{
-      name: 'File',
-      events: {
-        create: function (el, option) {
-          console.log('create', el, option)
-          domHelper.setClickFileHandler(el, function (event) {
-            prompter.loadImageFromFile(event, prompter.events.select)
+        name: 'File',
+        events: {
+          create: function (el, option) {
+            console.log('create', el, option)
+            domHelper.setClickFileHandler(el, function (event) {
+              prompter.loadImageFromFile(event, prompter.events.select)
+              prompter.hide()
+            })
+          }
+        }
+      },
+      {
+        name: 'Webcam',
+        events: {
+          click: function (el, option) {
+            console.log('click', el, option)
+            // prompter.takeBlindPhoto(prompter.events.select)
+            prompter.takePreviewablePhoto(prompter.events.select)
             prompter.hide()
-          })
+          }
+        }
+      },
+      {
+        name: 'Empty',
+        events: {
+          click: function (el, option) {
+            console.log('click', el, option)
+            var image = document.createElement('img')
+            image.src = ''
+            prompter.events.select(image)
+            prompter.hide()
+          }
         }
       }
-    },
-    {
-      name: 'Webcam',
-      events: {
-        click: function (el, option) {
-          console.log('click', el, option)
-          // prompter.takeBlindPhoto(prompter.events.select)
-          prompter.takePreviewablePhoto(prompter.events.select)
-          prompter.hide()
-        }
-      }
-    },
-    {
-      name: 'Empty',
-      events: {
-        click: function (el, option) {
-          console.log('click', el, option)
-          var image = document.createElement('img')
-          image.src = ''
-          prompter.events.select(image)
-          prompter.hide()
-        }
-      }
-    }
     ],
 
     classes: {
@@ -75,7 +75,7 @@ var ImagePrompter = function (settings) {
           callback(image)
         }
         image.onerror = function (err) {
-          console.error(err)
+          console.error('loadImageFromFile onerror', err)
         }
       }, {
         method: 'readAsDataURL'
@@ -263,7 +263,7 @@ var ImagePrompter = function (settings) {
 
       prompter.elements.list.style.display = 'none'
 
-      swal.close()
+      Swal.close()
     }
   }
 

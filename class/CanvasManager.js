@@ -35,12 +35,14 @@ function CanvasManager () {
 
     // Defaults
     var format = 'png'
-    var serialization = 'image'// data_url
+    var serialization = 'image' // data_url
     var onLoad = null
     var conversionOptions = null
 
     // Options
-    if (!options) { options = {} }
+    if (!options) {
+      options = {}
+    }
     for (var key in options) {
       if (key === 'format') {
         format = options[key]
@@ -119,17 +121,17 @@ function CanvasManager () {
       }
     }
     img.onerror = function (err) {
-      console.log(err)
-    }; console.log(dataURL)
+      console.error('canvasToImageFile error', err)
+    }
     img.src = dataURL
 
     return img
   }
 
   /**
-     * Watches for canvas stop, usual for WebRTC connection problems in older browsers.
-     * Stops on first stop.
-     */
+   * Watches for canvas stop, usual for WebRTC connection problems in older browsers.
+   * Stops on first stop.
+   */
   cManager.watchForCanvasStop = function (canvas, onStop, options) {
     var ms = options.interval || 2000
 
@@ -151,8 +153,8 @@ function CanvasManager () {
   }
 
   /**
-     * Returns boolean for quick imageData checking.
-     */
+   * Returns boolean for quick imageData checking.
+   */
   cManager.isImageDataSame = function (imgData1, imgData2) {
     if (imgData1.data.length !== imgData2.data.length) {
       return false
@@ -185,10 +187,18 @@ function CanvasManager () {
     }
 
     for (var i = 0; i < data.length; i += step) {
-      if (options.r && data[i + 0]) { return true }
-      if (options.g && data[i + 1]) { return true }
-      if (options.b && data[i + 2]) { return true }
-      if (options.a && data[i + 3]) { return true }
+      if (options.r && data[i + 0]) {
+        return true
+      }
+      if (options.g && data[i + 1]) {
+        return true
+      }
+      if (options.b && data[i + 2]) {
+        return true
+      }
+      if (options.a && data[i + 3]) {
+        return true
+      }
     }
 
     // FAILED
@@ -225,10 +235,18 @@ function CanvasManager () {
         x = index % cHeight
         y = Math.floor(index / cWidth)
 
-        if (boundingRect.top === null || y < boundingRect.top) { boundingRect.top = y }
-        if (boundingRect.bottom === null || y > boundingRect.bottom) { boundingRect.bottom = y }
-        if (boundingRect.left === null || x < boundingRect.left) { boundingRect.left = x }
-        if (boundingRect.right === null || x > boundingRect.right) { boundingRect.right = x }
+        if (boundingRect.top === null || y < boundingRect.top) {
+          boundingRect.top = y
+        }
+        if (boundingRect.bottom === null || y > boundingRect.bottom) {
+          boundingRect.bottom = y
+        }
+        if (boundingRect.left === null || x < boundingRect.left) {
+          boundingRect.left = x
+        }
+        if (boundingRect.right === null || x > boundingRect.right) {
+          boundingRect.right = x
+        }
       }
     }
 
@@ -257,7 +275,7 @@ function CanvasManager () {
     cRenderer.context = null
     cRenderer.rate = 1000 / 20
     cRenderer.interval = null
-    cRenderer.muted = false// Allows for keeping rate
+    cRenderer.muted = false // Allows for keeping rate
 
     cRenderer.setup = function (settings) {
       for (var key in settings) {

@@ -182,13 +182,6 @@ var FunctionWrapper = function () {
     // Reference
     wrapper.handleWrapReference(wrapperFunction, reference)
 
-    if (func.name === 'isCapitalLetter') {
-      console.log('isCapitalLetter')
-      console.log('func')
-      console.log(func)
-      console.log(reference)
-      console.log(wrapperFunction)
-    }
     return wrapperFunction
   }
 
@@ -200,8 +193,10 @@ var FunctionWrapper = function () {
     var wrapperFunction = function () {
       // ??bug: loopObject has no func.__wrapStatus. Why?
       if (func.name === 'loopObject' || !wrapperFunction.__wrapStatus) {
+        /*
         console.log(func.name)
         console.log(wrapperFunction.__wrapStatus)
+        */
       }
 
       var ignoreWrap = false
@@ -339,9 +334,7 @@ var FunctionWrapper = function () {
 
     wrapper.startStackTrace(obj)
     var onComplete = function () {
-      console.log(Utility.removeNonCharacters)
       var stackTrace = wrapper.stopStackTrace()
-      console.log(stackTrace[0])
       // Omit func
       stackTrace.shift()
 
@@ -388,7 +381,7 @@ var FunctionWrapper = function () {
 
   /* public */
   wrapper.unwrapFunctions = function () {
-    console.log('unwrap') // ??
+    // console.log('unwrap') // ??
     var wrapped = wrapper.status.wrap.wrapped
     for (var i = 0; i < wrapped.length; i++) {
       wrapper.unwrapFunction(wrapped[i])
