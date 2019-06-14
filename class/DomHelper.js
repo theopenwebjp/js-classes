@@ -1329,10 +1329,28 @@ var DomHelper = function () {
     return list
   }
 
-  manager.setElementAsEditable = function (el, handle, bool) {
-    // Sets as editable but not necessary in edit mode.
+  /**
+   * Sets as editable or non-editable.
+   * Adds/removes onChange event depending on edit mode.
+   * @param {HTMLElement} el
+   * @param {Function} onChange
+   * @param {Boolean} bool
+   * @see https://stackoverflow.com/questions/8694054/onchange-event-with-contenteditable
+   */
+  manager.setElementAsEditable = function (el, onChange, bool) {
+    // Ignore no change
+    if(el.contentEditable === bool){
+      return
+    }
     el.contentEditable = bool
-    el.addEventListener('change', handle)
+    if (bool) {
+      el.addEventListener('input', onChange)
+      // el.addEventListener("DOMNodeInserted", onChange, false)
+      // el.addEventListener("DOMNodeRemoved", onChange, false)
+      // el.addEventListener("DOMCharacterDataModified", onChange, false) // Use this if input fails.
+    } else {
+      el.removeEventListener('input', onChange)
+    }
   }
 
   manager.setEditMode = function (attr, bool) {
