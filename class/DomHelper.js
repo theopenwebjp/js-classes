@@ -1339,7 +1339,7 @@ var DomHelper = function () {
    */
   manager.setElementAsEditable = function (el, onChange, bool) {
     // Ignore no change
-    if(el.contentEditable === bool){
+    if (el.contentEditable === bool) {
       return
     }
     el.contentEditable = bool
