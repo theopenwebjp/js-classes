@@ -21,10 +21,17 @@ var ClassManager = function (settings) {
     };
   }
 
+  /**
+   * @return {Array}
+   */
   manager.getClassMappingOptionsFromSchema = function () {
     return manager.SimpleDataToClassMappingOptions(manager.schemaManager.schemaList);
   }
 
+  /**
+   * @param {Array} classNames
+   * @return {Array}
+   */
   manager.SimpleDataToClassMappingOptions = function (classNames) { //??test
     return [{
       condition: {
@@ -43,6 +50,11 @@ var ClassManager = function (settings) {
     }];
   }
 
+  /**
+   * @param {String} className
+   * @param {Object} options
+   * @return {Object}
+   */
   manager.getClass = function (className, options) {
     /*Gets class by passing name and options(including data)*/
     if (!options) {
@@ -67,6 +79,11 @@ var ClassManager = function (settings) {
     return classObj;
   }
 
+  /**
+   * @param {Object} args
+   * @param {Object} options
+   * @return {Object}
+   */
   manager.mapArguments = function (args, options) {
 
     //No data mapper
@@ -88,16 +105,42 @@ var ClassManager = function (settings) {
     return manager.dataMapper.map(args, options);
   }
 
+  /**
+   * @param {Object} classObj
+   * @param {Object} baseClass
+   * @return {Object}
+   */
   manager.inheritClass = function (classobj, baseClass) {
     return Object.assign(classobj, baseClass);
   }
 
-  manager.setup = function (settings) {
-    if (!settings || !settings.schemaManager) {
-      throw Error("ClassManager requires SchemaManager");
+  /**
+   * @param {Settings} settings
+   */
+  manager.setup = function (settings = {}) {
+    if (!settings.schemaManager) {
+      throw Error("ClassManager requires implementation of this.SchemaManager");
+    }
+
+    if (settings.dataMapper) {
+      manager.dataMapper = settings.dataMapper
     }
 
     manager.schemaManager = settings.schemaManager;
+  }
+
+  manager.Settings = function () {
+    return {
+      schemaManager: null,
+      dataMapper: null
+    }
+  }
+
+  manager.SchemaManager = function () {
+    return {
+      schema: (schemaList, className, data, schemaOptions) => {},
+      schemaList: {}
+    }
   }
 
   manager.setup(settings);
