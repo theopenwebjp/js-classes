@@ -6,28 +6,27 @@
  * //Old: http://www.loc.gov/standards/iso639-2/php/English_list.php
  * Name deprecated. Use I18n class instead.
  * Similar libary exists: https://github.com/i18next/i18next
- * Should use similar libary and unite functions over time. However some functions may be unique here.
- * @param {*} settings
-/**
- *
- *
- * @param {*} settings
+ * Should use similar library and unite functions over time. However some functions may be unique here.
+ * @param {Settings} settings
  * @returns
  */
 var TextManager = function (settings) {
   var manager = {}
 
-  manager.settings = {
-    auto: true,
-    actionHandler: null, // Pass in to allow url param handling
-    languageParam: 'language',
-    defaultLanguage: '',
-    language: '',
-    languages: {
-      // Language
-    },
-    languageFormat: 'iso639-3',
-    characterSet: 'standard'
+  manager.settings = manager.Settings()
+
+  manager.Settings = function () {
+    return {
+      auto: true,
+      languageParam: 'language',
+      defaultLanguage: '',
+      language: '',
+      languages: {
+        // Language
+      },
+      languageFormat: 'iso639-3',
+      characterSet: 'standard'
+    }
   }
 
   manager.Language = function () {
@@ -37,7 +36,7 @@ var TextManager = function (settings) {
   }
 
   manager.help = function () {
-    alert('Language codes use: ' + 'iso639-3')
+    window.alert('Language codes use: ' + 'iso639-3')
   }
 
   manager.setup = function (settings) {
@@ -59,6 +58,10 @@ var TextManager = function (settings) {
     }
   }
 
+  /**
+   * Setup checks
+   * @return {Boolean} Whether check failed or not
+   */
   manager.check = function () {
     /*
     Should allow languageFormat + character sets
@@ -83,13 +86,44 @@ var TextManager = function (settings) {
     return true
   }
 
-  manager.getLanguage = function (language) {
+  /**
+   * Get current language name
+   * @return {String}
+   */
+  manager.getLanguage = function () {
     return manager.settings.language
   }
 
+  /**
+   * Set current language
+   * @param {String} language
+   * @return {Boolean} Whether was able to set or not.
+   */
   manager.setLanguage = function (language) {
     if (language && manager.settings.languages[language]) {
       manager.settings.language = language
+      return true
+    } else {
+      return false
+    }
+  }
+
+  /**
+   * Get default language name
+   * @return {String}
+   */
+  manager.getDefaultLanguage = function () {
+    return manager.settings.defaultLanguage
+  }
+
+  /**
+   * Set default language
+   * @param {String} language
+   * @return {Boolean} Whether was able to set or not.
+   */
+  manager.setDefaultLanguage = function (language) {
+    if (language && manager.settings.languages[language]) {
+      manager.settings.defaultLanguage = language
       return true
     } else {
       return false
@@ -171,7 +205,7 @@ var TextManager = function (settings) {
   }
 
   manager.setLanguageFromEnvironment = function () {
-    if (!manager.setLanguageFromUrlParam()) {
+    if (!manager.setLanguageFromUrlParam().current) {
       manager.setLanguageFromBrowserLanguage()
     }
   }
@@ -183,38 +217,27 @@ var TextManager = function (settings) {
   }
 
   /**
-   * @param {Function} actionHandler actionHandler(url, actions[key] = handleLanguage(language))
-   * @param {Function} onTextUpdate
-   * @param {String} key
+   * @param {Object} keys GET keys to be used {current, default}
+   * @return {Object} Implemented languages by key {current, default}
    */
-  manager.setLanguageFromUrlParam = function (actionHandler, onTextUpdate, key) {
-    // actionHandler: uriActionHandler OR independent implementation
-    var url = window.location.href
-
-    if (!key) {
-      key = manager.settings.languageParam
+  manager.setLanguageFromUrlParam = function (keys = {}) {
+    // Default keys
+    const getKeys = {
+      current: keys.current || manager.settings.languageParam,
+      default: keys.default || manager.settings.defaultLanguageParam
     }
 
-    if (!actionHandler) {
-      actionHandler = manager.settings.actionHandler
-      if (!actionHandler) {
-        return false
-      }
+    const url = window.location.href
+
+    const getValues = {
+      current: (new URL(url)).searchParams.get(getKeys.current),
+      default: (new URL(url)).searchParams.get(getKeys.default)
     }
 
-    var handleLanguage = function (language) {
-      var bool = manager.setLanguage(language)
-      if (bool && onTextUpdate) {
-        onTextUpdate()
-      }
-      return bool
+    return {
+      current: getValues.current ? manager.setLanguage(getValues.current) : false,
+      default: getValues.default ? manager.setDefaultLanguage(getValues.default) : false
     }
-
-    var actions = {}
-    actions[key] = handleLanguage
-
-    var results = actionHandler(url, actions)
-    return results
   }
 
   manager.setup(settings)
