@@ -13,8 +13,6 @@
 var TextManager = function (settings) {
   var manager = {}
 
-  manager.settings = manager.Settings()
-
   manager.Settings = function () {
     return {
       auto: true,
@@ -40,6 +38,8 @@ var TextManager = function (settings) {
   }
 
   manager.setup = function (settings) {
+    manager.settings = manager.Settings()
+
     // Settings
     if (settings) {
       for (var key in settings) {
