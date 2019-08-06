@@ -82,9 +82,16 @@ class StreamHelper {
     return StreamHelper.trackHasData(track)
   }
 
+  /**
+  * Simple handling of getUserMedia
+  * Be careful of argument order change: navigator.getUserMedia(constraints, onSuccess, onError)
+  * Order changed due to constraints being optional.
+  * @deprecated This was used as during early adoption of this feature, but now it is standardized should use promises instead.
+  * @param {Function} callback
+  * @param {Object} constraints
+   */
   static getUserMedia (callback, constraints) {
-    // Be careful of argument order change: navigator.getUserMedia(constraints, onSuccess, onError)
-    // Order changed due to constraints being optional
+    
 
     if (!constraints) {
       constraints = {
@@ -106,7 +113,7 @@ class StreamHelper {
       callback(error)
     }
 
-    return navigator.getUserMedia(constraints, onSuccess, onError)
+    navigator.getUserMedia(constraints, onSuccess, onError)
   }
 
   static handleCameraStream (stream, object) {
@@ -143,14 +150,20 @@ class StreamHelper {
     }
   }
 
-  static stopCameraStreamObject (o) {
+  /**
+  * Stops stream and related data
+  * @param {Object} o
+  * @param {Boolean} removeFromDom
+  * @return {void}
+   */
+  static stopCameraStreamObject (o, removeFromDom = false) {
     // Stop Stream
     StreamHelper.stopCameraStream(o.stream)
 
     // Destroy video
     if (o.video) {
       o.video.src = ''
-      if (o.video.parentElement) {
+      if (removeFromDom && o.video.parentElement) {
         o.video.parentElement.removeChild(o.video)
       }
     }
@@ -287,15 +300,47 @@ class StreamHelper {
     }, constraints)
   }
 
-  static getUserMediaWithWorkingConstraints (constraints, onSuccess, onError) {
-    /*
-    Falls back to simpler constraints on fail.
-    Safe => Not safe
-    1. {video: true, audio: false} OR {video: false, audio: true}
-    2. {video: true, audio: true}
-    3. {video: {...}, audio: {...}
-    */
+  static getUnlimitedConstraints () {
+    return {
+      video: true,
+      audio: true
+    }
+  }
 
+  /**
+  * Attempts to get best constraints with best video.
+  * @return {Promise}
+   */
+  static getBestConstraints() {
+    return new Promise((resolve, reject) => {
+      StreamHelper.getUserMediaWithWorkingConstraints(null, (stream) => {
+        resolve(StreamHelper.getStreamConstraints(stream))
+      }, reject)
+    })
+  }
+
+  static getStreamConstraints (stream) {
+    const tracks = stream.getTracks()
+    const constraints = {}
+    tracks.forEach(track => {
+      const trackConstraints = track.getConstraints()
+      constraints[track.kind] = Object.keys(trackConstraints).length > 0 ? trackConstraints : true
+    })
+    return constraints
+  }
+
+  /**
+  * Attempts to getUserMedia with best video.
+  * Falls back to simpler constraints on fail.
+  *   Safe => Not safe
+  *   1. {video: true, audio: false} OR {video: false, audio: true}
+  *   2. {video: true, audio: true}
+  *   3. {video: {...}, audio: {...}
+   */
+  static getUserMediaWithWorkingConstraints (constraints = null, onSuccess, onError) {
+    if (!constraints) {
+      constraints = StreamHelper.getUnlimitedConstraints()
+    }
     var onErrorHandle = (err) => {
       var isError = false
 

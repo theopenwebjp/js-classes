@@ -33,6 +33,8 @@ class StreamManager {
     this.streamHasAudio = StreamHelper.streamHasAudio
     this.trackHasData = TrackHelper.trackHasData
 
+    this.StreamHelper = StreamHelper
+
     this.setup()
   }
 
