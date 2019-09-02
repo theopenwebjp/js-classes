@@ -10,6 +10,11 @@ const {
 var DomHelper = function () {
   var manager = {}
 
+  /**
+   * @param {string} type
+   * @param {object} options
+   * @return {object}
+   */
   manager.createClass = function (type, options) {
     var obj = manager[type]()
     for (var key in options) {
@@ -19,6 +24,9 @@ var DomHelper = function () {
     return obj
   }
 
+  /**
+   * @return {object}
+   */
   manager.DomElementSettings = function () {
     var settings = {
       tag: '',
@@ -32,6 +40,9 @@ var DomHelper = function () {
     return settings
   }
 
+  /**
+   * @return {object}
+   */
   manager.ChildrenSettings = function () {
     // Settings for lists
     var settings = {
@@ -43,7 +54,12 @@ var DomHelper = function () {
     return settings
   }
 
-  /* public */
+  /**
+   * @public
+   * @param {array} settingsArr
+   * @param {array} defaults
+   * @return {array}
+   */
   manager.createElements = function (settingsArr, defaults) {
     var elements = settingsArr.map(function (settings) {
       if (defaults) {
@@ -55,7 +71,11 @@ var DomHelper = function () {
     return elements
   }
 
-  /* public */
+  /**
+   * @public
+   * @param {object}
+   * @return {HTMLElement}
+   */
   manager.createElement = function (settings) {
     settings = manager.createClass('DomElementSettings', settings)
     var el = document.createElement(settings.tag)
@@ -74,15 +94,24 @@ var DomHelper = function () {
     return el
   }
 
-  /* public */
+  /**
+   * Helper for applying array of items to element settings.
+   * @public
+   * @param {object} settings
+   * @param {object} childrenSettings
+   * @return {array}
+   */
   manager.setChildrenSettings = function (settings, childrenSettings) {
-    // Helper for applying array of items to element settings.
     childrenSettings = manager.createClass('ChildrenSettings', childrenSettings)
     settings.children = manager._handleChildrenReplacements(childrenSettings)
     return settings.children
   }
 
-  /* public */
+  /**
+   * @public
+   * @param {array} rows
+   * @return {HTMLTableElement}
+   */
   manager.createTable = function (rows) {
     var table = document.createElement('table')
     var cols
@@ -106,7 +135,11 @@ var DomHelper = function () {
     return table
   }
 
-  /* public */
+  /**
+   * @public
+   * @param {array} nameValues
+   * @return {HTMLUListElement}
+   */
   manager.createElementList = function (nameValues) {
     var list = nameValues.map(function (nameValue) {
       var elementSettings = nameValue.value
@@ -123,7 +156,10 @@ var DomHelper = function () {
     return manager.createCommonList(list)
   }
 
-  /* public */
+  /**
+   * @param {object} obj
+   * @return {HTMLUListElement}
+   */
   manager.createKeyValueList = function (obj) {
     // key: val => int: {name, value}
     var list = []
@@ -138,7 +174,10 @@ var DomHelper = function () {
     return manager.createCommonList(list)
   }
 
-  /* public */
+  /**
+   * @param {array} arr
+   * @return {HTMLUListElement}
+   */
   manager.createList = function (arr) {
     var ul = document.createElement('ul')
     var li
@@ -159,7 +198,13 @@ var DomHelper = function () {
     return ul
   }
 
-  /* public */
+  /**
+   * @public
+   * @param {function} handle
+   * @param {string} headerText
+   * @param {array} arr
+   * @return {HTMLDivElement}
+   */
   manager.createHeadedArrayElement = function (handle, headerText, arr) {
     /*
     HEADER
@@ -191,22 +236,42 @@ var DomHelper = function () {
     return div
   }
 
-  /* public */
+  /**
+   * @public
+   * @param {string} header
+   * @param {array} arr
+   * @return {HTMLDivElement}
+   */
   manager.createHeadedTable = function (header, arr) {
     return manager.createHeadedArrayElement(manager.createTable, header, arr)
   }
 
-  /* public */
+  /**
+   * @public
+   * @param {string} header
+   * @param {array} arr
+   * @return {HTMLDivElement}
+   */
   manager.createHeadedList = function (header, arr) {
     return manager.createHeadedArrayElement(manager.createList, header, arr)
   }
 
-  /* public */
+  /**
+   * @public
+   * @param {string} header
+   * @param {object} obj
+   * @return {HTMLDivElement}
+   */
   manager.createHeadedKeyValueList = function (header, obj) {
     return manager.createHeadedArrayElement(manager.createKeyValueList, header, obj)
   }
 
-  /* public */
+  /**
+   * @public
+   * @param {HTMLElement} parentEl
+   * @param {object} settings
+   * @return {HTMLUListElement}
+   */
   manager.setupMenuList = function (parentEl, settings) {
     /*
     <ul>
@@ -314,7 +379,12 @@ var DomHelper = function () {
     return ul
   }
 
-  /* public */
+  /**
+   * @public
+   * @param {array} links
+   * @param {string} separator
+   * @return {HTMLSpanElement}
+   */
   manager.createBreadcrumbList = function (links, separator) {
     if (!separator) {
       separator = ' > '
@@ -357,7 +427,11 @@ var DomHelper = function () {
     return list
   }
 
-  /* public */
+  /**
+   * @public
+   * @param {array} nameValues
+   * @return {HTMLDivElement}
+   */
   manager.groupify = function (nameValues) {
     var wrapper = document.createElement('div')
     var el
@@ -370,7 +444,10 @@ var DomHelper = function () {
     return wrapper
   }
 
-  /* public */
+  /**
+   * @public
+   * @param {HTMLFormElement} form
+   */
   manager.clearForm = function (form) {
     console.log('clearForm', form)
     var elements = form.elements
@@ -421,6 +498,9 @@ var DomHelper = function () {
     }
   }
 
+  /**
+   * @private
+   */
   manager._setEvents = function (el, events) {
     var event
     for (var key in events) {
@@ -435,6 +515,9 @@ var DomHelper = function () {
     }
   }
 
+  /**
+   * @private
+   */
   manager._setChildren = function (el, settingsArr) {
     var children = []
     for (var i = 0; i < settingsArr.length; i++) {
@@ -446,6 +529,9 @@ var DomHelper = function () {
     return el
   }
 
+  /**
+   * @private
+   */
   manager._handleChildrenReplacements = function (childrenSettings) {
     var items = childrenSettings.items
     var children = []
@@ -459,6 +545,9 @@ var DomHelper = function () {
     return children
   }
 
+  /**
+   * @private
+   */
   manager._handleChildReplacements = function (item, format, replacements) {
     var childSettings
     var i, key
@@ -486,6 +575,9 @@ var DomHelper = function () {
     return childSettings
   }
 
+  /**
+   * @private
+   */
   manager._applyObjectReplacement = function (obj, item, elementPropKey, replacements) {
     for (var key in replacements) {
       if (obj[elementPropKey] === key) {
@@ -494,18 +586,32 @@ var DomHelper = function () {
     }
   }
 
+  /**
+   * @public
+   * @param {HTMLElement} el
+   * @param {array} children
+   */
   manager.appendChildren = function (el, children) {
     for (var i = 0; i < children.length; i++) {
       el.appendChild(children[i])
     }
   }
 
+  /**
+   * @public
+   * @param {HTMLElement} el
+   * @param {object} attributes
+   */
   manager.setAttributes = function (el, attributes) {
     for (var key in attributes) {
       el.setAttribute(key, attributes[key])
     }
   }
 
+  /**
+   * @public
+   * @return {object}
+   */
   manager.NameValue = function () {
     return {
       name: '',
@@ -513,11 +619,14 @@ var DomHelper = function () {
     }
   }
 
+  /**
+   * DOM list with name value pairs.
+   * Common in Android settings pages.
+   * @public
+   * @param {array} arr
+   * @return {HTMLUListElement}
+   */
   manager.createCommonList = function (arr) {
-    /*
-    DOM list with name value pairs.
-    Common in Android settings pages.
-    */
     var list = []
     var cur, curVal, item, span
 
@@ -545,6 +654,10 @@ var DomHelper = function () {
     return manager.createList(list)
   }
 
+  /**
+   * @public
+   * @return {object}
+   */
   manager.FormOptions = function () {
     return {
       method: 'POST',
@@ -556,6 +669,11 @@ var DomHelper = function () {
     }
   }
 
+  /**
+   * @param {HTMLElement} form
+   * @param {object} options
+   * @return {HTMLFormElement}
+   */
   manager.formify = function (el, options) {
     // Options
     var fOptions = manager.FormOptions()
@@ -622,10 +740,20 @@ var DomHelper = function () {
     return form
   }
 
+  /**
+   * @public
+   * @param {HTMLElement} el
+   * @return {DOMRect}
+   */
   manager.getElementScreenDimensions = function (el) {
     return el.getBoundingClientRect()
   }
 
+  /**
+   * @public
+   * @param {HTMLElement} el
+   * @return {DOMRect}
+   */
   manager.getElementPageDimensions = function (el) {
     var rect = BaseObjectHelper.copyObjectData(el.getBoundingClientRect())
     rect.top = rect.top + window.pageYOffset
@@ -636,16 +764,33 @@ var DomHelper = function () {
     return rect
   }
 
+  /**
+   * @public
+   * @param {HTMLElement} el
+   * @param {object} position
+   */
   manager.setStylePosition = function (el, position) {
     var allowed = ['top', 'right', 'bottom', 'left']
-    return manager.setStyleMeasurements(el, position, allowed)
+    manager.setStyleMeasurements(el, position, allowed)
   }
 
+  /**
+   * @public
+   * @param {HTMLElement} el
+   * @param {object} dimensions
+   */
   manager.setStyleDimensions = function (el, dimensions) {
     var allowed = ['top', 'right', 'bottom', 'left', 'width', 'height']
-    return manager.setStyleMeasurements(el, dimensions, allowed)
+    manager.setStyleMeasurements(el, dimensions, allowed)
   }
 
+  /**
+   * @public
+   * @param {HTMLElement} el
+   * @param {object} obj
+   * @param {array} allowed
+   * @param {string} unit
+   */
   manager.setStyleMeasurements = function (el, obj, allowed, unit) {
     if (!unit) {
       unit = 'px'
@@ -662,15 +807,27 @@ var DomHelper = function () {
     }
   }
 
+  /**
+   * @public
+   * @param {object} margins
+   * @param {DOMRect} dimensions
+   */
   manager.applyMarginsToDimensions = function (margins, dimensions) {
     var allowedMargins = ['top', 'left']
     for (var key in margins) {
       if (allowedMargins.indexOf(key) >= 0 && Utility.exists(margins[key])) {
-        dimensions += margins[key]
+        dimensions[key] += margins[key]
       }
     }
   }
 
+  /**
+   * @public
+   * @param {HTMLElement} el
+   * @param {object} dimensions
+   * @param {boolean} isContinuous
+   * @return {HTMLElement}
+   */
   manager.displayElementAtScreenDimensions = function (el, dimensions, isContinuous) {
     // Must be added to DOM
     if (!el.parentElement) {
@@ -696,6 +853,12 @@ var DomHelper = function () {
     return el
   }
 
+  /**
+   * @public
+   * @param {HTMLElement} el
+   * @param {object} dimensions
+   * @return {HTMLElement}
+   */
   manager.displayElementAtPageDimensions = function (el, dimensions) {
     // Must be added to DOM body
     if (el.parentElement !== document.body) {
@@ -715,6 +878,13 @@ var DomHelper = function () {
     return el
   }
 
+  /**
+   * @public
+   * @param {HTMLElement} shownElement
+   * @param {HTMLElemeent} targetElement
+   * @param {object} options
+   * @return {HTMLElement}
+   */
   manager.showAboveElement = function (shownElement, targetElement, options) {
     if (!options) {
       options = { // Margins
@@ -744,6 +914,11 @@ var DomHelper = function () {
     })
   }
 
+  /**
+   * @public
+   * @param {string} eventName
+   * @param {function} handle
+   */
   manager.startWatchingHtmlElementListenerChanges = function (eventName, handle) {
     var p = window.HTMLElement.prototype
 
@@ -782,6 +957,12 @@ var DomHelper = function () {
     p.__listenerChangeHandles[eventName].push(handle)
   }
 
+  /**
+   * @public
+   * @param {string} eventName
+   * @param {function} handle
+   * @return {boolean}
+   */
   manager.stopWatchingHtmlElementListenerChanges = function (eventName, handle) {
     var p = window.HTMLElement.prototype
 
@@ -816,6 +997,11 @@ var DomHelper = function () {
     return true
   }
 
+  /**
+   * @public
+   * @param {HTMLElement} el
+   * @return {array}
+   */
   manager.getAvailableElementEvents = function (el) {
     // Don't use on anywhere because is easy to add "on".
     var arr = []
@@ -829,6 +1015,11 @@ var DomHelper = function () {
     return arr
   }
 
+  /**
+   * @public
+   * @param {HTMLElement} el
+   * @param {object} events
+   */
   manager.htmlifyEvents = function (el, events) {
     /*
     There seems to be many plugins that duplicate an element or only take an HTML string.
@@ -844,6 +1035,11 @@ var DomHelper = function () {
     }
   }
 
+  /**
+   * @public
+   * @param {HTMLElement} el
+   * @param {string} eventName
+   */
   manager.htmlifyEvent = function (el, eventName) {
     var key = '__htmlified_event_' + (Math.random() * 10000000)
 
@@ -856,6 +1052,11 @@ var DomHelper = function () {
     el.setAttribute('on' + eventName, 'window["' + key + '"]()')
   }
 
+  /**
+   * @public
+   * @param {HTMLElement} el
+   * @return {array}
+   */
   manager.getParents = function (el) {
     var parents = [] // From closest to furthest
     var nextParent = el.parentElement
@@ -868,6 +1069,12 @@ var DomHelper = function () {
     return parents
   }
 
+  /**
+   * @public
+   * @param {HTMLElement} el
+   * @param {string} selector
+   * @return {HTMLElement}
+   */
   manager.getClosestParent = function (el, selector) {
     var parent = null
     var parents = manager.getParents(el)
@@ -881,6 +1088,9 @@ var DomHelper = function () {
     return parent
   }
 
+  /**
+   * @public
+   */
   manager.removeTabIndexes = function () {
     var elements = manager.getAllElements()
     for (var i = 0; i < elements.length; i++) {
@@ -888,6 +1098,10 @@ var DomHelper = function () {
     }
   }
 
+  /**
+   * @public
+   * @param {array} elements
+   */
   manager.setTabIndexes = function (elements) {
     // Sets in order
     for (var i = 0; i < elements.length; i++) {
@@ -895,6 +1109,11 @@ var DomHelper = function () {
     }
   }
 
+  /**
+   * @public
+   * @param {string} selector
+   * @return {HTMLElement|null}
+   */
   manager.getHtmlImport = function (selector) {
     var links = document.querySelectorAll('link[rel="import"]')
     var element, link
@@ -911,10 +1130,20 @@ var DomHelper = function () {
     return null
   }
 
+  /**
+   * @public
+   * @param {string} id
+   * @return {HTMLElement|undefined}
+   */
   manager.e = function (id) {
     return document.getElementById(id)
   }
 
+  /**
+   * @public
+   * @param {array} ids
+   * @return {array}
+   */
   manager.getElementsByIds = function (ids) {
     var elements = []
     var element
@@ -929,6 +1158,11 @@ var DomHelper = function () {
     return elements
   }
 
+  /**
+   * @public
+   * @param {array} arr
+   * @return {HTMLUListElement}
+   */
   manager.getDOMList = function (arr) {
     var listEl = document.createElement('ul')
     var itemEl
@@ -945,12 +1179,22 @@ var DomHelper = function () {
     return listEl
   }
 
+  /**
+   * @public
+   * @param {string} src
+   * @return {HTMLImageElement}
+   */
   manager.getDOMImage = function (src) {
     var image = new window.Image()
     image.src = src
     return image
   }
 
+  /**
+   * @public
+   * @param {array}
+   * @return {HTMLTableElement}
+   */
   manager.getDOMInputsList = function (inputs) {
     var listEl = document.createElement('table')
     var inputRow
@@ -962,6 +1206,11 @@ var DomHelper = function () {
     return listEl
   }
 
+  /**
+   * @public
+   * @param {HTMLInputElement} input Must contain name and value properties.
+   * @return {HTMLTableRowElement}
+   */
   manager.getDOMInputRow = function (input) {
     /*
       Input: {
@@ -989,6 +1238,11 @@ var DomHelper = function () {
     return rowEl
   }
 
+  /**
+   * @public
+   * @param {HTMLElement} el
+   * @param {function} onFileHandle
+   */
   manager.setClickFileHandler = function (el, onFileHandle) {
     // Create input
     var fileEl = document.createElement('input')
@@ -1015,13 +1269,15 @@ var DomHelper = function () {
     }, true)
   }
 
+  /**
+   * Goal:
+   * Use position to get DOM data.
+   * Would be used where position remains same but data can vary.
+   * @public
+   * @param {object} elementPosition
+   * @return {string|null}
+   */
   manager.getElementPositionData = function (elementPosition) {
-    /*
-    Goal:
-    Use position to get DOM data.
-    Would be used where position remains same but data can vary.
-    */
-
     var p = elementPosition
     var el = p.element
     var defaultData = null
@@ -1057,13 +1313,18 @@ var DomHelper = function () {
     return defaultData
   }
 
-  manager.searchDom = function (searchStr, type, el) {
+  /**
+   * Goal: Search for any format of data at once in DOM.
+   * Should only get direct parent of text nodes OR direct element.
+   * Should get position as best as possible so can replace if needed.
+   * @public
+   * @param {string} searchStr
+   * @param {object} type
+   * @param {HTMLElement} el
+   * @return {array}
+   */
+  manager.searchDom = function (searchStr, type = null, el) {
     /*
-    Goal:
-    Search for any format of data at once in DOM.
-    Should only get direct parent of text nodes OR direct element.
-    Should get position as best as possible so can replace if needed.
-
     ElementPosition: {
       element: Element,
       type: matched type,
@@ -1160,6 +1421,11 @@ var DomHelper = function () {
     return results
   }
 
+  /**
+   * @public
+   * @param {array} objectInfoArray
+   * @return {HTMLUListElement}
+   */
   manager.arrayInputter = function (objectInfoArray) {
     var arr = objectInfoArray
     var input
@@ -1186,6 +1452,11 @@ var DomHelper = function () {
     return ul
   }
 
+  /**
+   * @public
+   * @param {object} obj
+   * @return {HTMLUListElement}
+   */
   manager.nestedInputter = function (obj) {
     /*
 
@@ -1229,6 +1500,11 @@ var DomHelper = function () {
     return ul
   }
 
+  /**
+   * @public
+   * @param {HTMLElement} el
+   * @return {array}
+   */
   manager.textNodesUnder = function (el) {
     var n
     var a = []
@@ -1237,9 +1513,14 @@ var DomHelper = function () {
     return a
   }
 
-  manager.getElementsBySelectors = function (selectors, baseElement) {
-    // Selector:
-    // https://developer.mozilla.org/en-US/docs/Learn/CSS/Introduction_to_CSS/Selectors
+  /**
+   * @public
+   * @see https://developer.mozilla.org/en-US/docs/Learn/CSS/Introduction_to_CSS/Selectors
+   * @param {array} selectors
+   * @param {HTMLElement} baseElement
+   * @return {array}
+   */
+  manager.getElementsBySelectors = function (selectors, baseElement = null) {
     let elements = []
 
     if (!baseElement) {
@@ -1255,7 +1536,13 @@ var DomHelper = function () {
     return elements
   }
 
-  manager.getElementsMappedToSelectors = function (selectors, baseElement) {
+  /**
+   * @public
+   * @param {object} selectors
+   * @param {HTMLElement} baseElement
+   * @return {object}
+   */
+  manager.getElementsMappedToSelectors = function (selectors, baseElement = null) {
     let selectorMap = {}
 
     if (!baseElement) {
@@ -1271,14 +1558,28 @@ var DomHelper = function () {
     return selectorMap
   }
 
+  /**
+   * @public
+   * @return {HTMLCollection}
+   */
   manager.getAllElements = function () {
     return document.body.getElementsByTagName('*')
   }
 
+  /**
+   * @public
+   * @param {HTMLElement} el
+   * @return {HTMLCollection}
+   */
   manager.getAllChildren = function (el) {
     return el.getElementsByTagName('*')
   }
 
+  /**
+   * @public
+   * @param {string} attr
+   * @return {array}
+   */
   manager.getElementsWithAttribute = function (attr) {
     var elements = manager.getAllElements()
     var filtered = []
@@ -1291,6 +1592,11 @@ var DomHelper = function () {
     return filtered
   }
 
+  /**
+   * @public
+   * @param {HTMLElement}
+   * @return {object}
+   */
   manager.getElementAttributes = function (el) {
     var attr = {}
     var nodeMap = el.attributes
@@ -1301,6 +1607,12 @@ var DomHelper = function () {
     return attr
   }
 
+  /**
+   * @public
+   * @param {string} attr
+   * @param {string} value
+   * @return {string}
+   */
   manager.getAttributeSelector = function (attr, value) {
     var selector = ''
     selector += '[' + attr
@@ -1312,10 +1624,22 @@ var DomHelper = function () {
     return selector
   }
 
+  /**
+   * @public
+   * @param {string} attr
+   * @param {string} value
+   * @return {HTLMCollection}
+   */
   manager.getElementsByAttribute = function (attr, value) {
     return document.querySelectorAll(manager.getAttributeSelector(attr, value))
   }
 
+  /**
+   * @public
+   * @param {HTMLElement} el
+   * @param {string} attr
+   * @return {array}
+   */
   manager.getNestedAttributeListFromElement = function (el, attr) {
     if (!el) {
       el = document
@@ -1353,6 +1677,10 @@ var DomHelper = function () {
     }
   }
 
+  /**
+   * @param {string} attr
+   * @param {boolean} bool
+   */
   manager.setEditMode = function (attr, bool) {
     var elements = manager.getElementsWithAttribute(attr)
     var element
@@ -1365,6 +1693,10 @@ var DomHelper = function () {
     }
   }
 
+  /**
+   * @public
+   * @param {HTMLElement}
+   */
   manager.centerFixElement = function (el) {
     var s = el.style
     s.zIndex = Infinity
@@ -1374,6 +1706,11 @@ var DomHelper = function () {
     s.transform = '(-50% -50%)'
   }
 
+  /**
+   * @public
+   * @param {string} html
+   * @return {array}
+   */
   manager.convertTableHtmlToArray = function (html) {
     var element = document.createElement('div') // Wrapper
     element.innerHTML = html
@@ -1383,11 +1720,21 @@ var DomHelper = function () {
     return arr
   }
 
+  /**
+   * @public
+   * @param {HTMLTableElement} table
+   * @return {array}
+   */
   manager.convertTableElementToArray = function (table) {
     var rows = table.getElementsByTagName('tr')
     return manager.convertTableRowElementsToArray(rows)
   }
 
+  /**
+   * @public
+   * @param {array} rows
+   * @return {array}
+   */
   manager.convertTableRowElementsToArray = function (rows) {
     var arr = []
 
@@ -1408,6 +1755,11 @@ var DomHelper = function () {
     return arr
   }
 
+  /**
+   * @public
+   * @param {array} arr
+   * @return {HTMLTableElement}
+   */
   manager.convertArrToTableElement = function (arr) {
     var i, j
 
@@ -1429,6 +1781,8 @@ var DomHelper = function () {
 
   /**
    * Makes setting element info chainable
+   * @public
+   * @param {HTMLElement}
    * @return {Object} chainer with functions represeting properties/functions of element all returning chainer
    */
   manager.elementChainer = function (el) {

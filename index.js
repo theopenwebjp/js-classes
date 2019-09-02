@@ -19,7 +19,7 @@ const classes = {
   StandardUnitHelper: require('./class/StandardUnitHelper'),
   StreamManager: require('./class/StreamManager'),
   StreamHelper: require('./class/StreamHelper'),
-  TextManager: deprecated(require('./class/I18n'), 'Use I18n instead'),
+  TextManager: deprecated(require('./class/I18n'), 'Use I18n instead of TextManager'),
   TrackHelper: require('./class/TrackHelper'),
   TrackManager: require('./class/TrackManager')
 }
@@ -44,6 +44,7 @@ function removed(str) {
 * @return {*} Same variable
  */
 function deprecated(variable, info = '') {
+  variable = String(variable).substr(0, 100) // Limit size for now.
   console.log(`Deprecated: ${variable}: ${info}`)
   return variable
 }

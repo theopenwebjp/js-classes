@@ -130,14 +130,24 @@ var TextManager = function (settings) {
     }
   }
 
+  /**
+  * @return {object|null}
+  */
   manager.getCurrentLanguageData = function () {
     return manager.getCommonLanguageData('language')
   }
 
+  /**
+   * @return {object|null}
+   */
   manager.getDefaultLanguageData = function () {
     return manager.getCommonLanguageData('defaultLanguage')
   }
 
+  /**
+   * @param {string} key
+   * @return {object|null}
+   */
   manager.getCommonLanguageData = function (key) {
     var language, data
 
@@ -151,6 +161,10 @@ var TextManager = function (settings) {
     return null
   }
 
+  /**
+   * @param {string} key
+   * @return {string}
+   */
   manager.getMessage = function (key) {
     var data
 
@@ -173,6 +187,10 @@ var TextManager = function (settings) {
   // Alias
   manager.m = manager.getMessage
 
+  /**
+   * @param {array} keys
+   * @return {object}
+   */
   manager.getMessageObject = function (keys) {
     const obj = {}
     keys.forEach(key => {
@@ -182,12 +200,21 @@ var TextManager = function (settings) {
     return obj
   }
 
+  /**
+   * @param {array} keys
+   * @return {array}
+   */
   manager.getMessageArray = function (keys) {
     return keys.map(key => {
       return manager.getMessage(key)
     })
   }
 
+  /**
+   * @param {string} key
+   * @param {string} val
+   * @return {boolean}
+   */
   manager.setMessage = function (key, val) {
     var data = manager.getCurrentLanguageData()
     if (data) {
@@ -199,6 +226,9 @@ var TextManager = function (settings) {
     return false
   }
 
+  /**
+   * @return {array}
+   */
   manager.getAvailableLanguages = function () {
     var languages = manager.settings.languages
     return Object.keys(languages)
@@ -246,7 +276,7 @@ var TextManager = function (settings) {
 }
 
 if (typeof window === 'object') {
-  window.I18n = TextManager;
+  window.I18n = TextManager
   window.TextManager = TextManager
 }
 if (typeof module !== 'undefined') {
