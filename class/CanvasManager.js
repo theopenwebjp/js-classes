@@ -5,6 +5,10 @@
 function CanvasManager () {
   var cManager = {}
 
+  /**
+   * @param {HTMLCanvasElement} canvas
+   * @return {replacements}
+   */
   cManager.getContext = function (canvas) {
     // SPEC: Caching allows for higher speed.
 
@@ -16,6 +20,11 @@ function CanvasManager () {
     return canvas._context
   }
 
+  /**
+   * @param {HTMLCanvasElement} canvas
+   * @param {number} fps
+   * @return {MediaStream|boolean}
+   */
   cManager.canvasToStream = function (canvas, fps) {
     if (canvas.captureStream) {
       if (fps) {
@@ -28,9 +37,13 @@ function CanvasManager () {
     }
   }
 
+  /**
+   * Abstract canvas to image function
+   * @param {HTMLCanvasElement} canvas
+   * @param {object} options
+   * @return {*}
+   */
   cManager.canvasToImage = function (canvas, options) {
-    // Abstract canvas to image function
-
     var returnData
 
     // Defaults
@@ -73,6 +86,10 @@ function CanvasManager () {
   }
 
   // Imaging
+  /**
+   * @param {*} drawable
+   * @return {HTMLImageElement}
+   */
   cManager.drawableToImage = function (drawable) {
     var dataURL = cManager.drawableToDataURL(drawable)
     var image = new window.Image()
@@ -81,6 +98,12 @@ function CanvasManager () {
     return image
   }
 
+  /**
+   * @param {string} src
+   * @param {function} onLoad
+   * @param {string} format
+   * @param {object} conversionOptions
+   */
   cManager.ImageSrcToDataURL = function (src, onLoad, format, conversionOptions) {
     var image = new window.Image()
     image.src = src
@@ -91,6 +114,11 @@ function CanvasManager () {
     }
   }
 
+  /**
+   * @param {*} drawal
+   * @param {undefined|HTMLCanvasElement} canvas
+   * @return {HTMLCanvasElement}
+   */
   cManager.drawableToCanvas = function (drawable, canvas) {
     canvas = canvas || document.createElement('canvas')
     canvas.width = drawable.width || drawable.videoWidth
@@ -100,16 +128,35 @@ function CanvasManager () {
     return canvas
   }
 
+  /**
+   * @param {*} drawable
+   * @param {string} format
+   * @param {object} conversionOptions
+   * @return {string}
+   */
   cManager.drawableToDataURL = function (drawable, format, conversionOptions) {
     var canvas = cManager.drawableToCanvas(drawable)
     return cManager.canvasToDataURL(canvas, format, conversionOptions)
   }
 
+  /**
+   * @param {HTMLCanvasElement} canvas
+   * @param {string} format
+   * @param {object} conversionOptions
+   * @return {string}
+   */
   cManager.canvasToDataURL = function (canvas, format, conversionOptions) {
     var dataURL = canvas.toDataURL(format, conversionOptions)
     return dataURL
   }
 
+  /**
+   * @param {HTMLCanvasElement} canvas
+   * @param {string} format
+   * @param {object} conversionOptions
+   * @param {function }onLoad
+   * @return {HTMLImageElement}
+   */
   cManager.canvasToImageFile = function (canvas, format, conversionOptions, onLoad) {
     var img = new window.Image()
     var dataURL = cManager.canvasToDataURL(canvas, format, conversionOptions)
@@ -131,6 +178,9 @@ function CanvasManager () {
   /**
    * Watches for canvas stop, usual for WebRTC connection problems in older browsers.
    * Stops on first stop.
+   * @param {HTMLCanvasElement} canvas
+   * @param {function} onStop
+   * @param {object}
    */
   cManager.watchForCanvasStop = function (canvas, onStop, options) {
     var ms = options.interval || 2000
@@ -154,6 +204,9 @@ function CanvasManager () {
 
   /**
    * Returns boolean for quick imageData checking.
+   * @param {ImageData} imgData1
+   * @param {ImageData} imgData2
+   * @return {boolean}
    */
   cManager.isImageDataSame = function (imgData1, imgData2) {
     if (imgData1.data.length !== imgData2.data.length) {
@@ -172,6 +225,11 @@ function CanvasManager () {
     return true
   }
 
+  /**
+   * @param {HTMLCanvasElement} canvas
+   * @param {object} options
+   * @return {boolean}
+   */
   cManager.canvasHasColorData = function (canvas, options) {
     var ctx = canvas.getContext('2d')
     var data = ctx.getImageData(0, 0, canvas.width, canvas.height).data
@@ -205,6 +263,11 @@ function CanvasManager () {
     return false
   }
 
+  /**
+   * @param {HTMLCanvasElement} canvas
+   * @param {DOMRect} boundingRect
+   * @return {HTMLCanvasElement}
+   */
   cManager.fitCanvasToBoundingRect = function (canvas, boundingRect) {
     var canvas2 = document.createElement('canvas')
     canvas2.width = boundingRect.right - boundingRect.left
@@ -218,6 +281,10 @@ function CanvasManager () {
     return canvas
   }
 
+  /**
+   * @param {CanvasRenderingContext2D} ctx
+   * @return {DOMRect}
+   */
   cManager.getContextBoundingRect = function (ctx) {
     var boundingRect = cManager.BoundingRect()
     var canvas = ctx.canvas
@@ -253,6 +320,9 @@ function CanvasManager () {
     return boundingRect
   }
 
+  /**
+   * @return {DOMRect}
+   */
   cManager.BoundingRect = function () {
     return {
       top: null,
@@ -262,6 +332,10 @@ function CanvasManager () {
     }
   }
 
+  /**
+   * @param {object} settings
+   * @return {object}
+   */
   cManager.CanvasRenderer = function (settings) {
     /*
         SPEC:
@@ -277,18 +351,24 @@ function CanvasManager () {
     cRenderer.interval = null
     cRenderer.muted = false // Allows for keeping rate
 
+    /**
+     * @param {object} settings
+     */
     cRenderer.setup = function (settings) {
       for (var key in settings) {
         cRenderer[key] = settings[key]
       }
     }
 
+    /**
+     * @return {number}
+     */
     cRenderer.start = function () {
-      if (cRenderer.interval) {
-        return false
+      if (!cRenderer.interval) {
+        cRenderer.interval = window.setInterval(cRenderer.render, cRenderer.rate)
       }
 
-      cRenderer.interval = window.setInterval(cRenderer.render, cRenderer.rate)
+      return cRenderer.interval
     }
 
     cRenderer.mute = function () {
@@ -304,6 +384,9 @@ function CanvasManager () {
       cRenderer.interval = null
     }
 
+    /**
+     * @return {undefined|false}
+     */
     cRenderer.render = function () {
       if (cRenderer.muted) {
         return false
@@ -317,6 +400,11 @@ function CanvasManager () {
     return cRenderer
   }
 
+  /**
+   * @param {MediaStream} stream
+   * @param {number} updateRate
+   * @return {object}
+   */
   cManager.streamToCanvasRenderer = function (stream, updateRate) {
     // Abstract here
 

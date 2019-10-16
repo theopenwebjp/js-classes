@@ -13,6 +13,9 @@
 var TextManager = function (settings) {
   var manager = {}
 
+  /**
+   * @return {object}
+   */
   manager.Settings = function () {
     return {
       auto: true,
@@ -27,6 +30,9 @@ var TextManager = function (settings) {
     }
   }
 
+  /**
+   * @return {object}
+   */
   manager.Language = function () {
     return {
       // key value pairs
@@ -37,6 +43,9 @@ var TextManager = function (settings) {
     window.alert('Language codes use: ' + 'iso639-3')
   }
 
+  /**
+   * @param {object} settings
+   */
   manager.setup = function (settings) {
     manager.settings = manager.Settings()
 

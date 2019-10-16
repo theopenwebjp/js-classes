@@ -28,6 +28,9 @@ var FunctionWrapper = function () {
     disableStackTrace: false // Only during special functions
   }
 
+  /**
+   * @return {object}
+   */
   wrapper.WrapperOptions = function () {
     return {
       events: {
@@ -44,6 +47,9 @@ var FunctionWrapper = function () {
     }
   }
 
+  /**
+   * @return {object}
+   */
   wrapper.FunctionData = function () {
     return {
       function: null,
@@ -53,8 +59,11 @@ var FunctionWrapper = function () {
     }
   }
 
+  /**
+   * All info is non-wrap function info.
+   * @return {object}
+   */
   wrapper.StackTraceData = function () {
-    // All info is non-wrap function info.
     return {
       caller: null,
       callerName: null,
@@ -64,6 +73,9 @@ var FunctionWrapper = function () {
     }
   }
 
+  /**
+   * @return {object}
+   */
   wrapper.Reference = function () {
     return {
       parent: null,
@@ -71,6 +83,9 @@ var FunctionWrapper = function () {
     }
   }
 
+  /**
+   * @return {object}
+   */
   wrapper.WrapStatus = function () {
     return {
 
@@ -89,7 +104,13 @@ var FunctionWrapper = function () {
     //
   }
 
-  wrapper.simpleWrapFunction = function (func, before, after) {
+  /**
+   * @param {function} func
+   * @param {function|undefined} before
+   * @param {function|undefined} after
+   * @return {*}
+   */
+  wrapper.simpleWrapFunction = function (func, before=undefined, after=undefined) {
     // Do not wrap this function
 
     return function () {
@@ -105,6 +126,11 @@ var FunctionWrapper = function () {
     }
   }
 
+  /**
+   * @param {string} name
+   * @param {boolean} inPreparation
+   * @return {boolean}
+   */
   wrapper.handlePreparation = function (name, inPreparation) {
     // No name
     if (!name) {
@@ -126,8 +152,14 @@ var FunctionWrapper = function () {
       wrapper.status.wrap.preparationName = null
       wrapper.status.wrap.preparing = false
     }
+
+    return true
   }
 
+  /**
+   * @param {function} wrapperFunction
+   * @param {function} func
+   */
   wrapper.setupWrapStatus = function (wrapperFunction, func) {
     // Create new
     if (!wrapperFunction.__wrapStatus) {
@@ -141,6 +173,10 @@ var FunctionWrapper = function () {
     }
   }
 
+  /**
+   * @param {function} wrapperFunction
+   * @param {object} reference
+   */
   wrapper.handleWrapReference = function (wrapperFunction, reference) {
     // Add reference
     if (reference) {
@@ -153,8 +189,14 @@ var FunctionWrapper = function () {
     }
   }
 
-  /* public */
-  wrapper.wrapFunction = function (func, reference, options) {
+  /**
+   * @public
+   * @param {function} func
+   * @param {object} reference
+   * @param {options|undefined} options
+   * @return {function}
+   */
+  wrapper.wrapFunction = function (func, reference, options=undefined) {
     /*
     Wraps function with ability to handle arguments and return values.
     parent and key should be passed to reference to be able to unwrap.
@@ -185,6 +227,11 @@ var FunctionWrapper = function () {
     return wrapperFunction
   }
 
+  /**
+   * @param {function} func
+   * @param {object} options
+   * @return {function}
+   */
   wrapper.createWrapFunction = function (func, options) {
     /*
     func = old function
@@ -247,7 +294,13 @@ var FunctionWrapper = function () {
     return wrapperFunction
   }
 
-  /* public */
+  /**
+   * @public
+   * @param {array} funcs
+   * @param {function} callback
+   * @param {object} obj
+   * @return {false|undefined}
+   */
   wrapper.stackTraceFunctionCombinations = function (funcs, callback, obj) {
     /*
     Goal: Get every possible function that is executed in functions.
@@ -311,7 +364,12 @@ var FunctionWrapper = function () {
     handle()
   }
 
-  /* public */
+  /**
+   * @param {function} func
+   * @param {function} returnHandle
+   * @param {object} obj
+   * @return {function}
+   */
   wrapper.stackTraceFunction = function (func, returnHandle, obj) {
     /*
     func: Function taking a callback argument to execute on complete
@@ -345,7 +403,9 @@ var FunctionWrapper = function () {
     return onComplete
   }
 
-  /* public */
+  /**
+   * @param {object} obj
+   */
   wrapper.startStackTrace = function (obj) {
     /*
     Goal: Handle all function calls and record stack trace.
@@ -373,13 +433,17 @@ var FunctionWrapper = function () {
     wrapper.handlePreparation('stacktrace', false)
   }
 
-  /* public */
+  /**
+   * TODO
+   */
   wrapper.stopStackTrace = function () {
     wrapper.unwrapFunctions()
     return wrapper.status.stackTrace
   }
 
-  /* public */
+  /**
+   * @public
+   */
   wrapper.unwrapFunctions = function () {
     // console.log('unwrap') // ??
     var wrapped = wrapper.status.wrap.wrapped
@@ -390,7 +454,10 @@ var FunctionWrapper = function () {
     wrapper.status.wrap.wrapped = []
   }
 
-  /* public */
+  /**
+   * @public
+   * @param {function} wrapperFunction
+   */
   wrapper.unwrapFunction = function (wrapperFunction) {
     // ??Bug, should always have __wrapStatus
     if (!wrapperFunction.__wrapStatus) {
@@ -410,6 +477,10 @@ var FunctionWrapper = function () {
     delete wrapperFunction.__wrapStatus
   }
 
+  /**
+   * @param {function} func
+   * @return {object}
+   */
   wrapper.stackTrace = function (func) {
     var trace = wrapper.StackTraceData()
 
@@ -425,6 +496,10 @@ var FunctionWrapper = function () {
     return trace
   }
 
+  /**
+   * @param {object} obj
+   * @return {boolean}
+   */
   wrapper.isBad = function (obj) {
     if (obj.options.events.check) {
       return !obj.options.events.check(obj.data)
@@ -433,6 +508,10 @@ var FunctionWrapper = function () {
     }
   }
 
+  /**
+   * @param {object} funcData
+   * @return {boolean}
+   */
   wrapper.isPossibleBad = function (funcData) {
     // Default check. Doesn't need to be 100% accurate. Main goal is to filter out functions unlikely to be bad to reduce logs.
 
@@ -447,21 +526,30 @@ var FunctionWrapper = function () {
     return false
   }
 
-  wrapper.handleEvent = function (eventType, args) {
-    if (!args) {
-      args = []
-    }
-
+  /**
+   * @param {string} eventType
+   * @param {array} args
+   * @return {*}
+   */
+  wrapper.handleEvent = function (eventType, args = []) {
     var key = wrapper.settings.events[eventType]
     return wrapper[key].apply(this, args)
   }
 
+  /**
+   * @param {object} obj
+   * @param {object} options
+   */
   wrapper.wrapObjectFunctions = function (obj, options) {
     for (var key in obj) {
       wrapper.attemptWrapObjectFunction(obj, key, options)
     }
   }
 
+  /**
+   * @param {object} parentObj
+   * @param {object} options
+   */
   wrapper.deepWrapObjectFunctions = function (parentObj, options) {
     ObjectTraverser.loopObject(parentObj, function (obj, key /*, val */) {
       wrapper.attemptWrapObjectFunction(obj, key, options)
@@ -470,6 +558,12 @@ var FunctionWrapper = function () {
     })
   }
 
+  /**
+   * @param {object} obj
+   * @param {string} key
+   * @param {object} options
+   * @return {*}
+   */
   wrapper.attemptWrapObjectFunction = function (obj, key, options) {
     return wrapper.attemptWrapFunction(obj[key], {
       parent: obj,
@@ -477,6 +571,12 @@ var FunctionWrapper = function () {
     }, options)
   }
 
+  /**
+   * @param {*} data
+   * @param {*} reference
+   * @param {object} options
+   * @return {*}
+   */
   wrapper.attemptWrapFunction = function (data, reference, options) {
     /*
     Returns original data on failure for easy setting.
@@ -497,6 +597,10 @@ var FunctionWrapper = function () {
     return data
   }
 
+  /**
+   * @param {*} data
+   * @return {boolean}
+   */
   wrapper.isWrapperFunction = function (data) {
     if (typeof data !== 'function') {
       return false
@@ -511,6 +615,10 @@ var FunctionWrapper = function () {
     return false
   }
 
+  /**
+   * @param {function} func
+   * @return {boolean}
+   */
   wrapper.isWrapForbidden = function (func) {
     // Disallow this class so doesn't stackTrace
     if (func === FunctionWrapper) {
@@ -530,10 +638,20 @@ var FunctionWrapper = function () {
     return false
   }
 
+  /**
+   * @param {function} func
+   * @return {boolean}
+   */
   wrapper.isWrapped = function (func) {
     return !!func.__wrapped
   }
 
+  /**
+   * @param {function} func
+   * @param {array} args
+   * @param {*} returnVal
+   * @return {*}
+   */
   wrapper.getFunctionData = function (func, args, returnVal) {
     var data = wrapper.FunctionData()
 
@@ -554,6 +672,10 @@ var FunctionWrapper = function () {
     return data
   }
 
+  /**
+   * @param {object} obj
+   * @return {boolean}
+   */
   wrapper.handleCommonEvent = function (obj) {
     if (obj.options.events && obj.options.events[obj.event]) {
       obj.options.events[obj.data].apply(this, [obj.data])
@@ -570,8 +692,16 @@ var FunctionWrapper = function () {
       console.log(obj.logTitle)
       wrapper.logFunction(obj)
     }
+
+    return true
   }
 
+  /**
+   * @param {object} objOptions
+   * @param {object} funcData
+   * @param {object} options
+   * @return {object}
+   */
   wrapper.getCommonEventData = function (objOptions, funcData, options) {
     var obj = {
       event: null,
@@ -590,6 +720,11 @@ var FunctionWrapper = function () {
     return obj
   }
 
+  /**
+   * @param {object} funcData
+   * @param {object} options
+   * @return {boolean}
+   */
   wrapper.onStart = function (funcData, options) {
     var obj = wrapper.getCommonEventData({
       event: 'start',
@@ -598,6 +733,11 @@ var FunctionWrapper = function () {
     return wrapper.handleCommonEvent(obj)
   }
 
+  /**
+   * @param {object} funcData
+   * @param {object} options
+   * @return {boolean}
+   */
   wrapper.onComplete = function (funcData, options) {
     var obj = wrapper.getCommonEventData({
       event: 'complete',
@@ -606,6 +746,10 @@ var FunctionWrapper = function () {
     return wrapper.handleCommonEvent(obj)
   }
 
+  /**
+   * @param {object} funcData
+   * @return {object}
+   */
   wrapper.logFunction = function (funcData) {
     if (window.logObjectOnSingleLine) {
       window.logObjectOnSingleLine(funcData)

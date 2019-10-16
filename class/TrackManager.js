@@ -3,10 +3,16 @@ class TrackManager {
     this.tracks = []// Storing
   }
 
+  /**
+   * @param {MediaStreamTrack} track
+   */
   addTrack (track) {
     this.tracks.push(track)
   }
 
+  /**
+   * @param {MediaStreamTrack} track
+   */
   removeTrack (track) {
     var index = this.getTrackIndex(track)
     if (index >= 0) {
@@ -14,13 +20,20 @@ class TrackManager {
     }
   }
 
+  /**
+   * @param {MediaStreamTrack} track
+   * @return {number} index
+   */
   getTrackIndex (track) {
     return this.tracks.indexOf(track)
   }
 
+  /**
+   * Creates stream with tracks added
+   * @param {MediaStreamTrack} track
+   * @return {MediaStream}
+   */
   trackToStream (track) {
-    // SPEC: Creates stream with tracks added
-
     var stream = new window.MediaStream()
     stream.addTrack(track)
 

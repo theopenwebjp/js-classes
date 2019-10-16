@@ -54,6 +54,10 @@ var InputCopier = function () {
       page.elements.main.appendChild(page.elements.addButton)
     }
 
+    /**
+     * @param {object} obj
+     * @return {HTMLElement}
+     */
     page.Row = function (obj) {
       // InputElement = element for setting value.
 
@@ -69,6 +73,11 @@ var InputCopier = function () {
       return new page.CalculatedRow(name, value)
     }
 
+    /**
+     * @param {string} name
+     * @param {*} value
+     * @return {HTMLElement}
+     */
     page.CalculatedRow = function (name, value) {
       var wrapper = document.createElement('div')
       var el
@@ -97,6 +106,10 @@ var InputCopier = function () {
       return wrapper
     }
 
+    /**
+     * @param {array} arr
+     * @return {array}
+     */
     page.formatRows = function (arr) {
       // Helper for multiple
       var rows = []
@@ -112,35 +125,56 @@ var InputCopier = function () {
       page.addRow(row)
     }
 
+    /**
+     * @param {HTMLElement} row
+     */
     page.addRow = function (row) {
       page.elements.list.appendChild(row)
     }
 
+    /**
+     * @param {array} rows
+     */
     page.addRows = function (rows) {
       for (var i = 0; i < rows.length; i++) {
         page.addRow(rows[i])
       }
     }
 
+    /**
+     * @param {HTMLElement} row
+     */
     page.deleteRow = function (row) {
       row.parentElement.removeChild(row)
     }
 
+    /**
+     * @param {Event} ev
+     */
     page.deleteRowFromButton = function (ev) {
       var row = ev.target.parentElement
       page.deleteRow(row)
     }
 
+    /**
+     * @return {HTMLElement}
+     */
     page.getElement = function () {
       return page.elements.main
     }
 
+    /**
+     * @return {array}
+     */
     page.getRows = function () {
       var list = page.elements.list
       var rows = list.childNodes
       return rows
     }
 
+    /**
+     * @return {string}
+     */
     page.toJson = function () {
       var rows = page.getRows()
       var json = []
@@ -159,6 +193,10 @@ var InputCopier = function () {
       return (JSON.stringify(json))
     }
 
+    /**
+     * @param {string} jsonStr
+     * @return {boolean}
+     */
     page.fromJson = function (jsonStr) {
       var obj = (JSON.parse(jsonStr))
       if (!obj) {
@@ -178,6 +216,9 @@ var InputCopier = function () {
     return page
   }
 
+  /**
+   * @return {object}
+   */
   copier.newPage = function () {
     var page = new copier.Page()
     copier.addPage(page)
@@ -185,10 +226,16 @@ var InputCopier = function () {
     return page
   }
 
+  /**
+   * @param {object} page
+   */
   copier.addPage = function (page) {
     copier.elements.pages.appendChild(page.elements.main)
   }
 
+  /**
+   * @param {HTMLElement} el
+   */
   copier.removePage = function (el) {
     el.parentElement.removeChild(el)
   }

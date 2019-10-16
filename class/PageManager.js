@@ -18,6 +18,9 @@ var PageManager = function(settings){
     parent: null
   };
   
+  /**
+   * @param {object} settings
+   */
   manager.setup = function(settings){
     if(!window.uriActionHandler){throw Error("Requires uriActionHandler");}
     if(!window.setUriParam){throw Error("Requires setUriParam");}
@@ -29,6 +32,9 @@ var PageManager = function(settings){
     }
   }
   
+  /**
+   * @return {string}
+   */
   manager.getCurrentPageKey = function(){
     var param = manager.settings.param;
     var defaultKey = manager.settings.defaultKey;
@@ -47,6 +53,10 @@ var PageManager = function(settings){
     return key;
   }
   
+  /**
+   * @param {*} parent TODO
+   * @param {object} settings
+   */
   manager.setupCurrentPage = function(parent, settings){
     var key = manager.getCurrentPageKey();
     if(key){
@@ -54,6 +64,10 @@ var PageManager = function(settings){
     }
   }
   
+  /**
+   * @param {object} pages
+   * @return {HTMLElement}
+   */
   manager.getMenu = function(pages){
     //Requires key for url. Consider adding language handling.
     var nav = document.createElement("nav");
@@ -76,6 +90,11 @@ var PageManager = function(settings){
     return nav;
   }
   
+  /**
+   * @param {string} name
+   * @param {array} args
+   * @return {*}
+   */
   manager.handleEvent = function(name, args){
     var handle = manager.settings.events[name];
     if(handle){
@@ -85,6 +104,11 @@ var PageManager = function(settings){
     }
   }
   
+  /**
+   * @param {*} parent
+   * @param {string} key
+   * @param {object} settings
+   */
   manager.setupPage = function(parent, key, settings){
     manager.handleEvent("getpage", [key, settings, function(args){
       manager.handleEvent("pagecomplete", [args, parent]);

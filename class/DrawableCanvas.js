@@ -286,6 +286,9 @@ function DrawableCanvas (settings) {
     }
   }
 
+  /**
+   * @param {object} settings
+   */
   dCanvas.setup = function (settings) {
     // Settings
     const ALLOWED_SETTINGS = [
@@ -330,17 +333,24 @@ function DrawableCanvas (settings) {
     })
   }
 
+  /**
+   * @return {object}
+   */
   dCanvas.getManager = function () {
     return dCanvas.manager
   }
 
   /**
      * Abstract element used for drawing/events
+     * @return {HTMLCanvasElement}
      */
   dCanvas.getCanvas = function () {
     return dCanvas.manager.element
   }
 
+  /**
+   * @param {HTMLElement} element
+   */
   dCanvas.append = function (element) {
     if (!element) {
       element = document.body
@@ -390,6 +400,9 @@ function DrawableCanvas (settings) {
 
   /**
      * Direct action handling
+     * @param {string} action
+     * @param {array} args
+     * @return {*|null}
      */
   dCanvas.executeAction = function (action, args) {
     var manager = dCanvas.manager
@@ -407,11 +420,20 @@ function DrawableCanvas (settings) {
     return returnData
   }
 
+  /**
+   * @param {string} action
+   * @param {array} args
+   * @return {*}
+   */
   dCanvas.executeRawAction = function (action, args) {
     var returnData = dCanvas.manager[action].apply(this, args)
     return returnData
   }
 
+  /**
+   * @param {Event} ev
+   * @return {object}
+   */
   dCanvas.handleNewCoords = function (ev) {
     // Get
     var rawCoords = dCanvas.getElementEventCoordinates(ev)
@@ -426,6 +448,10 @@ function DrawableCanvas (settings) {
     return coords
   }
 
+  /**
+   * @param {Event} ev
+   * @return {object}
+   */
   dCanvas.getElementEventCoordinates = function (ev) {
     var rect = ev.target.getBoundingClientRect()
     var coords = {}
@@ -455,6 +481,11 @@ function DrawableCanvas (settings) {
     return coords
   }
 
+  /**
+   * @param {string} listener
+   * @param {Event} ev
+   * @return {*}
+   */
   dCanvas.executeCurrentTool = function (listener, ev) {
     // States
     if (listener === 'mousedown') {
@@ -472,6 +503,10 @@ function DrawableCanvas (settings) {
 
   /**
      * Abstract drawing through here
+     * @param {string} toolName
+     * @param {string} listener
+     * @param {array} args
+     * @return {*}
      */
   dCanvas.executeTool = function (toolName, listener, args) {
     dCanvas.log('executeTool', toolName, listener, args)
@@ -527,6 +562,7 @@ function DrawableCanvas (settings) {
 
   /**
      * Sets size of pen.
+     * @param {number} px
      * @return {DrawableCanvas} chainable
      */
   dCanvas.setPenSize = function (px) {
@@ -539,6 +575,7 @@ function DrawableCanvas (settings) {
 
   /**
      * Sets size of text.
+     * @param {number} px
      * @return {DrawableCanvas} chainable
      */
   dCanvas.setTextSize = function (px) {
@@ -551,6 +588,7 @@ function DrawableCanvas (settings) {
 
   /**
      * Sets text font.
+     * @param {string} font
      * @return {DrawableCanvas} chainable
      */
   dCanvas.setTextFont = function (font) {
@@ -563,6 +601,8 @@ function DrawableCanvas (settings) {
 
   /**
      * @see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/font
+     * @param {number} index
+     * @param {*} val
      */
   dCanvas._setFontPart = function (index, val) {
     var currentFont = dCanvas.manager.getStyles().font
@@ -578,6 +618,8 @@ function DrawableCanvas (settings) {
 
   /**
      * Represents back/forward state.
+     * @param {object} options
+     * @return {object}
      */
   dCanvas.State = function (options) {
     var state = {}
@@ -596,6 +638,8 @@ function DrawableCanvas (settings) {
      * Two ways to save:
      * 1. Save each separate action(Would require saving all)
      * 2. Save snapshot(Easier, so use for now)
+     * @param {string} action TODO
+     * @param {array} args
      */
   dCanvas.handleNewState = function (action, args) {
     // Check
@@ -612,9 +656,12 @@ function DrawableCanvas (settings) {
       action: stateAction,
       args: stateArgs
     })
-    return dCanvas.addNewState(state)
+    dCanvas.addNewState(state)
   }
 
+  /**
+   * @param {object} state
+   */
   dCanvas.addNewState = function (state) {
     // Remove forwards
     var nextIndex = dCanvas.current_state_index + 1
@@ -625,10 +672,11 @@ function DrawableCanvas (settings) {
 
     // Set last
     dCanvas.current_state_index = dCanvas.states.length - 1
-
-    return true
   }
 
+  /**
+   * @param {object} state
+   */
   dCanvas.applyState = function (state) {
     // Index(allow setting new)
     var index = null
@@ -660,6 +708,10 @@ function DrawableCanvas (settings) {
     }
   }
 
+  /**
+   * @param {object} settings
+   * @return {object}
+   */
   dCanvas.ToolSetting = function (settings) {
     var tSetting = {}
     tSetting.name = ''
@@ -702,6 +754,9 @@ function DrawableCanvas (settings) {
     dCanvas.setTool(dCanvas.current_state.tool)
   }
 
+  /**
+   * @return {object}
+   */
   dCanvas.getTools = function () {
     return dCanvas.tool_settings
   }
@@ -711,6 +766,7 @@ function DrawableCanvas (settings) {
      * Can also get tool settings from state object.
      *
      * @param {String} name
+     * @return {object}
      */
   dCanvas.getTool = function (name) {
     return dCanvas.tool_settings[name]
@@ -728,10 +784,19 @@ function DrawableCanvas (settings) {
     return dCanvas
   }
 
+  /**
+   * @return {object}
+   */
   dCanvas.getCurrentTool = function () {
     return dCanvas.current_state.tool_settings // ??Need to improve naming tool vs settings.
   }
 
+  /**
+   * @param {string} toolName
+   * @param {string} listener
+   * @param {array} args
+   * @return {*|undefined}
+   */
   dCanvas.handleTool = function (toolName, listener, args) {
     var tool = dCanvas.getTool(toolName)
     if (tool && tool.listeners[listener]) {
@@ -739,12 +804,19 @@ function DrawableCanvas (settings) {
     }
   }
 
+  /**
+   * @param {*} data
+   */
   dCanvas.log = function (data) {
     if (window.console && console.log) {
       console.log(data)
     }
   }
 
+  /**
+   * @param {Event} ev
+   * @return {boolean}
+   */
   dCanvas._checkIsClick = function (ev) {
     var WHICH_TYPES = {
       NONE: 0,

@@ -100,6 +100,9 @@ var StandardUnitHelper = function(){
     }
   };
   
+  /**
+   * @return {object}
+   */
   helper.Unit = function(){
     return {
       name: "",
@@ -108,6 +111,9 @@ var StandardUnitHelper = function(){
     };
   }
   
+  /**
+   * @return {object}
+   */
   helper.NumberUnit = function(){
     var numberUnit = {
       number: 0,
@@ -131,8 +137,12 @@ var StandardUnitHelper = function(){
     return numberUnit;
   }
   
+  /**
+   * Alias function for ease-of-use.
+   * @param {string} unitKey
+   * TODO
+   */
   helper.getUnit = function(unitKey){
-    //Alias function for ease-of-use.
     var defaultUnit = null;
     var tempUnit = null;
     
@@ -161,18 +171,35 @@ var StandardUnitHelper = function(){
     return defaultUnit;
   }
   
+  /**
+   * @param {string} str
+   * TODO
+   */
   helper.getUnitByName = function(str){
-    helper.getUnitByProperty("name", num);
+    return helper.getUnitByProperty("name", num);
   }
   
+  /**
+   * @param {string} str
+   * TODO
+   */
   helper.getUnitBySymbol = function(str){
     helper.getUnitByProperty("symbol", num);
   }
   
+  /**
+   * @param {number} num
+   * TODO
+   */
   helper.getUnitByExponent = function(num){
     helper.getUnitByProperty("exponent", num);
   }
   
+  /**
+   * @param {string} prop
+   * @param {*} val
+   * TODO
+   */
   helper.getUnitByProperty = function(prop, val){
     var units = helper.settings.units;
     for(var i=0; i<units.length; i++){
@@ -184,6 +211,11 @@ var StandardUnitHelper = function(){
     return null;
   }
   
+  /**
+   * @param {number} num
+   * @param {string} unitKey
+   * @return {string}
+   */
   helper.getNumberWithUnit = function(num, unitKey){
     var unit = helper.getUnit(unitKey);
     var numberUnit = helper.NumberUnit().apply(num, unit);
@@ -191,11 +223,19 @@ var StandardUnitHelper = function(){
     return numberUnit.toString();
   }
   
+  /**
+   * @param {number} num
+   * @return {string}
+   */
   helper.getNumberWithBestUnit = function(num){
     var unit = helper.getBestUnit(num);
     return helper.getNumberWithUnit(num, unit);
   }
   
+  /**
+   * @param {number} num
+   * TODO
+   */
   helper.getBestUnit = function(num){
     var parts = helper.getNumberParts(num);
     var unit = helper.getUnitWithClosestExponent(parts.exponent);
@@ -203,9 +243,12 @@ var StandardUnitHelper = function(){
     return unit;
   }
   
+  /**
+   * Ideal should be following format: [1 DIGIT].[DECIMALS] [EXPONENT]
+   * @param {number} exponent
+   * @return {string}
+   */
   helper.getUnitWithClosestExponent = function(exponent){
-    //Ideal should be following format: [1 DIGIT].[DECIMALS] [EXPONENT]
-    
     var closest = {
       unit: null,
       difference: Infinity
@@ -225,6 +268,10 @@ var StandardUnitHelper = function(){
     return closest.unit;
   }
   
+  /**
+   * @param {number} num
+   * @return {object}
+   */
   helper.getNumberParts = function(num){
     var str = (num).toExponential();
     var strParts = str.split("e+");
@@ -237,6 +284,10 @@ var StandardUnitHelper = function(){
     return parts;
   }
   
+  /**
+   * @param {object} measurements
+   * @return {object}
+   */
   helper.getMeasurementBaseMultipliers = function(measurements){
     var multipliers = {};
     
@@ -253,6 +304,10 @@ var StandardUnitHelper = function(){
     return multipliers;
   }
   
+  /**
+   * @param {object} multipliers
+   * @return {object}
+   */
   helper.multipliersToConverters = function(multipliers){
     //Multiplier: Input standard unit => Outputs how much larger desired unit is.
     //Converter: Input standard unit value => Outputs value in desired unit.
@@ -264,6 +319,10 @@ var StandardUnitHelper = function(){
     return converters;
   }
   
+  /**
+   * @param {string} mKey
+   * @return {object}
+   */
   helper.getMeasurementMultipliers = function(mKey){
     var measurements = helper.settings.measurements[mKey];
     var bMultipliers = helper.getMeasurementBaseMultipliers(measurements);
@@ -281,6 +340,9 @@ var StandardUnitHelper = function(){
     return multipliers;
   }
   
+  /**
+   * @return {object}
+   */
   helper.getSiUnitMultipliers = function(){
     var pow = 10;
     var multipliers = {};

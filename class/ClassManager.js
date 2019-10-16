@@ -129,6 +129,9 @@ var ClassManager = function (settings) {
     manager.schemaManager = settings.schemaManager;
   }
 
+  /**
+   * @return {object}
+   */
   manager.Settings = function () {
     return {
       schemaManager: null,
@@ -136,6 +139,9 @@ var ClassManager = function (settings) {
     }
   }
 
+  /**
+   * @return {object}
+   */
   manager.SchemaManager = function () {
     return {
       schema: (schemaList, className, data, schemaOptions) => {},

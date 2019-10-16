@@ -1,6 +1,10 @@
 const StreamHelper = require('./StreamHelper')
 
 class TrackHelper {
+  /**
+   * @param {MediaStreamTrack} track
+   * @return {boolean}
+   */
   static trackHasData (track) {
   // Track Check
     if (!track) {
@@ -29,6 +33,11 @@ class TrackHelper {
     return true
   }
 
+  /**
+   * @param {MediaStreamTrack} track
+   * @param {function} dataHandle
+   * @return 
+   */
   static startRecordingTrack (track, dataHandle) {
   // Should be abstract
 

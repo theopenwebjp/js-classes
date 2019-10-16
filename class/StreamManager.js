@@ -42,10 +42,16 @@ class StreamManager {
     this.polyfillGetUserMedia()
   }
 
+  /**
+   * @param {MediaStream} stream
+   */
   addStream (stream) {
     this.streams.push(stream)
   }
 
+  /**
+   * @param {MediaStream} stream
+   */
   removeStream (stream) {
     const NOT_EXIST_INDEX = -1
     var index = this.getStreamIndex(stream)
@@ -55,6 +61,10 @@ class StreamManager {
     }
   }
 
+  /**
+   * @param {MediaStream} stream
+   * @return {number}
+   */
   getStreamIndex (stream) {
     return this.streams.indexOf(stream)
   }

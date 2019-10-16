@@ -30,6 +30,12 @@ const polyfill = {
 }
 
 class StreamHelper {
+  /**
+   * @param {MediaStream} stream
+   * @param {function} dataHandle
+   * @param {object} options
+   * @return {MediaRecorder}
+   */
   static startRecordingStream (stream, dataHandle, options) {
     // Should be abstract
 
@@ -39,6 +45,9 @@ class StreamHelper {
     return recorder
   }
 
+  /**
+   * @param {MediaRecorder} recorder
+   */
   static stopRecordingStream (recorder) {
     recorder.stop()
   }
@@ -116,6 +125,11 @@ class StreamHelper {
     navigator.getUserMedia(constraints, onSuccess, onError)
   }
 
+  /**
+   * @param {MediaStream} stream
+   * @param {object} object
+   * @return {false|object}
+   */
   static handleCameraStream (stream, object) {
     if (!stream || stream.isError) {
       return false
@@ -140,6 +154,9 @@ class StreamHelper {
     return o
   }
 
+  /**
+   * @param {MediaStream} stream
+   */
   static stopCameraStream (stream) {
     // Stop tracks
     var tracks = StreamHelper.getStreamTracks(stream)
@@ -179,6 +196,10 @@ class StreamHelper {
     o.object_url = null
   }
 
+  /**
+   * @param {MediaStream} stream
+   * @return {array}
+   */
   static getStreamTracks (stream) {
     if (stream.getTracks) {
       return stream.getTracks()
@@ -187,6 +208,11 @@ class StreamHelper {
     }
   }
 
+  /**
+   * @param {MediaStream} stream
+   * @param {string} status
+   * @return {array}
+   */
   static getTracksByStatus (stream, status) {
     /*
       SPEC:
@@ -228,14 +254,29 @@ class StreamHelper {
     return fTracks
   }
 
+  /**
+   * @param {MediaStream} stream
+   * @return {array}
+   */
   static getTracks (stream) {
     return stream.getTracks()
   }
 
+  /**
+   * @param {MediaStream} stream
+   * @param {string} type
+   * @return {array}
+   */
   static getTracksByType (stream, type) {
     return StreamHelper.getTracksByAttribute(stream, 'kind', type)
   }
 
+  /**
+   * @param {MediaStream} stream
+   * @param {string} attr
+   * @param {*} value
+   * @return {array}
+   */
   static getTracksByAttribute (stream, attr, value) {
     var tracks = StreamHelper.getTracks(stream)
     var fTracks = []
@@ -251,6 +292,9 @@ class StreamHelper {
     return fTracks
   }
 
+  /**
+   * @return {object}
+   */
   static StreamError () {
     return {
       isError: true,
@@ -258,7 +302,11 @@ class StreamHelper {
     }
   }
 
-  static StreamObject () { // Connection between stream, video and url due to revoking and updating.
+  /**
+   * Connection between stream, video and url due to revoking and updating.
+   * @return {object}
+   */
+  static StreamObject () {
     return {
       stream: null,
       object_url: null,
@@ -274,9 +322,13 @@ class StreamHelper {
     )
   }
 
+  /**
+   * Quick method to get webcam and show in element
+   * @param {MediaStreamConstraints} constraints
+   * @param {HTMLElement} element
+   * @param {function} callback
+   */
   static webcamToElement (constraints, element, callback) {
-    // Quick method to get webcam and show in element
-
     StreamHelper.getUserMedia(function (data) {
       if (!data || data.isError) {
         if (callback) {
@@ -300,6 +352,9 @@ class StreamHelper {
     }, constraints)
   }
 
+  /**
+   * @return {MediaStreamConstraints}
+   */
   static getUnlimitedConstraints () {
     return {
       video: true,
@@ -319,6 +374,10 @@ class StreamHelper {
     })
   }
 
+  /**
+   * @param {MediaStream} stream
+   * @return {MediaStreamConstraints}
+   */
   static getStreamConstraints (stream) {
     const tracks = stream.getTracks()
     const constraints = {}
@@ -336,6 +395,9 @@ class StreamHelper {
   *   1. {video: true, audio: false} OR {video: false, audio: true}
   *   2. {video: true, audio: true}
   *   3. {video: {...}, audio: {...}
+  * @param {MediaStreamConstraints|null} constraints
+  * @param {function} onSuccess
+  * @param {function} onError
    */
   static getUserMediaWithWorkingConstraints (constraints = null, onSuccess, onError) {
     if (!constraints) {
@@ -365,6 +427,9 @@ class StreamHelper {
     navigator.getUserMedia(constraints, onSuccess, onErrorHandle)
   }
 
+  /**
+   * @return {MediaStream}
+   */
   static getEmptyStream () {
     let stream = new window.MediaStream()
 

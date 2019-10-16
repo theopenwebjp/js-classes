@@ -268,11 +268,45 @@ var DomHelper = function () {
 
   /**
    * @public
+   * @return {object}
+   */
+  manager.MenuListSettings = function () {
+    return {
+      items: [
+        {
+          type: '',
+          click: () => {},
+          text: '',
+          id: '',
+          class: '',
+          empty: false,
+          orientation: '' // vertical OR horizontal
+        }
+      ],
+      element: window.HTMLElement || undefined,
+      isChild: false,
+      hide: false,
+      header: {
+        text: string,
+        id: string
+      }
+    }
+  }
+
+  /**
+   * Creates a list from settings + items.
+   * May include a header.
+   * Parent element is required to add header, etc.
+   * Parent element preferred rather than using returned element due to nested formatting possible.
+   * If id is included for item, anchor tag with id as id + _a is also included.
+   * @public
+   * @deprecated This function is bloated. Should standardize and use what is necessary.
    * @param {HTMLElement} parentEl
-   * @param {object} settings
+   * @param {MenuListSettings} settings
    * @return {HTMLUListElement}
    */
   manager.setupMenuList = function (parentEl, settings) {
+    // ??offer alternatives this function, including bootstrap, etc.
     /*
     <ul>
       <li><a>HEADER</a></li>
@@ -323,13 +357,6 @@ var DomHelper = function () {
     // Items
     for (var i = 0; i < items.length; i++) {
       item = items[i]
-      /*
-      type
-      click
-      text
-      id
-      */
-
       li = document.createElement('li')
       a = document.createElement('a')
 
@@ -500,6 +527,8 @@ var DomHelper = function () {
 
   /**
    * @private
+   * @param {HTMLElement} el
+   * @param {object} events
    */
   manager._setEvents = function (el, events) {
     var event
@@ -517,6 +546,9 @@ var DomHelper = function () {
 
   /**
    * @private
+   * @param {HTMLElement} el
+   * @param {array} settingsArr
+   * @return {HTMLElement}
    */
   manager._setChildren = function (el, settingsArr) {
     var children = []
@@ -531,6 +563,8 @@ var DomHelper = function () {
 
   /**
    * @private
+   * @param {object} childrenSettings
+   * @return {array}
    */
   manager._handleChildrenReplacements = function (childrenSettings) {
     var items = childrenSettings.items
@@ -547,6 +581,10 @@ var DomHelper = function () {
 
   /**
    * @private
+   * @param {*} item
+   * @param {object} format
+   * @param {object} replacements
+   * @return {object}
    */
   manager._handleChildReplacements = function (item, format, replacements) {
     var childSettings
@@ -577,6 +615,10 @@ var DomHelper = function () {
 
   /**
    * @private
+   * @param {object} obj
+   * @param {*} item
+   * @param {string} elementPropKey
+   * @param {object} replacements
    */
   manager._applyObjectReplacement = function (obj, item, elementPropKey, replacements) {
     for (var key in replacements) {

@@ -3,6 +3,7 @@ const DomHelper = require('./DomHelper')
 /**
  * Collection of functions for handling forms.
  * Static class.
+ * @param {object} settings
  */
 var FormManager = function (settings) { // ??Make static.
   var manager = {}
@@ -108,6 +109,7 @@ var FormManager = function (settings) { // ??Make static.
   /**
    * Object representing settings for an input type in inputTypes.
    * Used for creating inputs.
+   * @return {object}
    */
   manager.InputType = function () {
     return {
@@ -122,6 +124,7 @@ var FormManager = function (settings) { // ??Make static.
 
   /**
    * Object representing data of input element
+   * @return {object}
    */
   manager.InputObject = function () {
     return {
@@ -137,6 +140,7 @@ var FormManager = function (settings) { // ??Make static.
 
   /**
    * ??Seems to be for same purpose as InputObject. CHECK!!!
+   * @return {object}
    */
   manager.InputSettings = function () {
     return {
@@ -150,6 +154,7 @@ var FormManager = function (settings) { // ??Make static.
 
   /**
    * Object representing data for creating form
+   * @return {object}
    */
   manager.FormSettings = function () {
     return {
@@ -159,16 +164,19 @@ var FormManager = function (settings) { // ??Make static.
     }
   }
 
-  manager.setup = function (settings) {
-    if (!settings) {
-      settings = {}
-    }
-
+  /**
+   * @param {object} settings
+   */
+  manager.setup = function (settings = {}) {
     for (var key in settings) {
       manager.settings[key] = settings[key]
     }
   }
 
+  /**
+   * @param {object} settings
+   * @return {HTMLFormElement}
+   */
   manager.settingsToForm = function (settings) {
     // Start
     var form = document.createElement('form')
@@ -185,6 +193,10 @@ var FormManager = function (settings) { // ??Make static.
     return form
   }
 
+  /**
+   * @param {object} settings
+   * @return {array}
+   */
   manager.createInputs = function (settings) {
     var inputs = []
     var input
@@ -198,6 +210,10 @@ var FormManager = function (settings) { // ??Make static.
     return inputs
   }
 
+  /**
+   * @param {string} key
+   * @return {string}
+   */
   manager.m = function (key) {
     return manager.settings.text[key]
   }
@@ -205,6 +221,7 @@ var FormManager = function (settings) { // ??Make static.
   /**
    * Input: <div><label>name</label> <div>{INPUT}</div></div>
    * @param {Object} settings: InputSettings
+   * @return {HTMLElement}
    */
   manager.createInput = function (settings) {
     var children = []
@@ -282,14 +299,25 @@ var FormManager = function (settings) { // ??Make static.
     return input
   }
 
+  /**
+   * @param {HTMLElement} el
+   */
   manager.setInputAsRequired = function (el) {
     el.setAttribute(manager.constants.REQUIRED_ATTR, true)
   }
 
-  manager.getRequiredInputs = function (form) {
+  /**
+   * @param {HTMLElement} form
+   * TODO
+   */
+  manager.getRequiredInputs = function (form) { // TODO: form not used.
     return manager.domHelper.getElementsWithAttribute(manager.constants.REQUIRED_ATTR)
   }
 
+  /**
+   * @param {Event} ev
+   * @return {boolean}
+   */
   manager.handleSubmit = function (ev) { // ??Not called bug.
     var form = ev.target
     var bool = manager.checkRequiredInputs(form)
@@ -300,6 +328,10 @@ var FormManager = function (settings) { // ??Make static.
     return bool
   }
 
+  /**
+   * @param {HTMLElement} form
+   * @return {boolean}
+   */
   manager.checkRequiredInputs = function (form) {
     var inputs = manager.getRequiredInputs(form)
     for (var i = 0; i < inputs.length; i++) {
@@ -313,6 +345,10 @@ var FormManager = function (settings) { // ??Make static.
     return true
   }
 
+  /**
+   * @param {HTMLElement} el
+   * @return boolean
+   */
   manager.checkRequiredInput = function (el) {
     /*
     checkbox: .checked length > 0
@@ -337,6 +373,10 @@ var FormManager = function (settings) { // ??Make static.
     return true
   }
 
+  /**
+   * @param {HTMLElement} el
+   * @return {array}
+   */
   manager.getCheckedElements = function (el) {
     var elements = el.children
     var checked = []
@@ -348,6 +388,10 @@ var FormManager = function (settings) { // ??Make static.
     return checked
   }
 
+  /**
+   * @param {string} type
+   * @return {boolean}
+   */
   manager.hasSingleTag = function (type) {
     if (!manager.inputTypes[type].multiple) {
       return true
@@ -356,6 +400,10 @@ var FormManager = function (settings) { // ??Make static.
     }
   }
 
+  /**
+   * @param {array} arr
+   * @return {array}
+   */
   manager.arrayifyAll = function (arr) {
     for (var i = 0; i < arr.length; i++) {
       arr[i] = [arr[i]]
@@ -364,6 +412,12 @@ var FormManager = function (settings) { // ??Make static.
     return arr
   }
 
+  /**
+   * @param {string} tagName
+   * @param {object} attributes
+   * @param {array} children
+   * @return {HTMLElement}
+   */
   manager.createTag = function (tagName, attributes, children) {
     return manager.domHelper.createElement({
       tag: tagName,
@@ -372,19 +426,35 @@ var FormManager = function (settings) { // ??Make static.
     })
   }
 
+  /**
+   * @param {HTMLElement} el
+   * @param {array} children
+   */
   manager.appendChildren = function (el, children) {
     manager.domHelper.appendChildren(el, children)
   }
 
+  /**
+   * @param {HTMLElement} el
+   * @param {object} attributes
+   */
   manager.setAttributes = function (el, attributes) {
     manager.domHelper.setAttributes(el, attributes)
   }
 
+  /**
+   * @param {HTMLElement} el
+   * @return {string}
+   */
   manager.getTableHeaderValue = function (el) {
     var parentEl = manager.domHelper.getClosestParent(el, 'th')
     return (parentEl ? parentEl.textContent : '')
   }
 
+  /**
+   * @param {object} obj
+   * @return {array}
+   */
   manager.keyValueObjToArrays = function (obj) {
     /*
     {
@@ -413,6 +483,10 @@ var FormManager = function (settings) { // ??Make static.
     return arr
   }
 
+  /**
+   * @param {object} attributes
+   * @return {string}
+   */
   manager.attributesToSelector = function (attributes) {
     var selector = ''
     for (var key in attributes) {
@@ -422,6 +496,10 @@ var FormManager = function (settings) { // ??Make static.
     return selector
   }
 
+  /**
+   * @param {object} inputTypes
+   * @return {array}
+   */
   manager.inputTypesToSelectors = function (inputTypes) {
     var selectors = []
     var selector, inputType
@@ -438,6 +516,10 @@ var FormManager = function (settings) { // ??Make static.
     return selectors
   }
 
+  /**
+   * @param {array} elements
+   * @return {array}
+   */
   manager.elementsToInputObjects = function (elements) {
     var inputs = []
     for (var i = 0; i < elements.length; i++) {
@@ -447,11 +529,12 @@ var FormManager = function (settings) { // ??Make static.
     return inputs
   }
 
+  /**
+   * Should keep only necessary information for editing
+   * @param {HTMLElement} element
+   * @return {object}
+   */
   manager.elementToInputObject = function (element) {
-    /*
-    Should keep only necessary information for editing
-    */
-
     var obj = manager.InputObject()
 
     obj.tag = element.tagName
@@ -470,6 +553,10 @@ var FormManager = function (settings) { // ??Make static.
     return obj
   }
 
+  /**
+   * @param {HTMLElement} element
+   * @return {HTMLElement|undefined}
+   */
   manager.getLabelElement = function (element) {
     var labelEl
 
@@ -493,6 +580,10 @@ var FormManager = function (settings) { // ??Make static.
     return labelEl
   }
 
+  /**
+   * @param {HTMLElement} element
+   * @return {string}
+   */
   manager.getLabel = function (element) {
     var label = ''
     var labelEl = manager.getLabelElement(element)
@@ -504,9 +595,11 @@ var FormManager = function (settings) { // ??Make static.
     return label
   }
 
-  manager.getCurrentPageInputs = function (options) {
-    if (!options) { options = {} }
-
+  /**
+   * @param {object} options
+   * @return {array}
+   */
+  manager.getCurrentPageInputs = function (options = {}) {
     // Settings
     var settings
     if (options.noHidden) {
@@ -524,6 +617,7 @@ var FormManager = function (settings) { // ??Make static.
 
   /**
    * Gets input type from element
+   * @param {HTMLElement} el
    * @return {Object} InputType. Default if not found.
    */
   manager.getElementInputType = function (el) {
@@ -620,6 +714,10 @@ var FormManager = function (settings) { // ??Make static.
     }
   }
 
+  /**
+   * @param {HTMLElement} el
+   * @return {boolean}
+   */
   manager.isInput = function (el) {
     return !manager.getElementInputType(el)
   }

@@ -8,11 +8,20 @@ var PersistentStateManager = function(){
     defaultMethod: "localStorage"
   };
   
-  manager.fixMethod = function(method){
+  /**
+   * @param {string} method
+   * @return {string}
+   */
+  manager.fixMethod = function(method = ''){
     if(!method){method = manager.settings.defaultMethod;}
     return method;
   }
   
+  /**
+   * @param {string} key
+   * @param {string} method
+   * @return {boolean}
+   */
   manager.get = function(key, method){
     method = manager.fixMethod(method);
     
@@ -29,6 +38,12 @@ var PersistentStateManager = function(){
     return false;
   }
   
+  /**
+   * @param {string} key
+   * @param {string} value
+   * @param {string} method
+   * @return {boolean}
+   */
   manager.set = function(key, value, method){
     method = manager.fixMethod(method);
     

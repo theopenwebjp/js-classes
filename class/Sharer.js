@@ -30,6 +30,9 @@ function Sharer(settings){
     };
     sharer.share_methods = {};
     
+    /**
+     * @param {object} settings
+     */
     sharer.setup = function(settings){
         
         //Settings
@@ -44,20 +47,34 @@ function Sharer(settings){
         }
     }
     
+    /**
+     * @param {string} key
+     * @param {*} data
+     */
     sharer.setupShareMethod = function(key, data){
         sharer.share_methods[key] = new sharer.ShareMethod(data);
     }
     
+    /**
+     * @param {string} key
+     * @return {function}
+     */
     sharer.getShareMethod = function(key){
         var methods = sharer.getShareMethods();
         return methods[key];
     }
     
+    /**
+     * @return {object}
+     */
     sharer.getShareMethods = function(){
         var methods = sharer.share_methods;
         return methods;
     }
 
+    /**
+     * @return {object}
+     */
     sharer.getTypes = function(){
         var types = {
             visual: {},
@@ -70,14 +87,23 @@ function Sharer(settings){
         return types;
     }
     
+    /**
+     * @param {HTMLElement} el
+     */
     sharer.setShareElement = function(el){
         el.addEventListener(sharer.handleShareClick);
     }
     
+    /**
+     * @param {Event} ev
+     */
     sharer.handleShareClick = function(ev){
         sharer.showGroupedData();
     }
     
+    /**
+     * @return {HTMLElement}
+     */
     sharer.getNewWindow = function(){
         var windowEl = document.createElement("div");
         
@@ -96,6 +122,9 @@ function Sharer(settings){
         return windowEl;
     }
     
+    /**
+     * @return {HTMLElement}
+     */
     sharer.getNewButton = function(){
         var buttonEl = document.createElement("div");
         
@@ -114,6 +143,9 @@ function Sharer(settings){
         return buttonEl;
     }
     
+    /**
+     * @param {HTMLElement} el
+     */
     sharer.showWindow = function(el){
         el.display = "block";
         el.visibility = "visibile";
@@ -123,6 +155,9 @@ function Sharer(settings){
         }
     }
     
+    /**
+     * @param {HTMLElement} el
+     */
     sharer.hideWindow = function(el){
         el.display = "none";
         el.visibility = "hidden";
@@ -164,6 +199,9 @@ function Sharer(settings){
         sharer.showWindow(windowEl);
     }
     
+    /**
+     * @return {object} gData
+     */
     sharer.getGroupedData = function(){
         var types = sharer.getTypes();
         var gData = {};
@@ -178,6 +216,9 @@ function Sharer(settings){
         return gData;
     }
     
+    /**
+     * @return {object}
+     */
     sharer.GroupedDataItem = function(){
         var gDataItem = {};
         gDataItem.name = "";
@@ -189,11 +230,20 @@ function Sharer(settings){
         return gDataItem;
     }
     
+    /**
+     * @param {string} type
+     * @return {object}
+     */
     sharer.getShareMethodsByType = function(type){
         var methods = sharer.getShareMethodsByAttr("type", type);
         return methods;
     }
     
+    /**
+     * @param {string} attr
+     * @param {*} value
+     * @return {object}
+     */
     sharer.getShareMethodsByAttr = function(attr, value){
         var methods = sharer.getShareMethods();
         var fMethods = {};
@@ -206,6 +256,10 @@ function Sharer(settings){
         return fMethods;
     }
     
+    /**
+     * @param {object} settings
+     * @return {object}
+     */
     sharer.ShareMethod = function(settings){
         var sMethod = {};
         sMethod.type = "visual";
