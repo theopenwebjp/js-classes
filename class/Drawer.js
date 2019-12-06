@@ -1,9 +1,17 @@
 /**
+ * @typedef {object} PixelData
+ * @property {number|null} x
+ * @property {number|null} y
+ * @property {number|null} color
+ */
+
+/**
  * Class for perform actions for canvas drawing.
  * No UI should be handled here as is often extended.
  * Allows for drawing with any implementation desired(Canvas, SVG, etc.)
  * Returns implementation.
  * No events done here. Must execute functions to use.
+ * TODO: Add this return types
  *
  * append: Appends to DOM.
  *
@@ -15,9 +23,9 @@ function Drawer (settings) {
   drawer.format = 'canvas' // svg, canvas. Previous DOM was tested but removed.
 
   /**
-   * @param {object} settings
-   * @return {object}
-   */
+     * @param {object} settings
+     * @return {object}
+     */
   drawer.handleStartup = function (settings) {
     // Settings
     const ALLOWED_SETTINGS = [
@@ -47,10 +55,10 @@ function Drawer (settings) {
   }
 
   /**
-   * @param {object} settings
-   */
+     * @param {object} settings
+     */
   drawer.CommonDrawer = function (settings) {
-    var manager = {}
+    var manager = {} // TODO: Typings for below.
     manager.element = null
     manager.fill = false
     manager.format = null
@@ -97,8 +105,8 @@ function Drawer (settings) {
     }
 
     /**
-     * @param {HTMLElement|undefined}
-     */
+         * @param {HTMLElement|undefined} parentElement
+         */
     manager.append = function (parentElement) {
       // Parent defaults to body
       if (!parentElement) {
@@ -120,7 +128,7 @@ function Drawer (settings) {
          * Allows for action with options.
          * Allows for one action style setting.
          * @param {string} args
-         * @param {array} args
+         * @param {*[]} args
          * @param {object|undefined} options
          */
     manager.executeAction = function (action, args, options) {
@@ -241,11 +249,11 @@ function Drawer (settings) {
     }
 
     /**
-     * @param {string} str
-     * @param {number} x
-     * @param {number} y
-     * @param {number} maxWidth
-     */
+         * @param {string} str
+         * @param {number} x
+         * @param {number} y
+         * @param {number} maxWidth
+         */
     manager.drawText = function (str, x, y, maxWidth) {
       return manager._overrideRequired()
     }
@@ -255,69 +263,69 @@ function Drawer (settings) {
     }
 
     /**
-     * @param {HTMLImageElement} img
-     * @param {number} x
-     * @param {number} y
-     * @param {number} width
-     * @param {number} height
-     */
+         * @param {HTMLImageElement} img
+         * @param {number} x
+         * @param {number} y
+         * @param {number} width
+         * @param {number} height
+         */
     manager.drawImage = function (img, x, y, width, height) {
       return manager._overrideRequired()
     }
 
     /**
-     * @param {number} x
-     * @param {number} y
-     */
+         * @param {number} x
+         * @param {number} y
+         */
     manager.drawPixel = function (x, y) {
       return manager._overrideRequired()
     }
 
     /**
-     * @param {number} x
-     * @param {number} y
-     * @param {number} width
-     * @param {number} height
-     */
+         * @param {number} x
+         * @param {number} y
+         * @param {number} width
+         * @param {number} height
+         */
     manager.drawRectangle = function (x, y, width, height) {
       return manager._overrideRequired()
     }
 
     /**
-     * @param {number} x
-     * @param {number} y
-     * @param {number} radius
-     */
+         * @param {number} x
+         * @param {number} y
+         * @param {number} radius
+         */
     manager.drawCircle = function (x, y, radius) {
       return manager._overrideRequired()
     }
 
     /**
-     * @param {number} x
-     * @param {number} y
-     * @param {number} radius
-     * @param {number} startAngle
-     * @param {number} endAngle
-     * @param {boolean} antiClockwise
-     */
+         * @param {number} x
+         * @param {number} y
+         * @param {number} radius
+         * @param {number} startAngle
+         * @param {number} endAngle
+         * @param {boolean} antiClockwise
+         */
     manager.drawArc = function (x, y, radius, startAngle, endAngle, antiClockwise) {
       return manager._overrideRequired()
     }
 
     /**
-     * @param {number} x1
-     * @param {number} x2
-     * @param {number} y1
-     * @param {number} y2
-     */
+         * @param {number} x1
+         * @param {number} x2
+         * @param {number} y1
+         * @param {number} y2
+         */
     manager.drawLine = function (x1, x2, y1, y2) {
       return manager._overrideRequired()
     }
 
     /**
-     * @param {number} x
-     * @param {number} y
-     */
+         * @param {number} x
+         * @param {number} y
+         */
     manager.getPixelData = function (x, y) {
       return manager._overrideRequired()
     }
@@ -327,9 +335,9 @@ function Drawer (settings) {
     }
 
     /**
-     * @param {number} byte
-     * @return {string}
-     */
+         * @param {number} byte
+         * @return {string}
+         */
     manager.convertByteToHex = function (byte) {
       var BASE = 16
       var HEX_BYTE_LENGTH = 2
@@ -347,14 +355,18 @@ function Drawer (settings) {
     }
 
     /**
-     * @param {object} options
-     * @return {object}
-     */
+         * @param {object} options
+         * @return {PixelData}
+         */
     manager.PixelData = function (options) {
-      var pData = {}
-      pData.x = null
-      pData.y = null
-      pData.color = null
+      /**
+       * @type {PixelData}
+       */
+      var pData = {
+        x: null,
+        y: null,
+        color: null
+      }
 
       for (var key in options) {
         pData[key] = options[key]
@@ -427,8 +439,8 @@ function Drawer (settings) {
     }
 
     /**
-     * @param {object}
-     */
+         * @return {object}
+         */
     manager.getSnapshot = function () {
       var nCanvas = document.createElement('canvas')
       nCanvas.width = manager.canvas.width
@@ -439,9 +451,9 @@ function Drawer (settings) {
     }
 
     /**
-     * @param {HTMLImageElement}
-     * @return {object}
-     */
+         * @param {HTMLImageElement} img
+         * @return {object}
+         */
     manager.applySnapshot = function (img) {
       var width = manager.canvas.width
       var height = manager.canvas.height
@@ -452,12 +464,12 @@ function Drawer (settings) {
     }
 
     /**
-     * @param {string} str
-     * @param {number} x
-     * @param {number} y
-     * @param {number} maxWidth
-     * @return {object}
-     */
+         * @param {string} str
+         * @param {number} x
+         * @param {number} y
+         * @param {number} maxWidth
+         * @return {object}
+         */
     manager.drawText = function (str, x, y, maxWidth) {
       manager.context.strokeText(str, x, y, maxWidth)
 
@@ -465,8 +477,8 @@ function Drawer (settings) {
     }
 
     /**
-     * @return {object}
-     */
+         * @return {object}
+         */
     manager.clearCanvas = function () {
       var width = manager.canvas.width
       var height = manager.canvas.height
@@ -494,10 +506,10 @@ function Drawer (settings) {
     }
 
     /**
-     * @param {number} x
-     * @param {number} y
-     * @return {object}
-     */
+         * @param {number} x
+         * @param {number} y
+         * @return {object}
+         */
     manager.drawPixel = function (x, y) {
       manager.context.rect(x, y, 1, 1)
       manager.context.stroke()
@@ -506,12 +518,12 @@ function Drawer (settings) {
     }
 
     /**
-     * @param {number} x
-     * @param {number} y
-     * @param {number} width
-     * @param {number} height
-     * @return {object}
-     */
+         * @param {number} x
+         * @param {number} y
+         * @param {number} width
+         * @param {number} height
+         * @return {object}
+         */
     manager.drawRectangle = function (x, y, width, height) {
       manager.context.rect(x, y, width, height)
       manager.context.stroke()
@@ -520,11 +532,11 @@ function Drawer (settings) {
     }
 
     /**
-     * @param {number} x
-     * @param {number} y
-     * @param {number} radius
-     * @return {object}
-     */
+         * @param {number} x
+         * @param {number} y
+         * @param {number} radius
+         * @return {object}
+         */
     manager.drawCircle = function (x, y, radius) {
       manager.drawArc(x, y, radius, 0, manager.CIRCLE_ANGLE)
 
@@ -532,13 +544,13 @@ function Drawer (settings) {
     }
 
     /**
-     * @param {number} x
-     * @param {number} y
-     * @param {number} radius
-     * @param {number} startAngle
-     * @param {number} endAngle
-     * @param {boolean} antiClockwise
-     */
+         * @param {number} x
+         * @param {number} y
+         * @param {number} radius
+         * @param {number} startAngle
+         * @param {number} endAngle
+         * @param {boolean} antiClockwise
+         */
     manager.drawArc = function (x, y, radius, startAngle, endAngle, antiClockwise) {
       if (!radius) {
         console.warn('drawArc should have radius', radius)
@@ -552,12 +564,12 @@ function Drawer (settings) {
     }
 
     /**
-     * @param {number} x1
-     * @param {number} y1
-     * @param {number} x2
-     * @param {number} y2
-     * @return {object}
-     */
+         * @param {number} x1
+         * @param {number} y1
+         * @param {number} x2
+         * @param {number} y2
+         * @return {object}
+         */
     manager.drawLine = function (x1, y1, x2, y2) {
       manager.context.beginPath()
       manager.context.moveTo(x1, y1)
@@ -569,10 +581,10 @@ function Drawer (settings) {
     }
 
     /**
-     * @param {number} x
-     * @param {number} y
-     * @return {object}
-     */
+         * @param {number} x
+         * @param {number} y
+         * @return {PixelData}
+         */
     manager.getPixelData = function (x, y) {
       var width = 1
       var height = 1

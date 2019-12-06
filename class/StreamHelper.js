@@ -1,4 +1,6 @@
-const polyfill = {
+const TrackHelper = require('./TrackHelper')
+
+const polyfill = { // TODO: polyfill typing. Set this AND inherit.
   ensure: function (object, key, handle) {
     if (object[key] === undefined) {
       // DEPRECATED: object.__proto__[key] = handle
@@ -6,7 +8,13 @@ const polyfill = {
     }
   },
   getAudioTracks: function () {
+    /**
+         * @type {MediaStreamTrack[]}
+         */
     const tracks = this.getTracks()
+    /**
+             * @type {MediaStreamTrack[]}
+             */
     const audioTracks = []
     tracks.forEach(track => {
       if (track.kind === 'audio') {
@@ -17,7 +25,13 @@ const polyfill = {
     return audioTracks
   },
   getVideoTracks: function () {
+    /**
+         * @type {MediaStreamTrack[]}
+         */
     const tracks = this.getTracks()
+    /**
+             * @type {MediaStreamTrack[]}
+             */
     const videoTracks = []
     tracks.forEach(track => {
       if (track.kind === 'video') {
@@ -29,14 +43,27 @@ const polyfill = {
   }
 }
 
+/**
+ * @typedef {object} StreamObject
+ * @property {MediaStream|null} stream
+ * @property {string|null} object_url
+ * @property {HTMLVideoElement|null} video
+ */
+
+/**
+ * @typedef {object} StreamError
+ * @property {Error|null} error
+ * @property {boolean} isError
+ */
+
 class StreamHelper {
   /**
-   * @param {MediaStream} stream
-   * @param {function} dataHandle
-   * @param {object} options
-   * @return {MediaRecorder}
-   */
-  static startRecordingStream (stream, dataHandle, options) {
+     * @param {MediaStream} stream
+     * @param {function} dataHandle
+     * @param {MediaRecorderOptions} options
+     * @return {MediaRecorder}
+     */
+  static startRecordingStream (stream, dataHandle, options = {}) {
     // Should be abstract
 
     var recorder = window.MediaRecorder(stream, options)
@@ -46,17 +73,17 @@ class StreamHelper {
   }
 
   /**
-   * @param {MediaRecorder} recorder
-   */
+     * @param {MediaRecorder} recorder
+     */
   static stopRecordingStream (recorder) {
     recorder.stop()
   }
 
   /**
-   * Create video element from stream
-   * @param {MediaStream} stream
-   * @return {HTMLVideo}
-   */
+     * Create video element from stream
+     * @param {MediaStream} stream
+     * @return {HTMLVideoElement}
+     */
   static createStreamVideoElement (stream) {
     const video = document.createElement('video')
     video.autoplay = true
@@ -66,42 +93,40 @@ class StreamHelper {
   }
 
   /**
-   * Checks if video exists
-   * @param {MediaStream} stream
-   * @return {Boolean}
-   */
+     * Checks if video exists
+     * @param {MediaStream} stream
+     * @return {Boolean}
+     */
   static streamHasVideo (stream) {
     polyfill.ensure(stream, 'getVideoTracks', polyfill.getVideoTracks)
 
     const FIRST_INDEX = 0
     const track = stream.getVideoTracks()[FIRST_INDEX]
-    return StreamHelper.trackHasData(track)
+    return TrackHelper.trackHasData(track)
   }
 
   /**
-   * Checks if audio exists
-   * @param {MediaStream} stream
-   * @return {Boolean}
-   */
+     * Checks if audio exists
+     * @param {MediaStream} stream
+     * @return {Boolean}
+     */
   static streamHasAudio (stream) {
     polyfill.ensure(stream, 'getAudioTracks', polyfill.getAudioTracks)
 
     const FIRST_INDEX = 0
     const track = stream.getAudioTracks()[FIRST_INDEX]
-    return StreamHelper.trackHasData(track)
+    return TrackHelper.trackHasData(track)
   }
 
   /**
-  * Simple handling of getUserMedia
-  * Be careful of argument order change: navigator.getUserMedia(constraints, onSuccess, onError)
-  * Order changed due to constraints being optional.
-  * @deprecated This was used as during early adoption of this feature, but now it is standardized should use promises instead.
-  * @param {Function} callback
-  * @param {Object} constraints
-   */
+     * Simple handling of getUserMedia
+     * Be careful of argument order change: navigator.getUserMedia(constraints, onSuccess, onError)
+     * Order changed due to constraints being optional.
+     * @deprecated This was used as during early adoption of this feature, but now it is standardized should use promises instead.
+     * @param {Function} callback
+     * @param {MediaStreamConstraints} constraints
+     */
   static getUserMedia (callback, constraints) {
-    
-
     if (!constraints) {
       constraints = {
         video: true,
@@ -109,10 +134,16 @@ class StreamHelper {
       }
     }
 
+    /**
+         * @param {MediaStream} stream
+         */
     var onSuccess = (stream) => {
       callback(stream)
     }
 
+    /**
+         * @param {Error} err
+         */
     var onError = (err) => {
       console.error(err)
 
@@ -126,11 +157,11 @@ class StreamHelper {
   }
 
   /**
-   * @param {MediaStream} stream
-   * @param {object} object
-   * @return {false|object}
-   */
-  static handleCameraStream (stream, object) {
+     * @param {MediaStream} stream
+     * @param {object} object
+     * @return {false|object}
+     */
+  static handleCameraStream (stream, object = undefined) {
     if (!stream || stream.isError) {
       return false
     }
@@ -155,8 +186,8 @@ class StreamHelper {
   }
 
   /**
-   * @param {MediaStream} stream
-   */
+     * @param {MediaStream} stream
+     */
   static stopCameraStream (stream) {
     // Stop tracks
     var tracks = StreamHelper.getStreamTracks(stream)
@@ -168,11 +199,11 @@ class StreamHelper {
   }
 
   /**
-  * Stops stream and related data
-  * @param {Object} o
-  * @param {Boolean} removeFromDom
-  * @return {void}
-   */
+     * Stops stream and related data
+     * @param {Object} o
+     * @param {Boolean} removeFromDom
+     * @return {void}
+     */
   static stopCameraStreamObject (o, removeFromDom = false) {
     // Stop Stream
     StreamHelper.stopCameraStream(o.stream)
@@ -197,9 +228,9 @@ class StreamHelper {
   }
 
   /**
-   * @param {MediaStream} stream
-   * @return {array}
-   */
+     * @param {MediaStream} stream
+     * @return {MediaStreamTrack[]}
+     */
   static getStreamTracks (stream) {
     if (stream.getTracks) {
       return stream.getTracks()
@@ -209,25 +240,19 @@ class StreamHelper {
   }
 
   /**
-   * @param {MediaStream} stream
-   * @param {string} status
-   * @return {array}
-   */
+     * @param {MediaStream} stream
+     * @param {boolean} status Enabled: enabled = true & muted = false
+     * @return {MediaStreamTrack[]}
+     */
   static getTracksByStatus (stream, status) {
-    /*
-      SPEC:
-
-      Enabled/Disabled:
-      enabled = true
-      muted = false
-      */
-
     var tracks = StreamHelper.getTracks(stream)
+    /**
+             * @type {MediaStreamTrack[]}
+             */
     var fTracks = []
-    var track
 
-    for (var i = 0; i < tracks.length; i++) {
-      track = tracks[i]
+    for (let i = 0; i < tracks.length; i++) {
+      let track = tracks[i]
 
       // Enabled
       if (track.enabled !== undefined && track.enabled !== status) {
@@ -237,10 +262,10 @@ class StreamHelper {
       // ReadyState
       if (
         track.readyState !== undefined &&
-        (
-          (track.readyState === 'live' && !status) ||
-          (track.readyState === 'ended' && status)
-        )
+                (
+                  (track.readyState === 'live' && !status) ||
+                    (track.readyState === 'ended' && status)
+                )
       ) {
         continue
       }
@@ -249,34 +274,36 @@ class StreamHelper {
       if (track.muted !== undefined && track.muted !== !status) {
         continue
       }
+
+      fTracks.push(track)
     }
 
     return fTracks
   }
 
   /**
-   * @param {MediaStream} stream
-   * @return {array}
-   */
+     * @param {MediaStream} stream
+     * @return {MediaStreamTrack[]}
+     */
   static getTracks (stream) {
     return stream.getTracks()
   }
 
   /**
-   * @param {MediaStream} stream
-   * @param {string} type
-   * @return {array}
-   */
+     * @param {MediaStream} stream
+     * @param {string} type
+     * @return {MediaStreamTrack[]}
+     */
   static getTracksByType (stream, type) {
     return StreamHelper.getTracksByAttribute(stream, 'kind', type)
   }
 
   /**
-   * @param {MediaStream} stream
-   * @param {string} attr
-   * @param {*} value
-   * @return {array}
-   */
+     * @param {MediaStream} stream
+     * @param {string} attr
+     * @param {*} value
+     * @return {MediaStreamTrack[]}
+     */
   static getTracksByAttribute (stream, attr, value) {
     var tracks = StreamHelper.getTracks(stream)
     var fTracks = []
@@ -293,19 +320,19 @@ class StreamHelper {
   }
 
   /**
-   * @return {object}
-   */
+     * @return {StreamError}
+     */
   static StreamError () {
     return {
       isError: true,
-      error: ''
+      error: null
     }
   }
 
   /**
-   * Connection between stream, video and url due to revoking and updating.
-   * @return {object}
-   */
+     * Connection between stream, video and url due to revoking and updating.
+     * @return {StreamObject}
+     */
   static StreamObject () {
     return {
       stream: null,
@@ -314,20 +341,20 @@ class StreamHelper {
     }
   }
 
-  static polyfillGetUserMedia () {
+  static polyfillGetUserMedia () { // TODO: polyfill typing. Should declare one feature at a time.
     navigator.getUserMedia = (
       navigator.getUserMedia ||
-      navigator.mozGetUserMedia ||
-      navigator.webkitGetUserMedia
+            navigator.mozGetUserMedia ||
+            navigator.webkitGetUserMedia
     )
   }
 
   /**
-   * Quick method to get webcam and show in element
-   * @param {MediaStreamConstraints} constraints
-   * @param {HTMLElement} element
-   * @param {function} callback
-   */
+     * Quick method to get webcam and show in element
+     * @param {MediaStreamConstraints} constraints
+     * @param {HTMLElement} element
+     * @param {function} callback
+     */
   static webcamToElement (constraints, element, callback) {
     StreamHelper.getUserMedia(function (data) {
       if (!data || data.isError) {
@@ -353,8 +380,8 @@ class StreamHelper {
   }
 
   /**
-   * @return {MediaStreamConstraints}
-   */
+     * @return {MediaStreamConstraints}
+     */
   static getUnlimitedConstraints () {
     return {
       video: true,
@@ -363,10 +390,10 @@ class StreamHelper {
   }
 
   /**
-  * Attempts to get best constraints with best video.
-  * @return {Promise}
-   */
-  static getBestConstraints() {
+     * Attempts to get best constraints with best video.
+     * @return {Promise}
+     */
+  static getBestConstraints () {
     return new Promise((resolve, reject) => {
       StreamHelper.getUserMediaWithWorkingConstraints(null, (stream) => {
         resolve(StreamHelper.getStreamConstraints(stream))
@@ -375,9 +402,9 @@ class StreamHelper {
   }
 
   /**
-   * @param {MediaStream} stream
-   * @return {MediaStreamConstraints}
-   */
+     * @param {MediaStream} stream
+     * @return {MediaStreamConstraints}
+     */
   static getStreamConstraints (stream) {
     const tracks = stream.getTracks()
     const constraints = {}
@@ -389,20 +416,23 @@ class StreamHelper {
   }
 
   /**
-  * Attempts to getUserMedia with best video.
-  * Falls back to simpler constraints on fail.
-  *   Safe => Not safe
-  *   1. {video: true, audio: false} OR {video: false, audio: true}
-  *   2. {video: true, audio: true}
-  *   3. {video: {...}, audio: {...}
-  * @param {MediaStreamConstraints|null} constraints
-  * @param {function} onSuccess
-  * @param {function} onError
-   */
+     * Attempts to getUserMedia with best video.
+     * Falls back to simpler constraints on fail.
+     *   Safe => Not safe
+     *   1. {video: true, audio: false} OR {video: false, audio: true}
+     *   2. {video: true, audio: true}
+     *   3. {video: {...}, audio: {...}
+     * @param {MediaStreamConstraints|null} constraints
+     * @param {function} onSuccess
+     * @param {function} onError
+     */
   static getUserMediaWithWorkingConstraints (constraints = null, onSuccess, onError) {
-    if (!constraints) {
+    if (!constraints) { // TODO: Typeguards not working.
       constraints = StreamHelper.getUnlimitedConstraints()
     }
+    /**
+         * @param {Error} err
+         */
     var onErrorHandle = (err) => {
       var isError = false
 
@@ -428,8 +458,8 @@ class StreamHelper {
   }
 
   /**
-   * @return {MediaStream}
-   */
+     * @return {MediaStream}
+     */
   static getEmptyStream () {
     let stream = new window.MediaStream()
 
@@ -437,7 +467,7 @@ class StreamHelper {
 
     // Firefox stream error bug fix
     // [Exception... "Component not initialized"  nsresult: "0xc1f30001 (NS_ERROR_NOT_INITIALIZED)"
-    canvas.getContext('2d').fillRect(1, 1, 1, 1)
+    canvas.getContext('2d').fillRect(1, 1, 1, 1) // TODO: import failOnFalsy
     stream = canvas.captureStream() // Error above can possibly be fixed by passing value here.
 
     return stream

@@ -197,7 +197,7 @@ var TextManager = function (settings) {
   manager.m = manager.getMessage
 
   /**
-   * @param {array} keys
+   * @param {string[]} keys
    * @return {object}
    */
   manager.getMessageObject = function (keys) {
@@ -210,8 +210,8 @@ var TextManager = function (settings) {
   }
 
   /**
-   * @param {array} keys
-   * @return {array}
+   * @param {string[]} keys
+   * @return {string[]}
    */
   manager.getMessageArray = function (keys) {
     return keys.map(key => {
@@ -236,7 +236,7 @@ var TextManager = function (settings) {
   }
 
   /**
-   * @return {array}
+   * @return {string[]}
    */
   manager.getAvailableLanguages = function () {
     var languages = manager.settings.languages

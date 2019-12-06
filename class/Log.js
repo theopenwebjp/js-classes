@@ -20,7 +20,7 @@ class Log {
      *
      * @param {String} level Log level(constants.LOG_LEVEL key)
      * @param {Function} h Log function
-     * @param {Array} args Arguments list
+     * @param {*[]} args Arguments list
      */
   static _log (level, h, args = []) {
     const setLevel = LOG_LEVEL

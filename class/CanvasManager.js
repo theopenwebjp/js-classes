@@ -1,4 +1,94 @@
 /**
+ * @typedef {object} SimpleDOMRect
+ * @property {number|null} top
+ * @property {number|null} bottom
+ * @property {number|null} left
+ * @property {number|null} right
+ */
+
+/**
+ * @typedef {object} CanvasRendererObject
+ * @property {function|null} renderable
+ * @property {HTMLCanvasElement|null} canvas
+ * @property {CanvasRenderingContext2D|null} context
+ * @property {number} rate
+ * @property {number|null} interval
+ * @property {boolean} muted
+ */
+
+/**
+ * @type {CanvasRendererObject}
+ */
+const defaultCanvasRenderer = {
+  renderable: null,
+  canvas: null,
+  context: null,
+  rate: 1000 / 20,
+  interval: null,
+  muted: false // Allows for keeping rate
+}
+
+class CanvasRenderer {
+  /**
+     * @param {object} settings
+     */
+  constructor (settings) {
+    Object.assign(this, defaultCanvasRenderer)
+    for (var key in settings) {
+      this[key] = settings[key]
+    }
+  }
+
+  /**
+     * @return {number}
+     */
+  start () {
+    if (!this.interval) {
+      this.interval = window.setInterval(this.render, this.rate)
+    }
+
+    return this.interval
+  }
+
+  mute () {
+    this.muted = true
+  }
+
+  unmute () {
+    this.muted = false
+  }
+
+  stop () {
+    if (this.interval) {
+      window.clearInterval(this.interval)
+      this.interval = null
+    }
+  }
+
+  /**
+     * @return {undefined|false}
+     */
+  render () {
+    if (this.muted) {
+      return false
+    }
+
+    this.renderable()
+  }
+}
+
+/**
+ * @template T
+ * @param {T} value
+ */
+function failOnFalsy (value) {
+  if (!value) {
+    throw new Error(`${value} expected to be non-falsy failed check.`)
+  }
+  return value
+}
+
+/**
  * Collection of static canvas functions.
  * Should change to CanvasHelper??
  */
@@ -6,9 +96,9 @@ function CanvasManager () {
   var cManager = {}
 
   /**
-   * @param {HTMLCanvasElement} canvas
-   * @return {replacements}
-   */
+     * @param {HTMLCanvasElement} canvas
+     * @return {CanvasRenderingContext2D}
+     */
   cManager.getContext = function (canvas) {
     // SPEC: Caching allows for higher speed.
 
@@ -21,10 +111,10 @@ function CanvasManager () {
   }
 
   /**
-   * @param {HTMLCanvasElement} canvas
-   * @param {number} fps
-   * @return {MediaStream|boolean}
-   */
+     * @param {HTMLCanvasElement} canvas
+     * @param {number} fps
+     * @return {MediaStream|boolean}
+     */
   cManager.canvasToStream = function (canvas, fps) {
     if (canvas.captureStream) {
       if (fps) {
@@ -38,11 +128,11 @@ function CanvasManager () {
   }
 
   /**
-   * Abstract canvas to image function
-   * @param {HTMLCanvasElement} canvas
-   * @param {object} options
-   * @return {*}
-   */
+     * Abstract canvas to image function
+     * @param {HTMLCanvasElement} canvas
+     * @param {object} options
+     * @return {*}
+     */
   cManager.canvasToImage = function (canvas, options) {
     var returnData
 
@@ -87,9 +177,9 @@ function CanvasManager () {
 
   // Imaging
   /**
-   * @param {*} drawable
-   * @return {HTMLImageElement}
-   */
+     * @param {*} drawable
+     * @return {HTMLImageElement}
+     */
   cManager.drawableToImage = function (drawable) {
     var dataURL = cManager.drawableToDataURL(drawable)
     var image = new window.Image()
@@ -99,11 +189,11 @@ function CanvasManager () {
   }
 
   /**
-   * @param {string} src
-   * @param {function} onLoad
-   * @param {string} format
-   * @param {object} conversionOptions
-   */
+     * @param {string} src
+     * @param {function} onLoad
+     * @param {string} format
+     * @param {object} conversionOptions
+     */
   cManager.ImageSrcToDataURL = function (src, onLoad, format, conversionOptions) {
     var image = new window.Image()
     image.src = src
@@ -115,48 +205,48 @@ function CanvasManager () {
   }
 
   /**
-   * @param {*} drawal
-   * @param {undefined|HTMLCanvasElement} canvas
-   * @return {HTMLCanvasElement}
-   */
-  cManager.drawableToCanvas = function (drawable, canvas) {
+     * @param {CanvasImageSource} drawable
+     * @param {undefined|HTMLCanvasElement} canvas
+     * @return {HTMLCanvasElement}
+     */
+  cManager.drawableToCanvas = function (drawable, canvas = undefined) {
     canvas = canvas || document.createElement('canvas')
-    canvas.width = drawable.width || drawable.videoWidth
-    canvas.height = drawable.height || drawable.videoHeight
-    canvas.getContext('2d').drawImage(drawable, 0, 0)
+    canvas.width = drawable.width || drawable.videoWidth || 0
+    canvas.height = drawable.height || drawable.videoHeight || 0
+    failOnFalsy(canvas.getContext('2d')).drawImage(drawable, 0, 0)
 
     return canvas
   }
 
   /**
-   * @param {*} drawable
-   * @param {string} format
-   * @param {object} conversionOptions
-   * @return {string}
-   */
-  cManager.drawableToDataURL = function (drawable, format, conversionOptions) {
+     * @param {CanvasImageSource} drawable
+     * @param {string|undefined} format
+     * @param {number|undefined} conversionOptions
+     * @return {string}
+     */
+  cManager.drawableToDataURL = function (drawable, format = undefined, conversionOptions = undefined) {
     var canvas = cManager.drawableToCanvas(drawable)
     return cManager.canvasToDataURL(canvas, format, conversionOptions)
   }
 
   /**
-   * @param {HTMLCanvasElement} canvas
-   * @param {string} format
-   * @param {object} conversionOptions
-   * @return {string}
-   */
-  cManager.canvasToDataURL = function (canvas, format, conversionOptions) {
+     * @param {HTMLCanvasElement} canvas
+     * @param {string|undefined} format
+     * @param {number|undefined} conversionOptions
+     * @return {string}
+     */
+  cManager.canvasToDataURL = function (canvas, format = undefined, conversionOptions = undefined) {
     var dataURL = canvas.toDataURL(format, conversionOptions)
     return dataURL
   }
 
   /**
-   * @param {HTMLCanvasElement} canvas
-   * @param {string} format
-   * @param {object} conversionOptions
-   * @param {function }onLoad
-   * @return {HTMLImageElement}
-   */
+     * @param {HTMLCanvasElement} canvas
+     * @param {string} format
+     * @param {object} conversionOptions
+     * @param {function} onLoad
+     * @return {HTMLImageElement}
+     */
   cManager.canvasToImageFile = function (canvas, format, conversionOptions, onLoad) {
     var img = new window.Image()
     var dataURL = cManager.canvasToDataURL(canvas, format, conversionOptions)
@@ -176,16 +266,16 @@ function CanvasManager () {
   }
 
   /**
-   * Watches for canvas stop, usual for WebRTC connection problems in older browsers.
-   * Stops on first stop.
-   * @param {HTMLCanvasElement} canvas
-   * @param {function} onStop
-   * @param {object}
-   */
+     * Watches for canvas stop, usual for WebRTC connection problems in older browsers.
+     * Stops on first stop.
+     * @param {HTMLCanvasElement} canvas
+     * @param {function} onStop
+     * @param {object} options
+     */
   cManager.watchForCanvasStop = function (canvas, onStop, options) {
     var ms = options.interval || 2000
 
-    var ctx = canvas.getContext('2d')
+    var ctx = failOnFalsy(canvas.getContext('2d'))
 
     var getImageData = function () {
       return ctx.getImageData(0, 0, canvas.width, canvas.height)
@@ -203,11 +293,11 @@ function CanvasManager () {
   }
 
   /**
-   * Returns boolean for quick imageData checking.
-   * @param {ImageData} imgData1
-   * @param {ImageData} imgData2
-   * @return {boolean}
-   */
+     * Returns boolean for quick imageData checking.
+     * @param {ImageData} imgData1
+     * @param {ImageData} imgData2
+     * @return {boolean}
+     */
   cManager.isImageDataSame = function (imgData1, imgData2) {
     if (imgData1.data.length !== imgData2.data.length) {
       return false
@@ -226,12 +316,12 @@ function CanvasManager () {
   }
 
   /**
-   * @param {HTMLCanvasElement} canvas
-   * @param {object} options
-   * @return {boolean}
-   */
+     * @param {HTMLCanvasElement} canvas
+     * @param {object} options
+     * @return {boolean}
+     */
   cManager.canvasHasColorData = function (canvas, options) {
-    var ctx = canvas.getContext('2d')
+    var ctx = failOnFalsy(canvas.getContext('2d'))
     var data = ctx.getImageData(0, 0, canvas.width, canvas.height).data
     var step = 4
 
@@ -264,27 +354,27 @@ function CanvasManager () {
   }
 
   /**
-   * @param {HTMLCanvasElement} canvas
-   * @param {DOMRect} boundingRect
-   * @return {HTMLCanvasElement}
-   */
+     * @param {HTMLCanvasElement} canvas
+     * @param {SimpleDOMRect} boundingRect
+     * @return {HTMLCanvasElement}
+     */
   cManager.fitCanvasToBoundingRect = function (canvas, boundingRect) {
     var canvas2 = document.createElement('canvas')
     canvas2.width = boundingRect.right - boundingRect.left
     canvas2.height = boundingRect.bottom - boundingRect.top
-    canvas2.getContext('2d').drawImage(canvas, boundingRect.left, boundingRect.top, canvas2.width, canvas2.height, 0, 0, canvas2.width, canvas2.height)
+    failOnFalsy(canvas2.getContext('2d')).drawImage(canvas, boundingRect.left, boundingRect.top, canvas2.width, canvas2.height, 0, 0, canvas2.width, canvas2.height)
 
     canvas.width = canvas2.width
     canvas.height = canvas2.height
-    canvas.getContext('2d').drawImage(canvas2, 0, 0)
+    failOnFalsy(canvas.getContext('2d')).drawImage(canvas2, 0, 0)
 
     return canvas
   }
 
   /**
-   * @param {CanvasRenderingContext2D} ctx
-   * @return {DOMRect}
-   */
+     * @param {CanvasRenderingContext2D} ctx
+     * @return {DOMRect}
+     */
   cManager.getContextBoundingRect = function (ctx) {
     var boundingRect = cManager.BoundingRect()
     var canvas = ctx.canvas
@@ -321,8 +411,8 @@ function CanvasManager () {
   }
 
   /**
-   * @return {DOMRect}
-   */
+     * @return {SimpleDOMRect}
+     */
   cManager.BoundingRect = function () {
     return {
       top: null,
@@ -332,79 +422,13 @@ function CanvasManager () {
     }
   }
 
-  /**
-   * @param {object} settings
-   * @return {object}
-   */
-  cManager.CanvasRenderer = function (settings) {
-    /*
-        SPEC:
-
-        Canvas video rendering
-        */
-
-    var cRenderer = {}
-    cRenderer.renderable = null
-    cRenderer.canvas = null
-    cRenderer.context = null
-    cRenderer.rate = 1000 / 20
-    cRenderer.interval = null
-    cRenderer.muted = false // Allows for keeping rate
-
-    /**
-     * @param {object} settings
-     */
-    cRenderer.setup = function (settings) {
-      for (var key in settings) {
-        cRenderer[key] = settings[key]
-      }
-    }
-
-    /**
-     * @return {number}
-     */
-    cRenderer.start = function () {
-      if (!cRenderer.interval) {
-        cRenderer.interval = window.setInterval(cRenderer.render, cRenderer.rate)
-      }
-
-      return cRenderer.interval
-    }
-
-    cRenderer.mute = function () {
-      cRenderer.mute = true
-    }
-
-    cRenderer.unmute = function () {
-      cRenderer.mute = false
-    }
-
-    cRenderer.stop = function () {
-      window.clearInterval(cRenderer.interval)
-      cRenderer.interval = null
-    }
-
-    /**
-     * @return {undefined|false}
-     */
-    cRenderer.render = function () {
-      if (cRenderer.muted) {
-        return false
-      }
-
-      cRenderer.renderable()
-    }
-
-    cRenderer.setup(settings)
-
-    return cRenderer
-  }
+  cManager.CanvasRenderer = CanvasRenderer
 
   /**
-   * @param {MediaStream} stream
-   * @param {number} updateRate
-   * @return {object}
-   */
+     * @param {MediaStream} stream
+     * @param {number} updateRate
+     * @return {object}
+     */
   cManager.streamToCanvasRenderer = function (stream, updateRate) {
     // Abstract here
 

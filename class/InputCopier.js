@@ -1,17 +1,50 @@
 /**
+ * @typedef {object} CopierElements
+ * @property {Element|null} main
+ * @property {Element|null} pages
+ */
+
+/**
+ * @typedef {object} CopierEvents
+ * @property {function|null} handlePageInputClick
+ * @property {function|null} handlePageInputDragStart
+ * @property {function|null} handlePageInputDrop
+ */
+
+/**
+ * @typedef {object} RowOptions
+ * @property {{name: string, id: string}} attributes
+ * @property {string} label
+ * @property {string[]} values
+ */
+
+/**
  * Copy inputs from one list to another.
  */
 var InputCopier = function () {
   var copier = {}
+
+  /**
+   * @type {CopierElements}
+   */
   copier.elements = {
     main: null,
     pages: null
   }
+
+
+  /**
+   * @type {CopierEvents}
+   */
   copier.events = {
     handlePageInputClick: null,
     handlePageInputDragStart: null,
     handlePageInputDrop: null
   }
+  /**
+         * @typedef {object} CopierState
+         * @property {*} copy // TODO: What is this?
+         */
   copier.state = {
     copy: null
   }
@@ -25,18 +58,50 @@ var InputCopier = function () {
     copier.newPage()
   }
 
+  /**
+     * @typedef {object} PageElements
+     * @property {HTMLElement|null} main
+     * @property {HTMLElement|null} list
+     * @property {HTMLElement|null} addButton
+     */
+
+  /**
+     * @typedef {object} PageEvents
+     * @property {function|null} handleInputClick
+     * @property {function|null} handleInputDragStart
+     * @property {function|null} handleInputDrop
+     */
+
+     /**
+             * @typedef {object} PageState
+             * @property {boolean} receiver
+             * @property {boolean} sender
+             */
+
   copier.Page = function () {
     var page = {}
+
+    /**
+     * @type {PageElements}
+     */
     page.elements = {
       main: null,
       list: null,
       addButton: null
     }
+
+    /**
+     * @type {PageEvents}
+     */
     page.events = {
       handleInputClick: null,
       handleInputDragStart: null,
       handleInputDrop: null
     }
+    
+    /**
+     * @type {PageState}
+     */
     page.state = {
       receiver: false,
       sender: false
@@ -55,10 +120,10 @@ var InputCopier = function () {
     }
 
     /**
-     * @param {object} obj
-     * @return {HTMLElement}
-     */
-    page.Row = function (obj) {
+         * @param {RowOptions|undefined} obj
+         * @return {HTMLElement}
+         */
+    page.Row = function (obj = undefined) {
       // InputElement = element for setting value.
 
       var name = ''
@@ -74,10 +139,10 @@ var InputCopier = function () {
     }
 
     /**
-     * @param {string} name
-     * @param {*} value
-     * @return {HTMLElement}
-     */
+         * @param {string} name
+         * @param {*} value
+         * @return {HTMLElement}
+         */
     page.CalculatedRow = function (name, value) {
       var wrapper = document.createElement('div')
       var el
@@ -107,11 +172,11 @@ var InputCopier = function () {
     }
 
     /**
-     * @param {array} arr
-     * @return {array}
-     */
+         * Helper for multiple
+         * @param {RowOptions[]} arr
+         * @return {Array}
+         */
     page.formatRows = function (arr) {
-      // Helper for multiple
       var rows = []
       for (var i = 0; i < arr.length; i++) {
         rows.push(page.Row(arr[i]))
@@ -126,15 +191,15 @@ var InputCopier = function () {
     }
 
     /**
-     * @param {HTMLElement} row
-     */
+         * @param {HTMLElement} row
+         */
     page.addRow = function (row) {
       page.elements.list.appendChild(row)
     }
 
     /**
-     * @param {array} rows
-     */
+         * @param {Array} rows
+         */
     page.addRows = function (rows) {
       for (var i = 0; i < rows.length; i++) {
         page.addRow(rows[i])
@@ -142,30 +207,31 @@ var InputCopier = function () {
     }
 
     /**
-     * @param {HTMLElement} row
-     */
+         * @param {HTMLElement} row
+         * @return {HTMLElement|undefined}
+         */
     page.deleteRow = function (row) {
-      row.parentElement.removeChild(row)
+      return row.parentElement ? row.parentElement.removeChild(row) : undefined
     }
 
     /**
-     * @param {Event} ev
-     */
+         * @param {MouseEvent} ev
+         */
     page.deleteRowFromButton = function (ev) {
-      var row = ev.target.parentElement
+      var row = ev.target.parentElement // TODO: target check
       page.deleteRow(row)
     }
 
     /**
-     * @return {HTMLElement}
-     */
+         * @return {HTMLElement}
+         */
     page.getElement = function () {
       return page.elements.main
     }
 
     /**
-     * @return {array}
-     */
+         * @return {Array}
+         */
     page.getRows = function () {
       var list = page.elements.list
       var rows = list.childNodes
@@ -173,8 +239,8 @@ var InputCopier = function () {
     }
 
     /**
-     * @return {string}
-     */
+         * @return {string}
+         */
     page.toJson = function () {
       var rows = page.getRows()
       var json = []
@@ -194,9 +260,9 @@ var InputCopier = function () {
     }
 
     /**
-     * @param {string} jsonStr
-     * @return {boolean}
-     */
+         * @param {string} jsonStr
+         * @return {boolean}
+         */
     page.fromJson = function (jsonStr) {
       var obj = (JSON.parse(jsonStr))
       if (!obj) {
@@ -217,8 +283,8 @@ var InputCopier = function () {
   }
 
   /**
-   * @return {object}
-   */
+     * @return {object}
+     */
   copier.newPage = function () {
     var page = new copier.Page()
     copier.addPage(page)
@@ -227,17 +293,18 @@ var InputCopier = function () {
   }
 
   /**
-   * @param {object} page
-   */
+     * @param {object} page
+     */
   copier.addPage = function (page) {
     copier.elements.pages.appendChild(page.elements.main)
   }
 
   /**
-   * @param {HTMLElement} el
-   */
+     * @param {HTMLElement} el
+     * @return {HTMLElement|undefined}
+     */
   copier.removePage = function (el) {
-    el.parentElement.removeChild(el)
+    return el.parentElement ? el.parentElement.removeChild(el) : undefined
   }
 
   copier.setup()

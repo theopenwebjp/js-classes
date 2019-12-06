@@ -8,17 +8,113 @@ const DomHelper = require('./DomHelper')
 var FormManager = function (settings) { // ??Make static.
   var manager = {}
 
-  manager.domHelper = new DomHelper()
+  manager.domHelper = DomHelper()
 
   manager.constants = {
     REQUIRED_ATTR: 'data-required'
   }
 
+  /**
+     * @typedef {object} FormManagerSettings
+     * @property {boolean} useLabel
+     * @property {Object<string, string>} text
+     */
+
+  /**
+     * @type {FormManagerSettings}
+     */
   manager.settings = {
     useLabel: false,
     text: {}
   }
+  /**
+         * @typedef {Object<string, *>} Dictionary
+         */
 
+  /**
+     * @typedef {object} PageInputOptions
+     * @property {boolean} noHidden
+     * @property {boolean} hidden
+     */
+
+  /**
+     * @typedef {object} A
+     * @description My description
+     * @property {string} b
+     */
+
+  /**
+     * @typedef {object} C
+     * @property {string} d
+     * @description My description
+     */
+
+  /**
+     * @typedef {Object} InputType
+     * @property {string} tag
+     * @property {boolean} placeholder
+     * @property {Object<string, string>} attributes
+     * @property {function} format // If handle: Number(val)
+     * @property {boolean} multiple
+     * @property {function(HTMLElement):*} value // Default = use .value. If handle: (el)=>{return el.value;}.
+     * @property {function(HTMLElement, *):void} setValue // Default = use .value. If handle: (el, val)=>{el.value = val;}.
+     * @description Object representing settings for an input type in inputTypes. Used for creating inputs.
+     */
+
+  /**
+     * @typedef {object} InputObject
+     * @description Object representing data of input element
+     * @property {string} type
+     * @property {string} tag
+     * @property {Object<string, string>} attributes
+     * @property {string} key
+     * @property {string} label
+     * @property {*[]} values
+     * @property {string} rowHeader
+     * @property {string} initialSelection
+     * @property {boolean} required
+     */
+
+  /**
+     * @return {InputObject}
+     */
+  manager.inputObject = function () {
+    return {
+      type: '',
+      tag: '',
+      attributes: {},
+      key: '', // Specifies unique key. Currently used as name attribute.
+      label: '',
+      values: [],
+      rowHeader: '',
+      initialSelection: '',
+      required: false
+    }
+  }
+
+  /**
+     * @typedef {object} FormSettings
+     * @description Object representing data for creating form
+     * @property {string} action
+     * @property {string} actionType
+     * @property {HTMLElement[]} inputs
+     */
+
+  /**
+     * @property
+     * @return {FormSettings}
+     */
+  manager.formSettings = function () {
+    return {
+      action: '',
+      actionType: '',
+      inputs: []
+    }
+  }
+
+  /**
+     * @type {Object<string, InputType>} // TODO: Why is this not working?
+     */
   manager.inputTypes = {
     text: {
       'tag': 'input',
@@ -98,8 +194,16 @@ var FormManager = function (settings) { // ??Make static.
   }
 
   manager.extendedTypes = {
+    /**
+         * @type {object}
+         * @property {string} type
+         * @property {function} override
+         */
     boolean: {
       type: 'checkbox',
+      /**
+             * @param {InputType} inputType
+             */
       override: function (inputType) {
         inputType.multiple = false
       }
@@ -107,66 +211,8 @@ var FormManager = function (settings) { // ??Make static.
   }
 
   /**
-   * Object representing settings for an input type in inputTypes.
-   * Used for creating inputs.
-   * @return {object}
-   */
-  manager.InputType = function () {
-    return {
-      tag: '',
-      attributes: {},
-      multiple: false,
-      value: null, // Default = use .value. If handle: (el)=>{return el.value;}.
-      setValue: null, // Default = use .value. If handle: (el, val)=>{el.value = val;}.
-      format: null// If handle: Number(val)
-    }
-  }
-
-  /**
-   * Object representing data of input element
-   * @return {object}
-   */
-  manager.InputObject = function () {
-    return {
-      type: '',
-      tag: '',
-      attributes: {},
-      label: '',
-      values: [],
-      rowHeader: '',
-      initialSelection: ''
-    }
-  }
-
-  /**
-   * ??Seems to be for same purpose as InputObject. CHECK!!!
-   * @return {object}
-   */
-  manager.InputSettings = function () {
-    return {
-      type: '',
-      tag: '',
-      key: '',
-      values: [],
-      required: false
-    }
-  }
-
-  /**
-   * Object representing data for creating form
-   * @return {object}
-   */
-  manager.FormSettings = function () {
-    return {
-      action: '',
-      actionType: '',
-      inputs: []
-    }
-  }
-
-  /**
-   * @param {object} settings
-   */
+     * @param {object} settings
+     */
   manager.setup = function (settings = {}) {
     for (var key in settings) {
       manager.settings[key] = settings[key]
@@ -174,9 +220,9 @@ var FormManager = function (settings) { // ??Make static.
   }
 
   /**
-   * @param {object} settings
-   * @return {HTMLFormElement}
-   */
+     * @param {object} settings
+     * @return {HTMLFormElement}
+     */
   manager.settingsToForm = function (settings) {
     // Start
     var form = document.createElement('form')
@@ -194,14 +240,16 @@ var FormManager = function (settings) { // ??Make static.
   }
 
   /**
-   * @param {object} settings
-   * @return {array}
-   */
+     * @param {object} settings
+     * @return {HTMLElement[]}
+     */
   manager.createInputs = function (settings) {
+    /**
+         * @type {HTMLElement[]}
+         */
     var inputs = []
-    var input
     for (var key in settings) {
-      input = settings[key]
+      let input = settings[key]
       input.key = key
 
       inputs.push(manager.createInput(input))
@@ -211,21 +259,26 @@ var FormManager = function (settings) { // ??Make static.
   }
 
   /**
-   * @param {string} key
-   * @return {string}
-   */
+     * @param {string} key
+     * @return {string}
+     */
   manager.m = function (key) {
     return manager.settings.text[key]
   }
 
   /**
-   * Input: <div><label>name</label> <div>{INPUT}</div></div>
-   * @param {Object} settings: InputSettings
-   * @return {HTMLElement}
-   */
+     * Input: <div><label>name</label> <div>{INPUT}</div></div>
+     * @param {InputObject} settings
+     * @return {HTMLElement}
+     */
   manager.createInput = function (settings) {
+    /**
+         * @type {HTMLElement[]}
+         */
     var children = []
-    var i
+    /**
+     * @type {HTMLElement|}
+     */
     var el
 
     var NAME_SUFFIX = ': '
@@ -249,6 +302,11 @@ var FormManager = function (settings) { // ??Make static.
 
     // Check tag
     if (manager.hasSingleTag(settings.type)) {
+      /**
+             * @type {object}
+             * @property {string} type
+             * @property {string} name
+             */
       var attributes = {
         type: settings.type,
         name: settings.key
@@ -263,30 +321,30 @@ var FormManager = function (settings) { // ??Make static.
         children
       )
     } else if (settings.tag === 'radio') { // Radio
-      for (i = 0; i < settings.values.length; i++) {
+      for (let i = 0; i < settings.values.length; i++) {
         children.push(manager.createTag(settings.tag, {
           type: 'radio',
           name: settings.key,
           value: settings.values[i]
-        }, null))
+        }))
       }
       el = manager.createTag('div', {}, children)
     } else if (settings.tag === 'checkbox') { // Checkbox
-      for (i = 0; i < settings.values.length; i++) {
+      for (let i = 0; i < settings.values.length; i++) {
         children.push(manager.createTag(settings.tag, {
           type: 'checkbox',
           name: settings.key,
           value: settings.values[i]
-        }, null))
+        }))
       }
       el = manager.createTag('div', {}, children)
     } else if (settings.tag === 'select') { // Select
-      for (i = 0; i < settings.values.length; i++) {
+      for (let i = 0; i < settings.values.length; i++) {
         children.push(manager.createTag('option', {
           value: settings.values[i]
-        }, null))
+        }))
       }
-      el = manager.createTag('select', {name: settings.key}, children)
+      el = manager.createTag('select', { name: settings.key }, children)
     }
 
     if (settings.required) {
@@ -300,24 +358,24 @@ var FormManager = function (settings) { // ??Make static.
   }
 
   /**
-   * @param {HTMLElement} el
-   */
+     * @param {HTMLElement} el
+     */
   manager.setInputAsRequired = function (el) {
     el.setAttribute(manager.constants.REQUIRED_ATTR, true)
   }
 
   /**
-   * @param {HTMLElement} form
-   * TODO
-   */
+     * @param {HTMLElement} form
+     * TODO
+     */
   manager.getRequiredInputs = function (form) { // TODO: form not used.
     return manager.domHelper.getElementsWithAttribute(manager.constants.REQUIRED_ATTR)
   }
 
   /**
-   * @param {Event} ev
-   * @return {boolean}
-   */
+     * @param {Event} ev
+     * @return {boolean}
+     */
   manager.handleSubmit = function (ev) { // ??Not called bug.
     var form = ev.target
     var bool = manager.checkRequiredInputs(form)
@@ -329,9 +387,9 @@ var FormManager = function (settings) { // ??Make static.
   }
 
   /**
-   * @param {HTMLElement} form
-   * @return {boolean}
-   */
+     * @param {HTMLElement} form
+     * @return {boolean}
+     */
   manager.checkRequiredInputs = function (form) {
     var inputs = manager.getRequiredInputs(form)
     for (var i = 0; i < inputs.length; i++) {
@@ -346,23 +404,23 @@ var FormManager = function (settings) { // ??Make static.
   }
 
   /**
-   * @param {HTMLElement} el
-   * @return boolean
-   */
+     * @param {HTMLElement} el
+     * @return boolean
+     */
   manager.checkRequiredInput = function (el) {
     /*
-    checkbox: .checked length > 0
-    radio: .checked has true
-    select: always selected.
-    */
+                            checkbox: .checked length > 0
+                            radio: .checked has true
+                            select: always selected.
+                            */
 
     var type = el.getAttribute('type')
 
     // Checked
     if (
       el.tagName === 'input' &&
-      (type === 'radio' || type === 'checkbox') &&
-      manager.getCheckedElements(el) === 0
+            (type === 'radio' || type === 'checkbox') &&
+            manager.getCheckedElements(el).length === 0
     ) {
       return false
     } else if (el.tagName === 'input' && !el.value) { // Input default
@@ -374,24 +432,19 @@ var FormManager = function (settings) { // ??Make static.
   }
 
   /**
-   * @param {HTMLElement} el
-   * @return {array}
-   */
+     * @param {HTMLElement} el
+     * @return {Element[]}
+     */
   manager.getCheckedElements = function (el) {
-    var elements = el.children
-    var checked = []
+    const elements = [...el.children]
 
-    for (var i = 0; i < elements.length; i++) {
-      if (elements[i].checked) { checked.push(elements[i]) }
-    }
-
-    return checked
+    return elements.filter(element => element.checked)
   }
 
   /**
-   * @param {string} type
-   * @return {boolean}
-   */
+     * @param {string} type
+     * @return {boolean}
+     */
   manager.hasSingleTag = function (type) {
     if (!manager.inputTypes[type].multiple) {
       return true
@@ -401,9 +454,9 @@ var FormManager = function (settings) { // ??Make static.
   }
 
   /**
-   * @param {array} arr
-   * @return {array}
-   */
+     * @param {*[]} arr
+     * @return {*[]}
+     */
   manager.arrayifyAll = function (arr) {
     for (var i = 0; i < arr.length; i++) {
       arr[i] = [arr[i]]
@@ -413,12 +466,12 @@ var FormManager = function (settings) { // ??Make static.
   }
 
   /**
-   * @param {string} tagName
-   * @param {object} attributes
-   * @param {array} children
-   * @return {HTMLElement}
-   */
-  manager.createTag = function (tagName, attributes, children) {
+     * @param {string} tagName
+     * @param {Dictionary} attributes
+     * @param {HTMLElement[]} children
+     * @return {HTMLElement}
+     */
+  manager.createTag = function (tagName, attributes, children = []) {
     return manager.domHelper.createElement({
       tag: tagName,
       attributes: attributes,
@@ -427,51 +480,54 @@ var FormManager = function (settings) { // ??Make static.
   }
 
   /**
-   * @param {HTMLElement} el
-   * @param {array} children
-   */
+     * @param {HTMLElement} el
+     * @param {HTMLElement[]} children
+     */
   manager.appendChildren = function (el, children) {
     manager.domHelper.appendChildren(el, children)
   }
 
   /**
-   * @param {HTMLElement} el
-   * @param {object} attributes
-   */
+     * @param {HTMLElement} el
+     * @param {Dictionary} attributes
+     */
   manager.setAttributes = function (el, attributes) {
     manager.domHelper.setAttributes(el, attributes)
   }
 
   /**
-   * @param {HTMLElement} el
-   * @return {string}
-   */
+     * @param {HTMLElement} el
+     * @return {string}
+     */
   manager.getTableHeaderValue = function (el) {
     var parentEl = manager.domHelper.getClosestParent(el, 'th')
-    return (parentEl ? parentEl.textContent : '')
+    return (parentEl ? parentEl.textContent : '') // TODO: failOnFalsy
   }
 
   /**
-   * @param {object} obj
-   * @return {array}
-   */
+     * @param {Dictionary} obj
+     * @return {Array<[string, *]>}
+     */
   manager.keyValueObjToArrays = function (obj) {
     /*
-    {
-      key1, val1,
-      keyn, valn,
-      ...
-    }
+                            {
+                              key1, val1,
+                              keyn, valn,
+                              ...
+                            }
 
-    >>
+                            >>
 
-    [
-      [key1, val1]
-      [keyn, valn]
-      ....
-    ]
-    */
+                            [
+                              [key1, val1]
+                              [keyn, valn]
+                              ....
+                            ]
+                            */
 
+    /**
+         * @type {Array<[string, *]>}
+         */
     var arr = []
 
     for (var key in obj) {
@@ -484,9 +540,9 @@ var FormManager = function (settings) { // ??Make static.
   }
 
   /**
-   * @param {object} attributes
-   * @return {string}
-   */
+     * @param {Dictionary} attributes
+     * @return {string}
+     */
   manager.attributesToSelector = function (attributes) {
     var selector = ''
     for (var key in attributes) {
@@ -497,15 +553,17 @@ var FormManager = function (settings) { // ??Make static.
   }
 
   /**
-   * @param {object} inputTypes
-   * @return {array}
-   */
+     * @param {Object<string, InputType>} inputTypes
+     * @return {string[]}
+     */
   manager.inputTypesToSelectors = function (inputTypes) {
-    var selectors = []
-    var selector, inputType
+    /**
+         * @type {string[]}
+         */
+    const selectors = []
     for (var key in inputTypes) {
-      inputType = inputTypes[key]
-      selector = ''
+      let inputType = inputTypes[key]
+      let selector = ''
 
       if (inputType.tag) { selector += ' ' + inputType.tag }
       if (inputType.attributes) { selector += manager.attributesToSelector(inputType.attributes) }
@@ -517,9 +575,9 @@ var FormManager = function (settings) { // ??Make static.
   }
 
   /**
-   * @param {array} elements
-   * @return {array}
-   */
+     * @param {HTMLElement[]} elements
+     * @return {InputObject[]}
+     */
   manager.elementsToInputObjects = function (elements) {
     var inputs = []
     for (var i = 0; i < elements.length; i++) {
@@ -530,23 +588,23 @@ var FormManager = function (settings) { // ??Make static.
   }
 
   /**
-   * Should keep only necessary information for editing
-   * @param {HTMLElement} element
-   * @return {object}
-   */
+     * Should keep only necessary information for editing
+     * @param {HTMLElement} element
+     * @return {InputObject}
+     */
   manager.elementToInputObject = function (element) {
-    var obj = manager.InputObject()
+    var obj = manager.inputObject()
 
     obj.tag = element.tagName
     obj.attributes = manager.domHelper.getElementAttributes(element)
 
-    if (element.value) {
+    if (element.value) { // TODO: type guard.
       obj.values.push(element.value)
     }
 
     obj.label = manager.getLabel(element)
     obj.rowHeader = manager.getTableHeaderValue(element)
-    if (obj.tag === 'select' && element.options.length > 0) {
+    if (obj.tag === 'select' && element.options.length > 0) { // TODO: Cast to select
       obj.initialSelection = element.options[0]
     }
 
@@ -554,9 +612,9 @@ var FormManager = function (settings) { // ??Make static.
   }
 
   /**
-   * @param {HTMLElement} element
-   * @return {HTMLElement|undefined}
-   */
+     * @param {HTMLElement} element
+     * @return {HTMLElement|undefined}
+     */
   manager.getLabelElement = function (element) {
     var labelEl
 
@@ -581,9 +639,9 @@ var FormManager = function (settings) { // ??Make static.
   }
 
   /**
-   * @param {HTMLElement} element
-   * @return {string}
-   */
+     * @param {HTMLElement} element
+     * @return {string}
+     */
   manager.getLabel = function (element) {
     var label = ''
     var labelEl = manager.getLabelElement(element)
@@ -596,9 +654,9 @@ var FormManager = function (settings) { // ??Make static.
   }
 
   /**
-   * @param {object} options
-   * @return {array}
-   */
+     * @param {PageInputOptions} options
+     * @return {HTMLElement[]}
+     */
   manager.getCurrentPageInputs = function (options = {}) {
     // Settings
     var settings
@@ -616,13 +674,13 @@ var FormManager = function (settings) { // ??Make static.
   }
 
   /**
-   * Gets input type from element
-   * @param {HTMLElement} el
-   * @return {Object} InputType. Default if not found.
-   */
+     * Gets input type from element
+     * @param {HTMLElement} el
+     * @return {Object} InputType. Default if not found.
+     */
   manager.getElementInputType = function (el) {
     const settings = manager.inputTypes
-    let type = null// DEFAULT
+    let type = null // DEFAULT
     for (let key in settings) {
       const setting = settings[key]
 
@@ -648,10 +706,10 @@ var FormManager = function (settings) { // ??Make static.
   }
 
   /**
-   * Gets input value of any form element.
-   * @param {DomElement} el
-   * @return {*} input value
-   */
+     * Gets input value of any form element.
+     * @param {HTMLElement} el
+     * @return {*} input value
+     */
   manager.getInputValue = function (el) {
     const type = manager.getElementInputType(el)
     let val = (typeof type.value === 'function') ? type.value(el) : el.value
@@ -663,9 +721,9 @@ var FormManager = function (settings) { // ??Make static.
   }
 
   /**
-   * Sets input values from a map
-   * @param {Object} map {selector1: val1, ...}
-   */
+     * Sets input values from a map
+     * @param {Object} map {selector1: val1, ...}
+     */
   manager.setInputValues = function (map) {
     for (let selector in map) {
       const val = map[selector]
@@ -677,10 +735,10 @@ var FormManager = function (settings) { // ??Make static.
   }
 
   /**
-   * Sets single input element's value
-   * @param {DomElement} el
-   * @param {*} val
-   */
+     * Sets single input element's value
+     * @param {HTMLElement} el
+     * @param {*} val
+     */
   manager.setInputValue = function (el, val) {
     const type = manager.getElementInputType(el)
     if (type.setValue) {
@@ -691,10 +749,10 @@ var FormManager = function (settings) { // ??Make static.
   }
 
   /**
-   * Focuses on first element found.
-   * Useful for having forms that auto focus.
-   * @param {DOMElement} el
-   */
+     * Focuses on first element found.
+     * Useful for having forms that auto focus.
+     * @param {HTMLElement} el
+     */
   manager.focusOnFirstInput = function (el) {
     const getFirstInput = (el) => {
       const children = [...el.children]
@@ -715,9 +773,9 @@ var FormManager = function (settings) { // ??Make static.
   }
 
   /**
-   * @param {HTMLElement} el
-   * @return {boolean}
-   */
+     * @param {HTMLElement} el
+     * @return {boolean}
+     */
   manager.isInput = function (el) {
     return !manager.getElementInputType(el)
   }
