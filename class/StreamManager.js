@@ -7,8 +7,12 @@ const TrackManager = require('./TrackManager')
  * Should change so is StreamHelper and is static.
  */
 class StreamManager {
-  constructor () {
-    this.streams = []// Storing
+  constructor() {
+    /**
+     * Storing
+     * @type {MediaStream[]}
+     */
+    this.streams = []
 
     // DEPRECATED mappings to functions moved to separate classes.
     this.TrackManager = TrackManager
@@ -38,21 +42,21 @@ class StreamManager {
     this.setup()
   }
 
-  setup () {
+  setup() {
     this.polyfillGetUserMedia()
   }
 
   /**
    * @param {MediaStream} stream
    */
-  addStream (stream) {
+  addStream(stream) {
     this.streams.push(stream)
   }
 
   /**
    * @param {MediaStream} stream
    */
-  removeStream (stream) {
+  removeStream(stream) {
     const NOT_EXIST_INDEX = -1
     var index = this.getStreamIndex(stream)
     if (index !== NOT_EXIST_INDEX) {
@@ -65,7 +69,7 @@ class StreamManager {
    * @param {MediaStream} stream
    * @return {number}
    */
-  getStreamIndex (stream) {
+  getStreamIndex(stream) {
     return this.streams.indexOf(stream)
   }
 }

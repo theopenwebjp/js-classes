@@ -29,7 +29,6 @@ module.exports = classes
 /**
  * TODO: Do the same as deprecated TODO.
  * @param {String} str
- * @return {Object}
  */
 function removed(str) {
     return {

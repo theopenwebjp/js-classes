@@ -14,10 +14,13 @@
  * TODO: Add this return types
  *
  * append: Appends to DOM.
+ * 
+ * TODO: Move out functionality that can be reused.
+ * @deprecated Use CanvasHelper OR fabricjs, etc.
  *
  * @param {Object} settings
  */
-function Drawer (settings) {
+function Drawer(settings) {
   var drawer = {}
   drawer.args = {} // Arguments passed to drawer abstraction.
   drawer.format = 'canvas' // svg, canvas. Previous DOM was tested but removed.
@@ -201,7 +204,7 @@ function Drawer (settings) {
         // Camel upper
         if (
           char === char.toUpperCase() &&
-                    char !== char.toLowerCase()
+          char !== char.toLowerCase()
         ) {
           returnText += (del + char)
         }

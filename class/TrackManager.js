@@ -1,6 +1,10 @@
 class TrackManager {
     constructor() {
-        this.tracks = [] // Storing
+        /**
+         * Storing
+         * @type {MediaStreamTrack[]}
+         */
+        this.tracks = []
     }
 
     /**

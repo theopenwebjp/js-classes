@@ -1,5 +1,13 @@
 /**
- * @typedef {object<string, function|null|undefined>} EventListenersMap
+ * @typedef {Object<string, function|null|undefined>} EventListenersMap
+ */
+
+/**
+ * @typedef {Object} PageManagerSettings
+ * @property {string} param
+ * @property {string} defaultKey
+ * @property {EventListenersMap} events
+ * @property {HTMLElement|null} parent
  */
 
 /**
@@ -8,49 +16,56 @@
  * 1. Load dynamic page area.
  * 2. Load based on url param.
  * 3. Create menu based on pages info.
+ * @param {PageManagerSettings} settings
  */
-var PageManager = function(settings) {
+var PageManager = function (settings) {
 
     var manager = {}
-    manager.settings = {
-        param: 'page',
-        defaultKey: '',
-        /**
-         * @type {EventListenersMap}
-         */
-        events: {
-            pagecomplete: null,
-            getpage: null
-        },
-        /**
-         * @type {HTMLElement|null}
-         */
-        parent: null
+    /**
+     * @param {Partial<PageManagerSettings>} options
+     */
+    manager.PageManagerSettings = function (options = {}) {
+        return Object.assign({
+            param: 'page',
+            defaultKey: '',
+            /**
+             * @type {EventListenersMap}
+             */
+            events: {
+                pagecomplete: null,
+                getpage: null
+            },
+            /**
+             * @type {HTMLElement|null}
+             */
+            parent: null
+        }, options)
     }
 
     /**
-     * @param {object} settings
+     * @type {PageManagerSettings}
      */
-    manager.setup = function(settings) {
+    manager.settings = manager.PageManagerSettings()
+
+    /**
+     * @param {Partial<PageManagerSettings>} options
+     */
+    manager.setup = function (options) {
         if (!window.uriActionHandler) { throw Error('Requires uriActionHandler') }
         if (!window.setUriParam) { throw Error('Requires setUriParam') }
 
-        if (settings) {
-            for (var key in settings) {
-                manager.settings[key] = settings[key]
-            }
-        }
+        manager.settings = manager.PageManagerSettings(options)
     }
 
     /**
      * @return {string}
      */
-    manager.getCurrentPageKey = function() {
+    manager.getCurrentPageKey = function () {
         var param = manager.settings.param
         var defaultKey = manager.settings.defaultKey
 
         var actions = {}
-        actions[param] = function(val) { return val }
+        actions[param] = function (val) { return val }
 
         var results = uriActionHandler(window.location.href, actions)
         var key = results[param]
@@ -67,7 +82,7 @@ var PageManager = function(settings) {
      * @param {*} parent TODO
      * @param {object} settings
      */
-    manager.setupCurrentPage = function(parent, settings) {
+    manager.setupCurrentPage = function (parent, settings) {
         var key = manager.getCurrentPageKey()
         if (key) {
             manager.setupPage(parent, key, settings)
@@ -78,7 +93,7 @@ var PageManager = function(settings) {
      * @param {object} pages
      * @return {HTMLElement}
      */
-    manager.getMenu = function(pages) {
+    manager.getMenu = function (pages) {
         // Requires key for url. Consider adding language handling.
         var nav = document.createElement('nav')
         var ul = document.createElement('ul')
@@ -105,7 +120,7 @@ var PageManager = function(settings) {
      * @param {*[]} args
      * @return {*}
      */
-    manager.handleEvent = function(name, args) {
+    manager.handleEvent = function (name, args) {
         var handle = manager.settings.events[name]
         if (handle) {
             return handle.apply(this, args)
@@ -119,8 +134,8 @@ var PageManager = function(settings) {
      * @param {string} key
      * @param {object} settings
      */
-    manager.setupPage = function(parent, key, settings) {
-        manager.handleEvent('getpage', [key, settings, function(args) {
+    manager.setupPage = function (parent, key, settings) {
+        manager.handleEvent('getpage', [key, settings, function (args) {
             manager.handleEvent('pagecomplete', [args, parent])
         }])
     }

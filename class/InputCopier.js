@@ -72,11 +72,11 @@ var InputCopier = function () {
      * @property {function|null} handleInputDrop
      */
 
-     /**
-             * @typedef {object} PageState
-             * @property {boolean} receiver
-             * @property {boolean} sender
-             */
+  /**
+          * @typedef {object} PageState
+          * @property {boolean} receiver
+          * @property {boolean} sender
+          */
 
   copier.Page = function () {
     var page = {}
@@ -98,7 +98,7 @@ var InputCopier = function () {
       handleInputDragStart: null,
       handleInputDrop: null
     }
-    
+
     /**
      * @type {PageState}
      */
@@ -135,7 +135,7 @@ var InputCopier = function () {
         value = obj.values[0] || ''
       }
 
-      return new page.CalculatedRow(name, value)
+      return page.CalculatedRow(name, value)
     }
 
     /**
@@ -174,7 +174,6 @@ var InputCopier = function () {
     /**
          * Helper for multiple
          * @param {RowOptions[]} arr
-         * @return {Array}
          */
     page.formatRows = function (arr) {
       var rows = []
@@ -186,7 +185,7 @@ var InputCopier = function () {
     }
 
     page.newRow = function () {
-      var row = new page.Row()
+      var row = page.Row()
       page.addRow(row)
     }
 
@@ -194,11 +193,13 @@ var InputCopier = function () {
          * @param {HTMLElement} row
          */
     page.addRow = function (row) {
-      page.elements.list.appendChild(row)
+      if (page && page.elements && page.elements.list) {
+        page.elements.list.appendChild(row)
+      }
     }
 
     /**
-         * @param {Array} rows
+         * @param {HTMLElement[]} rows
          */
     page.addRows = function (rows) {
       for (var i = 0; i < rows.length; i++) {
@@ -226,16 +227,15 @@ var InputCopier = function () {
          * @return {HTMLElement}
          */
     page.getElement = function () {
+      if (!page.elements || !page.elements.main) {
+        throw new Error('No element')
+      }
       return page.elements.main
     }
 
-    /**
-         * @return {Array}
-         */
     page.getRows = function () {
       var list = page.elements.list
-      var rows = list.childNodes
-      return rows
+      return list.childNodes
     }
 
     /**
@@ -271,7 +271,7 @@ var InputCopier = function () {
       var arr = obj
 
       for (var i = 0; i < arr.length; i++) {
-        page.addRow(new page.CalculatedRow(arr[i].name, arr[i].value))
+        page.addRow(page.CalculatedRow(arr[i].name, arr[i].value))
       }
 
       return true
@@ -286,17 +286,19 @@ var InputCopier = function () {
      * @return {object}
      */
   copier.newPage = function () {
-    var page = new copier.Page()
+    var page = copier.Page()
     copier.addPage(page)
 
     return page
   }
 
   /**
-     * @param {object} page
+     * @param {copier.Page} page
      */
   copier.addPage = function (page) {
-    copier.elements.pages.appendChild(page.elements.main)
+    if (copier.elements.pages) {
+      copier.elements.pages.appendChild(page.elements.main)
+    }
   }
 
   /**

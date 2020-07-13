@@ -1,6 +1,24 @@
 /**
+ * @typedef {Object} SharerSettings
+ */
+
+/**
+ * @typedef {Object} GroupedDataItem
+ * @property {string} name
+ * @property {string} description
+ * @property {string} image_src
+ * @property {HTMLImageElement|null} image
+ * @property {(function(...any):void)|null} handle
+ */
+
+/**
+ * @typedef {Object} ShareMethod
+ * @property {string} type
+ * @property {function():void} share
+
+/**
  * Data sharing handling.
- * @param {*} settings
+ * @param {SharerSettings} settings
  */
 function Sharer(settings) {
     var sharer = {}
@@ -28,19 +46,22 @@ function Sharer(settings) {
         // Other
         infrared: null
     }
+    /**
+     * @type {Object<string, ShareMethod>}
+     */
     sharer.share_methods = {}
 
     /**
-     * @param {object} settings
+     * @param {SharerSettings} settings
      */
-    sharer.setup = function(settings) {
+    sharer.setup = function (settings) {
         // Settings
         //
 
         sharer.setupShareMethods()
     }
 
-    sharer.setupShareMethods = function() {
+    sharer.setupShareMethods = function () {
         for (var key in sharer.sharer_settings) {
             sharer.setupShareMethod(key, sharer.sharer_settings[key])
         }
@@ -50,31 +71,25 @@ function Sharer(settings) {
      * @param {string} key
      * @param {*} data
      */
-    sharer.setupShareMethod = function(key, data) {
-        sharer.share_methods[key] = new sharer.ShareMethod(data)
+    sharer.setupShareMethod = function (key, data) {
+        sharer.share_methods[key] = sharer.ShareMethod(data)
     }
 
     /**
      * @param {string} key
      * @return {function}
      */
-    sharer.getShareMethod = function(key) {
+    sharer.getShareMethod = function (key) {
         var methods = sharer.getShareMethods()
         return methods[key]
     }
 
-    /**
-     * @return {object}
-     */
-    sharer.getShareMethods = function() {
+    sharer.getShareMethods = function () {
         var methods = sharer.share_methods
         return methods
     }
 
-    /**
-     * @return {object}
-     */
-    sharer.getTypes = function() {
+    sharer.getTypes = function () {
         var types = {
             visual: {},
             audio: {},
@@ -89,21 +104,21 @@ function Sharer(settings) {
     /**
      * @param {HTMLElement} el
      */
-    sharer.setShareElement = function(el) {
+    sharer.setShareElement = function (el) {
         el.addEventListener('click', sharer.handleShareClick)
     }
 
     /**
      * @param {Event} ev
      */
-    sharer.handleShareClick = function(ev) {
+    sharer.handleShareClick = function (ev) {
         sharer.showGroupedData()
     }
 
     /**
      * @return {HTMLElement}
      */
-    sharer.getNewWindow = function() {
+    sharer.getNewWindow = function () {
         var windowEl = document.createElement('div')
 
         // Style
@@ -124,7 +139,7 @@ function Sharer(settings) {
     /**
      * @return {HTMLElement}
      */
-    sharer.getNewButton = function() {
+    sharer.getNewButton = function () {
         var buttonEl = document.createElement('div')
 
         // Style
@@ -145,7 +160,7 @@ function Sharer(settings) {
     /**
      * @param {HTMLElement} el
      */
-    sharer.showWindow = function(el) {
+    sharer.showWindow = function (el) {
         el.style.display = 'block'
         el.style.visibility = 'visibile'
         if (!el.parentElement) {
@@ -157,7 +172,7 @@ function Sharer(settings) {
     /**
      * @param {HTMLElement} el
      */
-    sharer.hideWindow = function(el) {
+    sharer.hideWindow = function (el) {
         el.style.display = 'none'
         el.style.visibility = 'hidden'
         if (el.parentElement) {
@@ -166,7 +181,7 @@ function Sharer(settings) {
         }
     }
 
-    sharer.showGroupedData = function() {
+    sharer.showGroupedData = function () {
         var gData = sharer.getGroupedData()
         var item
         var windowEl = sharer.getNewWindow()
@@ -200,16 +215,15 @@ function Sharer(settings) {
         sharer.showWindow(windowEl)
     }
 
-    /**
-     * @return {object} gData
-     */
-    sharer.getGroupedData = function() {
+    sharer.getGroupedData = function () {
         var types = sharer.getTypes()
+        /**
+         * @type {Object<string, GroupedDataItem>}
+         */
         var gData = {}
-        var item
 
         for (var key in types) {
-            item = new sharer.GroupedDataItem()
+            const item = sharer.GroupedDataItem()
             item.name = key
             gData[key] = item
         }
@@ -218,24 +232,24 @@ function Sharer(settings) {
     }
 
     /**
-     * @return {object}
+     * @param {Partial<GroupedDataItem>} options
+     * @return {GroupedDataItem}
      */
-    sharer.GroupedDataItem = function() {
-        var gDataItem = {}
-        gDataItem.name = ''
-        gDataItem.description = ''
-        gDataItem.image_src = ''
-        gDataItem.image = null
-        gDataItem.handle = null
-
-        return gDataItem
+    sharer.GroupedDataItem = function (options = {}) {
+        return Object.assign({
+            name: '',
+            description: '',
+            image_src: '',
+            image: null,
+            handle: null
+        }, options)
     }
 
     /**
      * @param {string} type
      * @return {object}
      */
-    sharer.getShareMethodsByType = function(type) {
+    sharer.getShareMethodsByType = function (type) {
         var methods = sharer.getShareMethodsByAttr('type', type)
         return methods
     }
@@ -245,7 +259,7 @@ function Sharer(settings) {
      * @param {*} value
      * @return {object}
      */
-    sharer.getShareMethodsByAttr = function(attr, value) {
+    sharer.getShareMethodsByAttr = function (attr, value) {
         var methods = sharer.getShareMethods()
         var fMethods = {}
         for (var key in methods) {
@@ -258,19 +272,16 @@ function Sharer(settings) {
     }
 
     /**
-     * @param {object} settings
-     * @return {object}
+     * @param {Partial<ShareMethod>} options
+     * @return {ShareMethod}
      */
-    sharer.ShareMethod = function(settings) {
-        var sMethod = {}
-        sMethod.type = 'visual'
-
-        // Settings
-        //
-
-        sMethod.share = function() {}
-
-        return sMethod
+    sharer.ShareMethod = function (options = {}) {
+        return Object.assign({
+            type: 'visual',
+            // Settings
+            //
+            share: function () { }
+        }, options)
     }
 
     sharer.setup(settings)

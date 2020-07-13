@@ -37,22 +37,22 @@
  *
  * @param {ClassManagerSettings} settings
  */
-var ClassManager = function(settings) {
+var ClassManager = function (settings) {
     var manager = {}
-        /**
-         * @type {SchemaManager|null}
-         */
+    /**
+     * @type {SchemaManager|null}
+     */
     manager.schemaManager = null
-        /**
-         * @type {DataMapper|null}
-         */
+    /**
+     * @type {DataMapper|null}
+     */
     manager.dataMapper = null
-        /**
-         * @type {object|null}
-         */
+    /**
+     * @type {object|null}
+     */
     manager.baseClass = null
 
-    manager.ClassOptions = function() {
+    manager.ClassOptions = function () {
         /**
          * @type {ClassOptions}
          */
@@ -67,7 +67,7 @@ var ClassManager = function(settings) {
     /**
      * @return {MappingOptions[]}
      */
-    manager.getClassMappingOptionsFromSchema = function() {
+    manager.getClassMappingOptionsFromSchema = function () {
         return manager.SimpleDataToClassMappingOptions(manager.schemaManager.schemaList)
     }
 
@@ -75,11 +75,11 @@ var ClassManager = function(settings) {
      * @param {Array<string>} classNames
      * @return {Array<MappingOptions>}
      */
-    manager.SimpleDataToClassMappingOptions = function(classNames) { // ??test
+    manager.SimpleDataToClassMappingOptions = function (classNames) { // TODO: test
         return [{
             condition: {
                 type: 'key',
-                value: function(val) {
+                value: function (val) {
                     return classNames.includes(val)
                 }
             },
@@ -95,7 +95,7 @@ var ClassManager = function(settings) {
      * @param {ClassOptions|undefined} options
      * @return {Object}
      */
-    manager.getClass = function(className, options) {
+    manager.getClass = function (className, options) {
         if (!options) {
             options = manager.ClassOptions()
         }
@@ -123,7 +123,7 @@ var ClassManager = function(settings) {
      * @param {Object} options
      * @return {Object}
      */
-    manager.mapArguments = function(args, options) {
+    manager.mapArguments = function (args, options) {
         if (!manager.dataMapper) { // No data mapper
             return args
         } else if (!args || Object.keys(args).length === 0) { // No args
@@ -140,14 +140,14 @@ var ClassManager = function(settings) {
      * @param {Object} baseClass
      * @return {Object}
      */
-    manager.inheritClass = function(classObj, baseClass) {
+    manager.inheritClass = function (classObj, baseClass) {
         return Object.assign(classObj, baseClass)
     }
 
     /**
-     * @param {ClassManagerSettings} settings
+     * @param {Partial<ClassManagerSettings>} settings
      */
-    manager.setup = function(settings = {}) {
+    manager.setup = function (settings = {}) {
         if (!settings.schemaManager) {
             throw Error('ClassManager requires implementation of this.SchemaManager')
         }
@@ -162,7 +162,7 @@ var ClassManager = function(settings) {
     /**
      * @return {ClassManagerSettings}
      */
-    manager.Settings = function() {
+    manager.Settings = function () {
         /**
          * @type {ClassManagerSettings}
          */
@@ -176,12 +176,12 @@ var ClassManager = function(settings) {
     /**
      * @return {SchemaManager}
      */
-    manager.SchemaManager = function() {
+    manager.SchemaManager = function () {
         /**
          * @type {SchemaManager}
          */
         const schemaManager = { // TODO: Should import typedef from SchemaManager.
-            schema: (schemaList, className, data, schemaOptions) => {},
+            schema: (schemaList, className, data, schemaOptions) => { },
             schemaList: {}
         }
         return schemaManager

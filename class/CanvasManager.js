@@ -1,9 +1,9 @@
 /**
  * @typedef {object} SimpleDOMRect
- * @property {number|null} top
- * @property {number|null} bottom
- * @property {number|null} left
- * @property {number|null} right
+ * @property {number} top
+ * @property {number} bottom
+ * @property {number} left
+ * @property {number} right
  */
 
 /**
@@ -14,6 +14,26 @@
  * @property {number} rate
  * @property {number|null} interval
  * @property {boolean} muted
+ */
+
+/**
+ * @typedef {HTMLCanvasElement & {_context: CanvasRenderingContext2D|null|undefined}} CachedHTMLCanvasElement
+ */
+
+/**
+ * @typedef {Object} CanvasImageOptions
+ * @property {string} format
+ * @property {'data_url'|'image'} serialization
+ * @property {function(...any):any} on_load
+ * @property {number|null} conversion_options
+ */
+
+/**
+ * @typedef {Object} RGBASelection
+ * @property {boolean} r
+ * @property {boolean} g
+ * @property {boolean} b
+ * @property {boolean} a
  */
 
 /**
@@ -30,9 +50,9 @@ const defaultCanvasRenderer = {
 
 class CanvasRenderer {
   /**
-     * @param {object} settings
+     * @param {Partial<CanvasRendererObject>} settings
      */
-  constructor (settings) {
+  constructor(settings) {
     Object.assign(this, defaultCanvasRenderer)
     for (var key in settings) {
       this[key] = settings[key]
@@ -42,7 +62,7 @@ class CanvasRenderer {
   /**
      * @return {number}
      */
-  start () {
+  start() {
     if (!this.interval) {
       this.interval = window.setInterval(this.render, this.rate)
     }
@@ -50,15 +70,15 @@ class CanvasRenderer {
     return this.interval
   }
 
-  mute () {
+  mute() {
     this.muted = true
   }
 
-  unmute () {
+  unmute() {
     this.muted = false
   }
 
-  stop () {
+  stop() {
     if (this.interval) {
       window.clearInterval(this.interval)
       this.interval = null
@@ -68,7 +88,7 @@ class CanvasRenderer {
   /**
      * @return {undefined|false}
      */
-  render () {
+  render() {
     if (this.muted) {
       return false
     }
@@ -81,7 +101,7 @@ class CanvasRenderer {
  * @template T
  * @param {T} value
  */
-function failOnFalsy (value) {
+function failOnFalsy(value) {
   if (!value) {
     throw new Error(`${value} expected to be non-falsy failed check.`)
   }
@@ -90,21 +110,35 @@ function failOnFalsy (value) {
 
 /**
  * Collection of static canvas functions.
- * Should change to CanvasHelper??
+ * TODO: Change to CanvasHelper with static functions, and deprecate CanvasManager.
  */
-function CanvasManager () {
+function CanvasManager() {
   var cManager = {}
 
   /**
-     * @param {HTMLCanvasElement} canvas
+   * @param {Partial<RGBASelection>} options
+   */
+  cManager.RGBASelection = function (options) {
+    return Object.assign({
+      r: true,
+      g: true,
+      b: true,
+      a: false
+    }, options)
+  }
+
+  /**
+   * Caching allows for higher speed.
+     * @param {CachedHTMLCanvasElement} canvas
      * @return {CanvasRenderingContext2D}
      */
   cManager.getContext = function (canvas) {
-    // SPEC: Caching allows for higher speed.
-
     // Set cache
     if (!canvas._context) {
       canvas._context = canvas.getContext('2d')
+    }
+    if (!canvas._context) {
+      throw new Error('Unexpectedly did not assign context')
     }
 
     return canvas._context
@@ -130,7 +164,7 @@ function CanvasManager () {
   /**
      * Abstract canvas to image function
      * @param {HTMLCanvasElement} canvas
-     * @param {object} options
+     * @param {Partial<CanvasImageOptions>} options
      * @return {*}
      */
   cManager.canvasToImage = function (canvas, options) {
@@ -192,7 +226,7 @@ function CanvasManager () {
      * @param {string} src
      * @param {function} onLoad
      * @param {string} format
-     * @param {object} conversionOptions
+     * @param {number|undefined} conversionOptions
      */
   cManager.ImageSrcToDataURL = function (src, onLoad, format, conversionOptions) {
     var image = new window.Image()
@@ -206,14 +240,14 @@ function CanvasManager () {
 
   /**
      * @param {CanvasImageSource} drawable
-     * @param {undefined|HTMLCanvasElement} canvas
+     * @param {undefined|HTMLCanvasElement} startCanvas
      * @return {HTMLCanvasElement}
      */
-  cManager.drawableToCanvas = function (drawable, canvas = undefined) {
-    canvas = canvas || document.createElement('canvas')
+  cManager.drawableToCanvas = function (drawable, startCanvas = undefined) {
+    const canvas = startCanvas || document.createElement('canvas')
     canvas.width = drawable.width || drawable.videoWidth || 0
     canvas.height = drawable.height || drawable.videoHeight || 0
-    failOnFalsy(canvas.getContext('2d')).drawImage(drawable, 0, 0)
+    failOnFalsy(cManager.getContext(canvas)).drawImage(drawable, 0, 0)
 
     return canvas
   }
@@ -232,18 +266,18 @@ function CanvasManager () {
   /**
      * @param {HTMLCanvasElement} canvas
      * @param {string|undefined} format
-     * @param {number|undefined} conversionOptions
+     * @param {number|undefined} encoderOptions https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toDataURL
      * @return {string}
      */
-  cManager.canvasToDataURL = function (canvas, format = undefined, conversionOptions = undefined) {
-    var dataURL = canvas.toDataURL(format, conversionOptions)
+  cManager.canvasToDataURL = function (canvas, format = undefined, encoderOptions = undefined) {
+    var dataURL = canvas.toDataURL(format, encoderOptions)
     return dataURL
   }
 
   /**
      * @param {HTMLCanvasElement} canvas
      * @param {string} format
-     * @param {object} conversionOptions
+     * @param {number|undefined} conversionOptions
      * @param {function} onLoad
      * @return {HTMLImageElement}
      */
@@ -270,7 +304,7 @@ function CanvasManager () {
      * Stops on first stop.
      * @param {HTMLCanvasElement} canvas
      * @param {function} onStop
-     * @param {object} options
+     * @param {{interval: number}} options
      */
   cManager.watchForCanvasStop = function (canvas, onStop, options) {
     var ms = options.interval || 2000
@@ -317,22 +351,14 @@ function CanvasManager () {
 
   /**
      * @param {HTMLCanvasElement} canvas
-     * @param {object} options
+     * @param {Partial<RGBASelection>} rgbaOptions
      * @return {boolean}
      */
-  cManager.canvasHasColorData = function (canvas, options) {
+  cManager.canvasHasColorData = function (canvas, rgbaOptions = {}) {
+    const options = cManager.RGBASelection(rgbaOptions)
     var ctx = failOnFalsy(canvas.getContext('2d'))
     var data = ctx.getImageData(0, 0, canvas.width, canvas.height).data
     var step = 4
-
-    if (!options) {
-      options = {
-        r: true,
-        g: true,
-        b: true,
-        a: false
-      }
-    }
 
     for (var i = 0; i < data.length; i += step) {
       if (options.r && data[i + 0]) {
@@ -376,32 +402,30 @@ function CanvasManager () {
      * @return {DOMRect}
      */
   cManager.getContextBoundingRect = function (ctx) {
-    var boundingRect = cManager.BoundingRect()
-    var canvas = ctx.canvas
-    var cWidth = canvas.width
-    var cHeight = canvas.height
-    var data = ctx.getImageData(0, 0, cWidth, cHeight).data
+    const boundingRect = cManager.BoundingRect()
+    const canvas = ctx.canvas
+    const cWidth = canvas.width
+    const cHeight = canvas.height
+    const data = ctx.getImageData(0, 0, cWidth, cHeight).data
 
-    var x, y
-    var step = 4
-    var index
+    const step = 4
 
-    for (var i = 0; i < data.length; i += step) {
+    for (let i = 0; i < data.length; i += step) {
       if (data[i + 0] || data[i + 1] || data[i + 2]) { // Has a color value
-        index = i / step
-        x = index % cHeight
-        y = Math.floor(index / cWidth)
+        const index = i / step
+        const x = index % cHeight
+        const y = Math.floor(index / cWidth)
 
-        if (boundingRect.top === null || y < boundingRect.top) {
+        if (boundingRect.top === 0 || y < boundingRect.top) {
           boundingRect.top = y
         }
-        if (boundingRect.bottom === null || y > boundingRect.bottom) {
+        if (boundingRect.bottom === 0 || y > boundingRect.bottom) {
           boundingRect.bottom = y
         }
-        if (boundingRect.left === null || x < boundingRect.left) {
+        if (boundingRect.left === 0 || x < boundingRect.left) {
           boundingRect.left = x
         }
-        if (boundingRect.right === null || x > boundingRect.right) {
+        if (boundingRect.right === 0 || x > boundingRect.right) {
           boundingRect.right = x
         }
       }
@@ -415,10 +439,10 @@ function CanvasManager () {
      */
   cManager.BoundingRect = function () {
     return {
-      top: null,
-      bottom: null,
-      left: null,
-      right: null
+      top: 0,
+      bottom: 0,
+      left: 0,
+      right: 0
     }
   }
 

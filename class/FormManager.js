@@ -62,8 +62,8 @@ var FormManager = function (settings) { // ??Make static.
      */
 
   /**
+   * @description Object representing data of input element
      * @typedef {object} InputObject
-     * @description Object representing data of input element
      * @property {string} type
      * @property {string} tag
      * @property {Object<string, string>} attributes
@@ -93,8 +93,8 @@ var FormManager = function (settings) { // ??Make static.
   }
 
   /**
+   * @description Object representing data for creating form
      * @typedef {object} FormSettings
-     * @description Object representing data for creating form
      * @property {string} action
      * @property {string} actionType
      * @property {HTMLElement[]} inputs
@@ -113,7 +113,7 @@ var FormManager = function (settings) { // ??Make static.
   }
 
   /**
-     * @type {Object<string, InputType>} // TODO: Why is this not working?
+     * @type {Object<string, Partial<InputType>>} // TODO: Why is this not working?
      */
   manager.inputTypes = {
     text: {
@@ -158,9 +158,16 @@ var FormManager = function (settings) { // ??Make static.
         'type': 'radio'
       },
       'multiple': true,
+      /**
+     * @param {HTMLInputElement} el
+     */
       'value': (el) => {
         return !!el.checked
       },
+      /**
+       * @param {HTMLInputElement} el
+       * @param {boolean} val
+       */
       'setValue': (el, val) => {
         el.checked = val
       }
@@ -171,9 +178,16 @@ var FormManager = function (settings) { // ??Make static.
         'type': 'checkbox'
       },
       'multiple': true,
+      /**
+     * @param {HTMLInputElement} el
+     */
       'value': (el) => {
         return !!el.checked
       },
+      /**
+       * @param {HTMLInputElement} el
+       * @param {boolean} val
+       */
       'setValue': (el, val) => {
         el.checked = val
       }
@@ -187,6 +201,9 @@ var FormManager = function (settings) { // ??Make static.
     select: {
       'tag': 'select',
       'multiple': true,
+      /**
+       * @param {HTMLSelectElement} el
+       */
       'value': (el) => {
         return el.options[el.selectedIndex].value
       }
@@ -220,7 +237,7 @@ var FormManager = function (settings) { // ??Make static.
   }
 
   /**
-     * @param {object} settings
+     * @param {FormSettings} settings
      * @return {HTMLFormElement}
      */
   manager.settingsToForm = function (settings) {
@@ -361,14 +378,14 @@ var FormManager = function (settings) { // ??Make static.
      * @param {HTMLElement} el
      */
   manager.setInputAsRequired = function (el) {
-    el.setAttribute(manager.constants.REQUIRED_ATTR, true)
+    el.setAttribute(manager.constants.REQUIRED_ATTR, '')
   }
 
   /**
-     * @param {HTMLElement} form
+     * @param {HTMLFormElement} form
      * TODO
      */
-  manager.getRequiredInputs = function (form) { // TODO: form not used.
+  manager.getRequiredInputs = function (form) {
     return manager.domHelper.getElementsWithAttribute(manager.constants.REQUIRED_ATTR)
   }
 
@@ -409,18 +426,18 @@ var FormManager = function (settings) { // ??Make static.
      */
   manager.checkRequiredInput = function (el) {
     /*
-                            checkbox: .checked length > 0
-                            radio: .checked has true
-                            select: always selected.
-                            */
+      checkbox: .checked length > 0
+      radio: .checked has true
+      select: always selected.
+      */
 
     var type = el.getAttribute('type')
 
     // Checked
     if (
       el.tagName === 'input' &&
-            (type === 'radio' || type === 'checkbox') &&
-            manager.getCheckedElements(el).length === 0
+      (type === 'radio' || type === 'checkbox') &&
+      manager.getCheckedElements(el).length === 0
     ) {
       return false
     } else if (el.tagName === 'input' && !el.value) { // Input default
@@ -436,7 +453,7 @@ var FormManager = function (settings) { // ??Make static.
      * @return {Element[]}
      */
   manager.getCheckedElements = function (el) {
-    const elements = [...el.children]
+    const elements = [...Array.from(el.children)]
 
     return elements.filter(element => element.checked)
   }
@@ -598,13 +615,13 @@ var FormManager = function (settings) { // ??Make static.
     obj.tag = element.tagName
     obj.attributes = manager.domHelper.getElementAttributes(element)
 
-    if (element.value) { // TODO: type guard.
+    if (element instanceof HTMLInputElement || element instanceof HTMLSelectElement) {
       obj.values.push(element.value)
     }
 
     obj.label = manager.getLabel(element)
     obj.rowHeader = manager.getTableHeaderValue(element)
-    if (obj.tag === 'select' && element.options.length > 0) { // TODO: Cast to select
+    if (element instanceof HTMLSelectElement && obj.tag === 'select' && element.options.length > 0) {
       obj.initialSelection = element.options[0]
     }
 
@@ -629,7 +646,10 @@ var FormManager = function (settings) { // ??Make static.
     if (id) {
       // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/label
       // Not connected to form by spec.
-      var elements = document.querySelectorAll('[for=' + id + ']')
+      /**
+       * @type {HTMLLabelElement[]}
+       */
+      var elements = [...Array.from(document.querySelectorAll('[for=' + id + ']'))]
       if (elements[0]) {
         labelEl = elements[0]
       }
@@ -654,11 +674,13 @@ var FormManager = function (settings) { // ??Make static.
   }
 
   /**
-     * @param {PageInputOptions} options
+     * @param {Partial<PageInputOptions>} options
      * @return {HTMLElement[]}
      */
   manager.getCurrentPageInputs = function (options = {}) {
-    // Settings
+    /**
+     * @type {Partial<PageInputOptions>}
+     */
     var settings
     if (options.noHidden) {
       settings = Object.assign({}, options)
@@ -676,7 +698,7 @@ var FormManager = function (settings) { // ??Make static.
   /**
      * Gets input type from element
      * @param {HTMLElement} el
-     * @return {Object} InputType. Default if not found.
+     * @return {Partial<InputType> | null} InputType. Default if not found.
      */
   manager.getElementInputType = function (el) {
     const settings = manager.inputTypes
@@ -707,11 +729,14 @@ var FormManager = function (settings) { // ??Make static.
 
   /**
      * Gets input value of any form element.
-     * @param {HTMLElement} el
+     * @param {HTMLInputElement|HTMLSelectElement} el
      * @return {*} input value
      */
   manager.getInputValue = function (el) {
     const type = manager.getElementInputType(el)
+    if (!type) {
+      throw new Error('No type')
+    }
     let val = (typeof type.value === 'function') ? type.value(el) : el.value
     if (type.format) {
       val = type.format(val)
@@ -736,11 +761,14 @@ var FormManager = function (settings) { // ??Make static.
 
   /**
      * Sets single input element's value
-     * @param {HTMLElement} el
+     * @param {HTMLInputElement|HTMLSelectElement} el
      * @param {*} val
      */
   manager.setInputValue = function (el, val) {
     const type = manager.getElementInputType(el)
+    if (!type) {
+      throw new Error('No type')
+    }
     if (type.setValue) {
       type.setValue(el, val)
     } else {

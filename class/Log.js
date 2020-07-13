@@ -6,7 +6,7 @@ const constants = {
     'DEBUG': 4
   }
 }
-const LOG_LEVEL = constants.LOG_LEVEL.DEBUG
+const LOG_LEVEL = 'DEBUG'
 
 /**
  * Log handling
@@ -18,11 +18,11 @@ class Log {
   /**
      * Logging by set log level.
      *
-     * @param {String} level Log level(constants.LOG_LEVEL key)
+     * @param {keyof (constants.LOG_LEVEL)} level Log level(constants.LOG_LEVEL key)
      * @param {Function} h Log function
      * @param {*[]} args Arguments list
      */
-  static _log (level, h, args = []) {
+  static _log(level, h, args = []) {
     const setLevel = LOG_LEVEL
     const setConstLevel = constants.LOG_LEVEL[setLevel]
     const curLevel = (setConstLevel !== undefined) ? setConstLevel : constants.LOG_LEVEL.DEBUG
@@ -45,30 +45,34 @@ class Log {
 
   /**
      * catch / error event logging
+     * @param {...*} args
      */
-  static error () {
-    Log._log('ERROR', console.error, arguments)
+  static error(...args) {
+    Log._log('ERROR', console.error, args)
   }
 
   /**
      * Deprecations, etc.
+     * @param {...*} args
      */
-  static warn () {
-    Log._log('WARN', console.warn, arguments)
+  static warn(...args) {
+    Log._log('WARN', console.warn, args)
   }
 
   /**
      * Info logging. For important logging.
+     * @param {...*} args
      */
-  static info () {
-    Log._log('INFO', console.info, arguments)
+  static info(...args) {
+    Log._log('INFO', console.info, args)
   }
 
   /**
      * Debug logging.
+     * @param {...*} args
      */
-  static debug () {
-    Log._log('DEBUG', console.info, arguments)
+  static debug(...args) {
+    Log._log('DEBUG', console.info, args)
   }
 }
 

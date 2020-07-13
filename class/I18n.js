@@ -1,25 +1,39 @@
 /**
+ * @typedef {Object} TextManagerSettings 
+ * @property {boolean} auto
+ * @property {string} languageParam
+ * @property {string} defaultLanguageParam
+ * @property {string} defaultLanguage
+ * @property {string} language
+ * @property {Object<string, Object<string, string>>} languages
+ * @property {string} languageFormat
+ * @property {string} characterSet
+ */
+
+/**
  * Text language handling class.
  * language/defaultLanguage:
  * Any string allowed, but using ISO standard preferred.
  * http://www-01.sil.org/iso639-3/codes.asp // same as wordpress and newer than many others.
- * //Old: http://www.loc.gov/standards/iso639-2/php/English_list.php
+ * Old: http://www.loc.gov/standards/iso639-2/php/English_list.php
  * Name deprecated. Use I18n class instead.
  * Similar libary exists: https://github.com/i18next/i18next
  * Should use similar library and unite functions over time. However some functions may be unique here.
- * @param {Settings} settings
+ * @param {TextManagerSettings} settings
  * @returns
  */
 var TextManager = function (settings) {
   var manager = {}
 
   /**
-   * @return {object}
+   * @param {Partial<TextManagerSettings>} options
+   * @return {TextManagerSettings}
    */
-  manager.Settings = function () {
-    return {
+  manager.Settings = function (options = {}) {
+    return Object.assign({
       auto: true,
       languageParam: 'language',
+      defaultLanguageParam: 'default-language',
       defaultLanguage: '',
       language: '',
       languages: {
@@ -27,8 +41,13 @@ var TextManager = function (settings) {
       },
       languageFormat: 'iso639-3',
       characterSet: 'standard'
-    }
+    }, options)
   }
+
+  /**
+   * @type {TextManagerSettings}
+   */
+  manager.settings = manager.Settings()
 
   /**
    * @return {object}
@@ -44,17 +63,10 @@ var TextManager = function (settings) {
   }
 
   /**
-   * @param {object} settings
+   * @param {Partial<TextManagerSettings>} options
    */
-  manager.setup = function (settings) {
-    manager.settings = manager.Settings()
-
-    // Settings
-    if (settings) {
-      for (var key in settings) {
-        manager.settings[key] = settings[key]
-      }
-    }
+  manager.setup = function (options) {
+    manager.settings = manager.Settings(options)
 
     // Default language
     if (manager.settings.auto) {
@@ -139,23 +151,16 @@ var TextManager = function (settings) {
     }
   }
 
-  /**
-  * @return {object|null}
-  */
   manager.getCurrentLanguageData = function () {
     return manager.getCommonLanguageData('language')
   }
 
-  /**
-   * @return {object|null}
-   */
   manager.getDefaultLanguageData = function () {
     return manager.getCommonLanguageData('defaultLanguage')
   }
 
   /**
    * @param {string} key
-   * @return {object|null}
    */
   manager.getCommonLanguageData = function (key) {
     var language, data
@@ -198,9 +203,11 @@ var TextManager = function (settings) {
 
   /**
    * @param {string[]} keys
-   * @return {object}
    */
   manager.getMessageObject = function (keys) {
+    /**
+     * @type {Object<string, *>}
+     */
     const obj = {}
     keys.forEach(key => {
       obj[key] = manager.getMessage(key)
@@ -256,7 +263,7 @@ var TextManager = function (settings) {
   }
 
   /**
-   * @param {Object} keys GET keys to be used {current, default}
+   * @param {Partial<{current: string, default: string}>} keys GET keys to be used {current, default}
    * @return {Object} Implemented languages by key {current, default}
    */
   manager.setLanguageFromUrlParam = function (keys = {}) {

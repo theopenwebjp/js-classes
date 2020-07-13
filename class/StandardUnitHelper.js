@@ -1,65 +1,78 @@
 /**
- * @typedef {object} Unit
+ * @typedef {Object} Unit
  * @property {string} name
  * @property {string} symbol
  * @property {number} exponent
+ */
+
+/**
+ * @typedef {Object} ImperialUnit
+ * @property {string} name
+ * @property {string} symbol
+ * @property {number} multiplier
+ */
+
+/**
+ * @typedef {Object} Measurement
+ * @property {string} siSymbol
+ * @property {Object<string, ImperialUnit>} imperial
  */
 
 
 /**
  * Collection of functions for handling units.
  */
-var StandardUnitHelper = function() {
+var StandardUnitHelper = function () {
     var helper = {}
 
     helper.settings = {
         // https://en.wikipedia.org/wiki/Metric_prefix#List_of_SI_prefixes
         // http://www.bipm.org/en/measurement-units/prefixes.html
         units: [{
-                name: 'deci',
-                symbol: 'd',
-                exponent: -1
-            },
-            {
-                name: 'centi',
-                symbol: 'c',
-                exponent: -2
-            },
-            {
-                name: 'milli',
-                symbol: 'm',
-                exponent: -3
-            },
-            {
-                name: 'micro',
-                symbol: 'μ',
-                exponent: -6
-            },
-            {
-                name: 'deca',
-                symbol: 'da',
-                exponent: 1
-            },
-            {
-                name: 'hecto',
-                symbol: 'h',
-                exponent: 2
-            },
-            {
-                name: 'kilo',
-                symbol: 'k',
-                exponent: 3
-            },
-            {
-                name: 'mega',
-                symbol: 'M',
-                exponent: 6
-            },
-            {
-                name: 'giga',
-                symbol: 'G',
-                exponent: 9
-            }
+            name: 'deci',
+            symbol: 'd',
+            exponent: -1
+        },
+        {
+            name: 'centi',
+            symbol: 'c',
+            exponent: -2
+        },
+        {
+            name: 'milli',
+            symbol: 'm',
+            exponent: -3
+        },
+        {
+            name: 'micro',
+            symbol: 'μ',
+            exponent: -6
+        },
+        {
+            name: 'deca',
+            symbol: 'da',
+            exponent: 1
+        },
+        {
+            name: 'hecto',
+            symbol: 'h',
+            exponent: 2
+        },
+        {
+            name: 'kilo',
+            symbol: 'k',
+            exponent: 3
+        },
+        {
+            name: 'mega',
+            symbol: 'M',
+            exponent: 6
+        },
+        {
+            name: 'giga',
+            symbol: 'G',
+            exponent: 9
+        }
         ],
 
         measurements: {
@@ -110,7 +123,7 @@ var StandardUnitHelper = function() {
     /**
      * @return {Unit}
      */
-    helper.Unit = function() {
+    helper.Unit = function () {
         return {
             name: '',
             symbol: '',
@@ -121,7 +134,7 @@ var StandardUnitHelper = function() {
     /**
      * @return {object}
      */
-    helper.NumberUnit = function() {
+    helper.NumberUnit = function () {
         /**
          * @typedef {object} NumberUnit
          * @property {number} number
@@ -137,17 +150,17 @@ var StandardUnitHelper = function() {
         var numberUnit = {
             number: 0,
             unit: null,
-            apply: function(num, unit) {
+            apply: function (num, unit) {
                 numberUnit.number = num
                 numberUnit.unit = unit
 
                 return numberUnit
             },
-            calculate: function() {
+            calculate: function () {
                 var pow = 10
                 return numberUnit.number / (Math.pow(pow, numberUnit.unit.exponent))
             },
-            toString: function() {
+            toString: function () {
                 var number = numberUnit.calculate()
                 return number + numberUnit.unit.symbol
             }
@@ -161,7 +174,7 @@ var StandardUnitHelper = function() {
      * @param {string} unitKey
      * TODO
      */
-    helper.getUnit = function(unitKey) {
+    helper.getUnit = function (unitKey) {
         var defaultUnit = null
         var tempUnit = null
 
@@ -194,7 +207,7 @@ var StandardUnitHelper = function() {
      * @param {string} str
      * TODO
      */
-    helper.getUnitByName = function(str) {
+    helper.getUnitByName = function (str) {
         return helper.getUnitByProperty('name', str)
     }
 
@@ -202,7 +215,7 @@ var StandardUnitHelper = function() {
      * @param {string} str
      * TODO
      */
-    helper.getUnitBySymbol = function(str) {
+    helper.getUnitBySymbol = function (str) {
         return helper.getUnitByProperty('symbol', str)
     }
 
@@ -210,7 +223,7 @@ var StandardUnitHelper = function() {
      * @param {number} num
      * TODO
      */
-    helper.getUnitByExponent = function(num) {
+    helper.getUnitByExponent = function (num) {
         return helper.getUnitByProperty('exponent', num)
     }
 
@@ -219,7 +232,7 @@ var StandardUnitHelper = function() {
      * @param {*} val
      * TODO
      */
-    helper.getUnitByProperty = function(prop, val) {
+    helper.getUnitByProperty = function (prop, val) {
         var units = helper.settings.units
         for (var i = 0; i < units.length; i++) {
             if (units[i][prop] === val) {
@@ -235,7 +248,7 @@ var StandardUnitHelper = function() {
      * @param {string} unitKey
      * @return {string}
      */
-    helper.getNumberWithUnit = function(num, unitKey) {
+    helper.getNumberWithUnit = function (num, unitKey) {
         var unit = helper.getUnit(unitKey)
         var numberUnit = helper.NumberUnit().apply(num, unit)
 
@@ -246,7 +259,7 @@ var StandardUnitHelper = function() {
      * @param {number} num
      * @return {string}
      */
-    helper.getNumberWithBestUnit = function(num) {
+    helper.getNumberWithBestUnit = function (num) {
         var unit = helper.getBestUnit(num)
         return helper.getNumberWithUnit(num, unit)
     }
@@ -255,7 +268,7 @@ var StandardUnitHelper = function() {
      * @param {number} num
      * TODO
      */
-    helper.getBestUnit = function(num) {
+    helper.getBestUnit = function (num) {
         var parts = helper.getNumberParts(num)
         var unit = helper.getUnitWithClosestExponent(parts.exponent)
 
@@ -267,7 +280,7 @@ var StandardUnitHelper = function() {
      * @param {number} exponent
      * @return {string}
      */
-    helper.getUnitWithClosestExponent = function(exponent) {
+    helper.getUnitWithClosestExponent = function (exponent) {
         var closest = {
             unit: null,
             difference: Infinity
@@ -291,7 +304,7 @@ var StandardUnitHelper = function() {
      * @param {number} num
      * @return {object}
      */
-    helper.getNumberParts = function(num) {
+    helper.getNumberParts = function (num) {
         var str = (num).toExponential()
         var strParts = str.split('e+')
 
@@ -304,10 +317,12 @@ var StandardUnitHelper = function() {
     }
 
     /**
-     * @param {object} measurements
-     * @return {object}
+     * @param {Object<string, Measurement>} measurements
      */
-    helper.getMeasurementBaseMultipliers = function(measurements) {
+    helper.getMeasurementBaseMultipliers = function (measurements) {
+        /**
+         * @type {Object<string, number>}
+         */
         var multipliers = {}
 
         // SI
@@ -327,7 +342,7 @@ var StandardUnitHelper = function() {
      * @param {object} multipliers
      * @return {object}
      */
-    helper.multipliersToConverters = function(multipliers) {
+    helper.multipliersToConverters = function (multipliers) {
         // Multiplier: Input standard unit => Outputs how much larger desired unit is.
         // Converter: Input standard unit value => Outputs value in desired unit.
         var converters = {}
@@ -340,13 +355,15 @@ var StandardUnitHelper = function() {
 
     /**
      * @param {string} mKey
-     * @return {object}
      */
-    helper.getMeasurementMultipliers = function(mKey) {
+    helper.getMeasurementMultipliers = function (mKey) {
         var measurements = helper.settings.measurements[mKey]
         var bMultipliers = helper.getMeasurementBaseMultipliers(measurements)
         var siUnitMultipliers = helper.getSiUnitMultipliers()
 
+        /**
+         * @type {Object<string, number>}
+         */
         var multipliers = {}
         var bKey, siKey
         for (bKey in bMultipliers) {
@@ -359,11 +376,11 @@ var StandardUnitHelper = function() {
         return multipliers
     }
 
-    /**
-     * @return {object}
-     */
-    helper.getSiUnitMultipliers = function() {
+    helper.getSiUnitMultipliers = function () {
         var pow = 10
+        /**
+         * @type {Object<string, number>}
+         */
         var multipliers = {}
         var units = helper.settings.units
         for (var i = 0; i < units.length; i++) {
