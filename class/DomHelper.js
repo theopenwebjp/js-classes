@@ -1,7 +1,12 @@
-const {
+import {
     Utility,
     BaseObjectHelper
-} = require('js-functions')
+} from 'js-functions'
+
+/**
+ * typedef {{ -readonly [P in keyof DOMRect]: DOMRect[P] }} CustomDOMRect // Don't want functions
+ * @typedef {{ width: number, height: number, x: number, y: number, top: number, left: number }} CustomDOMRect
+ */
 
 /**
  * @typedef {object} NameValue
@@ -12,7 +17,7 @@ const {
 /**
  * @typedef {object} ElementPosition
  * @property {HTMLElement} element
- * @property {string} type // Matched type
+ * @property {string|null} type // Matched type
  * @property {number} attributeIndex // Integer index from 0
  * @property {number} stringIndex // Character index type area
  * @property {number} stringLength // Length of match
@@ -34,7 +39,7 @@ const {
 /**
  * @typedef {Object} DomElementSettings
  * @property {string} tag
- * @property {HTMLElement[]} children
+ * @property {DomElementSettings[]} children
  * @property {Object<string, string>} attributes
  * @property {string} textContent
  * @property {string} innerHTML
@@ -57,14 +62,14 @@ const {
 /**
  * @typedef {Object} FormOptions
  * @property {string} method
- * @property {string|function():void} action: '', // url OR function
+ * @property {string|((event: SubmitEvent) => void)} action: '', // url OR function
  * @property {{reset: boolean, submit: boolean}} controls
  */
 
 /**
  * @typedef {Object} MenuListItem
  * @property {string} type
- * @property {function():void} click
+ * @property {() => void} click
  * @property {string} text
  * @property {string} id
  * @property {string} class
@@ -79,21 +84,73 @@ const {
  * @property {boolean} isChild
  * @property {boolean} hide
  * @property {{text: string, id: string}} header
- * 
  */
+
+/**
+ * @typedef {HTMLElement & { __listenerChangeHandles: any, __handleEvent: any, __addEventListener: any, __removeEventListener: any }} WatchedHTMLElement
+ */
+
+// TODO: ts support: Create way of doing both js or ts in project.
+/*
+// TODO: Add below:
+function onClickOutside(element: Element, onClick: () => void): (ev: Event) => void {
+    const handle = (ev: Event) => {
+        const { target } = ev
+        ev.stopImmediatePropagation()
+
+        if (!target || !(target instanceof Element)) {
+        console.warn('target not Element')
+        return
+        }
+
+        if (element !== target && !Array.from(element.querySelectorAll('*')).includes(target)) {
+        console.debug('clicked outside', { element, target })
+        onClick()
+        }
+    }
+    document.addEventListener('click', handle)
+
+    return handle
+}
+
+export function onElementEscaped(element: Element, onEscape: () => void): void {
+    const clearRefs: (() => void)[] = []
+    const clearHandles = () => {
+        clearRefs.forEach(handle => handle())
+    }
+
+    const handles = {
+        keyDown: (ev: KeyboardEvent) => {
+        if (ev.code === 'Escape') {
+            clearHandles()
+            onEscape()
+        }
+        }
+    }
+
+        () => document.removeEventListener('click', clickHandler)
+    }
+
+    const clickHandler = onClickOutside(element, () => {
+        clearHandles()
+        onEscape()
+    })
+    document.addEventListener('keydown', handles.keyDown)
+} 
+*/
 
 /**
  * Collection of DOM helper functions.
  * Static class.
  */
-const DomHelper = function () {
-    var manager = {}
-
+export default class DomHelper {
+    
     /**
+     * Represent customizable parts of an HTML Element.
      * @param {Partial<DomElementSettings>} options
      * @return {DomElementSettings}
      */
-    manager.DomElementSettings = function (options = {}) {
+    static DomElementSettings (options = {}) {
         const settings = Object.assign({
             tag: '',
             children: [], // Allows nested
@@ -110,13 +167,13 @@ const DomHelper = function () {
      * @param {Partial<DOMSearchSettings>} options
      * @return {DOMSearchSettings}
      */
-    manager.DOMSearchSettings = function (options = {}) {
+    static DOMSearchSettings (options = {}) {
         return Object.assign({
             tag: false,
             textContent: true,
             attributeKey: false,
             attributeValue: false,
-            handle: null // function(el){return result;}//If non-falsy, adds.
+            handle: null // function(el){return result;} // If non-falsy, adds.
         }, options)
     }
 
@@ -125,10 +182,10 @@ const DomHelper = function () {
      * @param {Partial<ChildrenSettings>} options
      * @return {ChildrenSettings}
      */
-    manager.ChildrenSettings = function (options) {
-        var settings = Object.assign({
+    static ChildrenSettings (options) {
+        const settings = Object.assign({
             replacements: {}, // key: function(item, key){return replacement;}
-            format: manager.DomElementSettings(),
+            format: DomHelper.DomElementSettings(),
             items: []
         }, options)
 
@@ -141,13 +198,13 @@ const DomHelper = function () {
      * @param {Partial<DomElementSettings>} defaults
      * @return {HTMLElement[]}
      */
-    manager.createElements = function (settingsArr, defaults) {
-        var elements = settingsArr.map(function (settings) {
+    static createElements (settingsArr, defaults) {
+        const elements = settingsArr.map(function (settings) {
             if (defaults) {
                 settings = Utility.combineObjects([settingsArr, defaults])
             }
 
-            return manager.createElement(settings)
+            return DomHelper.createElement(settings)
         })
         return elements
     }
@@ -157,15 +214,15 @@ const DomHelper = function () {
      * @param {Partial<DomElementSettings>} options
      * @return {HTMLElement}
      */
-    manager.createElement = function (options) {
-        const settings = manager.DomElementSettings(options)
+    static createElement (options) {
+        const settings = DomHelper.DomElementSettings(options)
         const el = document.createElement(settings.tag)
-        manager.setAttributes(el, settings.attributes)
-        manager._setEvents(el, settings.events)
+        DomHelper.setAttributes(el, settings.attributes)
+        DomHelper._setEvents(el, settings.events)
 
         // Nesting
         if (settings.children.length > 0) {
-            manager._setChildren(el, settings.children)
+            DomHelper._setChildren(el, settings.children)
         } else if (settings.innerHTML !== '') {
             el.innerHTML = settings.innerHTML
         } else {
@@ -181,20 +238,21 @@ const DomHelper = function () {
      * @param {DomElementSettings} settings
      * @param {Partial<ChildrenSettings>} childrenOptions
      */
-    manager.setChildrenSettings = function (settings, childrenOptions) {
-        const childrenSettings = manager.ChildrenSettings(childrenOptions)
-        settings.children = manager._handleChildrenReplacements(childrenSettings)
+    static setChildrenSettings (settings, childrenOptions) {
+        const childrenSettings = DomHelper.ChildrenSettings(childrenOptions)
+        settings.children = DomHelper._handleChildrenReplacements(childrenSettings)
         return settings.children
     }
 
     /**
      * @public
+     * @example createTable([[1, 2][3, 4]])
      * @param {Array<string[]>} rows
      * @return {HTMLTableElement}
      */
-    manager.createTable = function (rows) {
-        var table = document.createElement('table')
-        var cols
+    static createTable (rows) {
+        const table = document.createElement('table')
+        let cols
         for (let i = 0; i < rows.length; i++) {
             let tr = document.createElement('tr')
             cols = rows[i]
@@ -214,15 +272,16 @@ const DomHelper = function () {
 
     /**
      * @public
+     * @example createElementList([{name: 'a', value: 'b'}])
      * @param {NameValue[]} nameValues
      * @return {HTMLUListElement}
      */
-    manager.createElementList = function (nameValues) {
-        var list = nameValues.map(function (nameValue) {
-            var elementSettings = nameValue.value
+    static createElementList (nameValues) {
+        const list = nameValues.map(function (nameValue) {
+            const elementSettings = nameValue.value
 
             // Element
-            var el = manager.createElement(elementSettings)
+            const el = DomHelper.createElement(elementSettings)
 
             return {
                 name: nameValue.name,
@@ -230,35 +289,37 @@ const DomHelper = function () {
             }
         })
 
-        return manager.createCommonList(list)
+        return DomHelper.createCommonList(list)
     }
 
     /**
-     * @param {object} obj
+     * @example createKeyValueList({ name1: 'value1', name2: 'value2' })
+     * @param {Record<string, any>} obj
      * @return {HTMLUListElement}
      */
-    manager.createKeyValueList = function (obj) {
+    static createKeyValueList (obj) {
         // key: val => int: {name, value}
-        var list = []
+        const list = []
 
-        for (var key in obj) {
+        for (let key in obj) {
             list.push({
                 name: key,
                 value: obj[key]
             })
         }
 
-        return manager.createCommonList(list)
+        return DomHelper.createCommonList(list)
     }
 
     /**
+     * @example createList(['a', 'b'])
      * @param {(HTMLElement|string)[]} arr
      * @return {HTMLUListElement}
      */
-    manager.createList = function (arr) {
+    static createList (arr) {
         const ul = document.createElement('ul')
 
-        for (var i = 0; i < arr.length; i++) {
+        for (let i = 0; i < arr.length; i++) {
             const li = document.createElement('li')
             const item = arr[i]
 
@@ -277,12 +338,13 @@ const DomHelper = function () {
 
     /**
      * @public
-     * @param {function|undefined} handle
+     * @example createHeadedArrayElement()
+     * @param {((arr: any[]) => HTMLElement) | undefined} handle
      * @param {string} headerText
-     * @param {Array} arr
+     * @param {(any[])} arr
      * @return {HTMLDivElement}
      */
-    manager.createHeadedArrayElement = function (handle = undefined, headerText, arr) {
+    static createHeadedArrayElement (handle = undefined, headerText, arr) {
         /*
         HEADER
         name: value
@@ -295,19 +357,24 @@ const DomHelper = function () {
         */
 
         if (!handle) {
+            /**
+             * @param {any[]} arr
+             */
             handle = function (arr) {
-                return arr
+                const element = document.createElement('div')
+                arr.forEach(i => element.textContent += String(i))
+                return element
             }
         }
 
-        var div = document.createElement('div')
+        const div = document.createElement('div')
 
-        var header = document.createElement('h3')
+        const header = document.createElement('h3')
         header.textContent = headerText
         header.style.textAlign = 'center'
         div.appendChild(header)
 
-        var arrElement = handle(arr)
+        const arrElement = handle(arr)
         div.appendChild(arrElement)
 
         return div
@@ -316,21 +383,21 @@ const DomHelper = function () {
     /**
      * @public
      * @param {string} header
-     * @param {Array} arr
+     * @param {string[]} arr
      * @return {HTMLDivElement}
      */
-    manager.createHeadedTable = function (header, arr) {
-        return manager.createHeadedArrayElement(manager.createTable, header, arr)
+    static createHeadedTable (header, arr) {
+        return DomHelper.createHeadedArrayElement(DomHelper.createTable, header, arr)
     }
 
     /**
      * @public
      * @param {string} header
-     * @param {Array} arr
+     * @param {string[]} arr
      * @return {HTMLDivElement}
      */
-    manager.createHeadedList = function (header, arr) {
-        return manager.createHeadedArrayElement(manager.createList, header, arr)
+    static createHeadedList (header, arr) {
+        return DomHelper.createHeadedArrayElement(DomHelper.createList, header, arr)
     }
 
     /**
@@ -339,8 +406,8 @@ const DomHelper = function () {
      * @param {object} obj
      * @return {HTMLDivElement}
      */
-    manager.createHeadedKeyValueList = function (header, obj) {
-        return manager.createHeadedArrayElement(manager.createKeyValueList, header, obj)
+    static createHeadedKeyValueList (header, obj) {
+        return DomHelper.createHeadedArrayElement(DomHelper.createKeyValueList, header, Object.values(obj))
     }
 
     /**
@@ -348,7 +415,7 @@ const DomHelper = function () {
      * @param {Partial<MenuListSettings>} options
      * @return {MenuListSettings}
      */
-    manager.MenuListSettings = function (options = {}) {
+    static MenuListSettings (options = {}) {
         return Object.assign({
             items: [{
                 type: '',
@@ -379,9 +446,9 @@ const DomHelper = function () {
      * @deprecated This function is bloated. Should standardize and use what is necessary.
      * @param {HTMLElement} parentEl
      * @param {MenuListSettings} settings
-     * @return {HTMLUListElement}
+     * @return {HTMLElement}
      */
-    manager.setupMenuList = function (parentEl, settings) {
+    static setupMenuList (parentEl, settings) {
         // TODO: offer alternatives this function, including bootstrap, etc.
         /*
         <ul>
@@ -390,13 +457,13 @@ const DomHelper = function () {
         </ul>
         */
 
-        var items = settings.items
+        const items = settings.items
 
         // Wrapper
         /**
-         * @type {HTMLUListElement}
+         * @type {HTMLElement}
          */
-        var ul
+        let ul
         if (settings.element) {
             ul = settings.element
             ul.innerHTML = ''
@@ -421,7 +488,7 @@ const DomHelper = function () {
 
         // Header
         if (settings.header) {
-            var headerEl = document.createElement('a')
+            const headerEl = document.createElement('a')
             if (settings.header.text) {
                 headerEl.textContent = settings.header.text
             }
@@ -455,7 +522,7 @@ const DomHelper = function () {
 
             // Event
             if (item.type === 'file') {
-                manager.setClickFileHandler(a, item.click)
+                DomHelper.setClickFileHandler(a, item.click)
             } else {
                 a.addEventListener('click', item.click)
             }
@@ -489,13 +556,13 @@ const DomHelper = function () {
      * @param {string} separator
      * @return {HTMLSpanElement}
      */
-    manager.createBreadcrumbList = function (links, separator) {
+    static createBreadcrumbList (links, separator) {
         if (!separator) {
             separator = ' > '
         }
 
-        var list = document.createElement('span')
-        for (var i = 0; i < links.length; i++) {
+        const list = document.createElement('span')
+        for (let i = 0; i < links.length; i++) {
             const abstractLink = links[i]
 
             // Separator
@@ -533,12 +600,12 @@ const DomHelper = function () {
      * @param {NameValue[]} nameValues
      * @return {HTMLDivElement}
      */
-    manager.groupify = function (nameValues) {
-        var wrapper = document.createElement('div')
-        var el
+    static groupify (nameValues) {
+        const wrapper = document.createElement('div')
+        let el
 
-        for (var i = 0; i < nameValues.length; i++) {
-            el = manager.createHeadedArrayElement(undefined, nameValues[i].name, nameValues[i].value)
+        for (let i = 0; i < nameValues.length; i++) {
+            el = DomHelper.createHeadedArrayElement(undefined, nameValues[i].name, nameValues[i].value)
             wrapper.appendChild(el)
         }
 
@@ -549,9 +616,9 @@ const DomHelper = function () {
      * @public
      * @param {HTMLFormElement} form
      */
-    manager.clearForm = function (form) {
+    static clearForm (form) {
         console.log('clearForm', form)
-        var elements = /** @type {(HTMLInputElement|HTMLSelectElement)[]} */ (form.elements)
+        const elements = /** @type {(HTMLInputElement|HTMLSelectElement)[]} */ (Array.from(form.elements))
         form.reset()
 
         /*
@@ -575,26 +642,26 @@ const DomHelper = function () {
                 case 'text':
                 case 'password':
                 case 'textarea':
-                case 'hidden':
+                case 'hidden': {
                     const input = /** @type {HTMLInputElement} */ (el)
                     input.value = ''
                     input.defaultValue = ''
                     break
-
+                }
                 case 'radio':
-                case 'checkbox':
+                case 'checkbox': {
                     const checkedInput = /** @type {HTMLInputElement} */ (el)
                     if (checkedInput.checked) {
                         checkedInput.checked = false
                     }
                     break
-
+                }
                 case 'select-one':
-                case 'select-multi':
+                case 'select-multi': {
                     const select = /** @type {HTMLSelectElement} */ (el)
                     select.selectedIndex = -1
                     break
-
+                }
                 default:
                     break
             }
@@ -606,9 +673,9 @@ const DomHelper = function () {
      * @param {HTMLElement} el
      * @param {Object<string, function(...any):void>} events
      */
-    manager._setEvents = function (el, events) {
-        var event
-        for (var key in events) {
+    static _setEvents (el, events) {
+        let event
+        for (let key in events) {
             event = events[key]
 
             // String = DOM attribute based event
@@ -626,16 +693,16 @@ const DomHelper = function () {
      * @param {DomElementSettings[]} settingsArr
      * @return {HTMLElement}
      */
-    manager._setChildren = function (el, settingsArr) {
+    static _setChildren (el, settingsArr) {
         /**
          * @type {HTMLElement[]}
          */
         const children = []
-        for (var i = 0; i < settingsArr.length; i++) {
-            children.push(manager.createElement(settingsArr[i]))
+        for (let i = 0; i < settingsArr.length; i++) {
+            children.push(DomHelper.createElement(settingsArr[i]))
         }
 
-        manager.appendChildren(el, children)
+        DomHelper.appendChildren(el, children)
 
         return el
     }
@@ -644,17 +711,16 @@ const DomHelper = function () {
      * @private
      * @param {ChildrenSettings} childrenSettings
      */
-    manager._handleChildrenReplacements = function (childrenSettings) {
-        var items = childrenSettings.items
+    static _handleChildrenReplacements (childrenSettings) {
+        const items = childrenSettings.items
         /**
          * @type {DomElementSettings[]}
          */
-        var children = []
+         const children = []
 
-        var i
-        for (i = 0; i < items.length; i++) {
+        for (let i = 0; i < items.length; i++) {
             let item = items[i]
-            children.push(manager._handleChildReplacements(item, childrenSettings.format, childrenSettings.replacements))
+            children.push(DomHelper._handleChildReplacements(item, childrenSettings.format, childrenSettings.replacements))
         }
 
         return children
@@ -663,26 +729,26 @@ const DomHelper = function () {
     /**
      * @private
      * @param {*} item
-     * @param {object} format
-     * @param {object} replacements
+     * @param {Partial<DomElementSettings>} format
+     * @param {Object<string, function(*, string):any>} replacements
      */
-    manager._handleChildReplacements = function (item, format, replacements) {
-        const childSettings = manager.DomElementSettings(format) // New child setting.
+    static _handleChildReplacements (item, format, replacements) {
+        const childSettings = DomHelper.DomElementSettings(format) // New child setting.
         childSettings.children = [] // Initialize because overwritten by format replacements.
 
         // Replaceable: tag, attribute values, textContent, innerHTML
-        manager._applyObjectReplacement(childSettings, item, 'tag', replacements)
-        manager._applyObjectReplacement(childSettings, item, 'textContent', replacements)
-        manager._applyObjectReplacement(childSettings, item, 'innerHTML', replacements)
+        DomHelper._applyObjectReplacement(childSettings, item, 'tag', replacements)
+        DomHelper._applyObjectReplacement(childSettings, item, 'textContent', replacements)
+        DomHelper._applyObjectReplacement(childSettings, item, 'innerHTML', replacements)
 
         for (let key in childSettings.attributes) {
-            manager._applyObjectReplacement(childSettings.attributes, item, key, replacements)
+            DomHelper._applyObjectReplacement(childSettings.attributes, item, key, replacements)
         }
 
         if (format.children) {
-            var cVal
+            let cVal
             for (let i = 0; i < format.children.length; i++) {
-                cVal = manager._handleChildReplacements(item, format.children[i], replacements)
+                cVal = DomHelper._handleChildReplacements(item, format.children[i], replacements)
                 childSettings.children.push(cVal)
             }
         }
@@ -692,13 +758,13 @@ const DomHelper = function () {
 
     /**
      * @private
-     * @param {Object<string, string|function():any>} obj
+     * @param {Record<string, (any|string|function():any)>} obj
      * @param {*} item
-     * @param {string} elementPropKey
-     * @param {Object<string, function(*, string):any>} replacements
+     * @param {keyof obj} elementPropKey
+     * @param {Record<string, (function(*, string):any)>} replacements
      */
-    manager._applyObjectReplacement = function (obj, item, elementPropKey, replacements) {
-        for (var key in replacements) {
+    static _applyObjectReplacement (obj, item, elementPropKey, replacements) {
+        for (let key in replacements) {
             if (obj[elementPropKey] === key) {
                 obj[elementPropKey] = replacements[key](item, key)
             }
@@ -710,8 +776,8 @@ const DomHelper = function () {
      * @param {HTMLElement} el
      * @param {HTMLElement[]} children
      */
-    manager.appendChildren = function (el, children) {
-        for (var i = 0; i < children.length; i++) {
+    static appendChildren (el, children) {
+        for (let i = 0; i < children.length; i++) {
             el.appendChild(children[i])
         }
     }
@@ -721,8 +787,8 @@ const DomHelper = function () {
      * @param {HTMLElement} el
      * @param {Object<string, string>} attributes
      */
-    manager.setAttributes = function (el, attributes) {
-        for (var key in attributes) {
+    static setAttributes (el, attributes) {
+        for (let key in attributes) {
             el.setAttribute(key, attributes[key])
         }
     }
@@ -731,7 +797,7 @@ const DomHelper = function () {
      * @public
      * @return {object}
      */
-    manager.NameValue = function () {
+    static NameValue () {
         return {
             name: '',
             value: ''
@@ -745,13 +811,13 @@ const DomHelper = function () {
      * @param {{name: string, value: string|HTMLElement}[]} arr
      * @return {HTMLUListElement}
      */
-    manager.createCommonList = function (arr) {
+    static createCommonList (arr) {
         /**
          * @type {HTMLSpanElement[]}
          */
-        var list = []
+         const list = []
 
-        for (var i = 0; i < arr.length; i++) {
+        for (let i = 0; i < arr.length; i++) {
             const cur = arr[i]
             const curVal = cur.value
 
@@ -772,7 +838,7 @@ const DomHelper = function () {
             list.push(item)
         }
 
-        return manager.createList(list)
+        return DomHelper.createList(list)
     }
 
     /**
@@ -780,7 +846,7 @@ const DomHelper = function () {
      * @param {Partial<FormOptions>} options
      * @return {FormOptions}
      */
-    manager.FormOptions = function (options = {}) {
+    static FormOptions (options = {}) {
         return Object.assign({
             method: 'POST',
             action: '', // url OR function
@@ -796,12 +862,12 @@ const DomHelper = function () {
      * @param {Partial<FormOptions>} fOptions
      * @return {HTMLFormElement}
      */
-    manager.formify = function (el, fOptions) {
-        const options = manager.FormOptions(fOptions)
-        var div, input
+    static formify (el, fOptions) {
+        const options = DomHelper.FormOptions(fOptions)
+        let div, input
 
         // Wrap
-        var form = document.createElement('form')
+        const form = document.createElement('form')
         form.appendChild(el)
 
         // Method
@@ -810,8 +876,9 @@ const DomHelper = function () {
         // Action
         if (options.action) {
             if (typeof options.action === 'function') {
+                const { action } = options
                 form.addEventListener('submit', function (ev) {
-                    options.action(ev) // TODO: Why type guard not working?
+                    action(ev)
 
                     ev.preventDefault()
                     return false
@@ -831,7 +898,7 @@ const DomHelper = function () {
                 input.setAttribute('type', 'reset')
                 input.setAttribute('value', 'Reset')
                 input.addEventListener('click', function (ev) {
-                    manager.clearForm(form)
+                    DomHelper.clearForm(form)
 
                     ev.preventDefault()
                     return false
@@ -858,58 +925,57 @@ const DomHelper = function () {
      * @param {HTMLElement} el
      * @return {DOMRect}
      */
-    manager.getElementScreenDimensions = function (el) {
+    static getElementScreenDimensions (el) {
         return el.getBoundingClientRect()
     }
 
     /**
      * @public
      * @param {HTMLElement} el
-     * @return {DOMRect}
      */
-    manager.getElementPageDimensions = function (el) {
-        var rect = BaseObjectHelper.copyObjectData(el.getBoundingClientRect())
+    static getElementPageDimensions (el) {
+        const rect = BaseObjectHelper.copyObjectData(el.getBoundingClientRect())
         rect.top = rect.top + window.pageYOffset
         rect.left = rect.left + window.pageXOffset
         rect.bottom = rect.top + rect.height
         rect.right = rect.left + rect.width
 
-        return rect
+        return /** @type {CustomDOMRect} */ (rect)
     }
 
     /**
      * @public
      * @param {HTMLElement} el
-     * @param {object} position
+     * @param {any} position
      */
-    manager.setStylePosition = function (el, position) {
-        var allowed = ['top', 'right', 'bottom', 'left']
-        manager.setStyleMeasurements(el, position, allowed)
+    static setStylePosition (el, position) {
+        const allowed = ['top', 'right', 'bottom', 'left']
+        DomHelper.setStyleMeasurements(el, position, allowed)
     }
 
     /**
      * @public
      * @param {HTMLElement} el
-     * @param {object} dimensions
+     * @param {Record<keyof CSSStyleDeclaration, string|null>} dimensions
      */
-    manager.setStyleDimensions = function (el, dimensions) {
-        var allowed = ['top', 'right', 'bottom', 'left', 'width', 'height']
-        manager.setStyleMeasurements(el, dimensions, allowed)
+    static setStyleDimensions (el, dimensions) {
+        const allowed = ['top', 'right', 'bottom', 'left', 'width', 'height']
+        DomHelper.setStyleMeasurements(el, dimensions, allowed)
     }
 
     /**
      * @public
      * @param {HTMLElement} el
-     * @param {Object<keyof CSSStyleDeclaration, string|null>} obj
+     * @param {Record<keyof CSSStyleDeclaration, string|null>} obj
      * @param {string[]} allowed
      * @param {string} [unit]
      */
-    manager.setStyleMeasurements = function (el, obj, allowed, unit = undefined) {
+    static setStyleMeasurements (el, obj, allowed, unit = undefined) {
         if (!unit) {
             unit = 'px'
         }
-        var s = el.style
-        for (var key in obj) {
+        const s = el.style
+        for (let key in obj) {
             if (obj[key] === null) {
                 continue
             }
@@ -923,15 +989,20 @@ const DomHelper = function () {
     /**
      * @public
      * @param {Partial<Margins>} margins
-     * @param {DOMRect} dimensions
+     * @param {CustomDOMRect} dimensions
      */
-    manager.applyMarginsToDimensions = function (margins, dimensions) {
-        var allowedMargins = ['top', 'left']
-        for (var key in margins) {
+    static applyMarginsToDimensions (margins, dimensions) {
+        const allowedMargins = ['top', 'left']
+        const keys = /** @type {Array<keyof typeof margins>} */ (Object.keys(margins))
+        keys.forEach(key => {
             if (allowedMargins.indexOf(key) >= 0 && Utility.exists(margins[key])) {
-                dimensions[key] += margins[key]
+                const m = (/** @type {Margins} */ (margins));
+                const margin = m[key];
+                if (margin) {
+                    dimensions[key] += margin;
+                }
             }
-        }
+        })
     }
 
     /**
@@ -940,24 +1011,24 @@ const DomHelper = function () {
      * @param {object} dimensions
      * @return {HTMLElement}
      */
-    manager.displayElementAtScreenDimensions = function (el, dimensions) {
+    static displayElementAtScreenDimensions (el, dimensions) {
         // Must be added to DOM
         if (!el.parentElement) {
             document.body.appendChild(el)
         }
 
-        var position = 'fixed'
+        const position = 'fixed'
 
         // Dimensions
         el.style.position = position
-        manager.setStylePosition(el, dimensions)
+        DomHelper.setStylePosition(el, dimensions)
 
         // Continuous
-        var handle = function () {
+        const handle = function () {
             if (!el.parentElement) {
                 window.removeEventListener('scroll', handle)
             } else {
-                manager.displayElementAtScreenDimensions(el, dimensions)
+                DomHelper.displayElementAtScreenDimensions(el, dimensions)
             }
         }
         window.addEventListener('scroll', handle, true)
@@ -971,7 +1042,7 @@ const DomHelper = function () {
      * @param {object} dimensions
      * @return {HTMLElement}
      */
-    manager.displayElementAtPageDimensions = function (el, dimensions) {
+    static displayElementAtPageDimensions (el, dimensions) {
         // Must be added to DOM body
         if (el.parentElement !== document.body) {
             if (el.parentElement) {
@@ -981,11 +1052,11 @@ const DomHelper = function () {
             document.body.appendChild(el)
         }
 
-        var position = 'absolute'
+        const position = 'absolute'
 
         // Dimensions
         el.style.position = position
-        manager.setStylePosition(el, dimensions)
+        DomHelper.setStylePosition(el, dimensions)
 
         return el
     }
@@ -997,7 +1068,7 @@ const DomHelper = function () {
      * @param {Partial<Margins>} options
      * @return {HTMLElement}
      */
-    manager.showAboveElement = function (shownElement, targetElement, options) {
+    static showAboveElement (shownElement, targetElement, options) {
         if (!options) {
             options = { // Margins
                 top: null,
@@ -1009,20 +1080,20 @@ const DomHelper = function () {
         shownElement.style.position = 'fixed'
 
         // Dimensions
-        var dimensions = manager.getElementPageDimensions(targetElement)
-        manager.applyMarginsToDimensions(options, dimensions)
+        const dimensions = DomHelper.getElementPageDimensions(targetElement)
+        DomHelper.applyMarginsToDimensions(options, dimensions)
 
         // Display
-        return manager.displayElementAtPageDimensions(shownElement, dimensions)
+        return DomHelper.displayElementAtPageDimensions(shownElement, dimensions)
     }
 
     /**
      * @param {HTMLElement} element
      * @param {function} handle
      */
-    manager.watchDocumentSizeChanges = function (element, handle) {
-        var height = element.offsetHeight
-        var width = element.offsetWidth
+    static watchDocumentSizeChanges (element, handle) {
+        const height = element.offsetHeight
+        const width = element.offsetWidth
         document.addEventListener('DOMSubtreeModified', function () {
             if (element.offsetHeight !== height || element.offsetWidth !== width) {
                 handle(element)
@@ -1035,33 +1106,45 @@ const DomHelper = function () {
      * @param {string} eventName
      * @param {function} handle
      */
-    manager.startWatchingHtmlElementListenerChanges = function (eventName, handle) {
-        var p = window.HTMLElement.prototype
+    static startWatchingHtmlElementListenerChanges (eventName, handle) {
+        const p = /** @type {WatchedHTMLElement} */ (window.HTMLElement.prototype)
 
         if (!p.__listenerChangeHandles) { // TODO: Copy types?
             p.__listenerChangeHandles = {}
 
+            /**
+             * @param {string} type 
+             * @param {*} args 
+             */
             p.__handleEvent = function (type, args) {
-                var prefix = '__'
-                var listenerKey = ((type === 'add') ? 'addEventListener' : 'removeEventListener')
-                var oldListenerKey = prefix + listenerKey
-                var eventName = args[0]
+                const prefix = '__'
+                const listenerKey = ((type === 'add') ? 'addEventListener' : 'removeEventListener')
+                const oldListenerKey = /** @type {keyof p} */ (prefix + listenerKey)
+                const eventName = args[0]
 
-                var handles = p.__listenerChangeHandles[eventName]
-                for (var i = 0; i < handles.length; i++) {
+                const handles = p.__listenerChangeHandles[eventName]
+                for (let i = 0; i < handles.length; i++) {
                     p[oldListenerKey].apply(this, args)
                 }
             }
 
             p.__addEventListener = p.addEventListener
+            /**
+             * type {typeof Element.prototype.addEventListener}
+             * @type {(eventName: string, handler: any, bubbling: boolean) => any}
+             */
             p.addEventListener = function (eventName, handler, bubbling) {
-                var type = 'add'
+                const type = 'add'
                 return p.__handleEvent.apply(this, [type, arguments])
             }
 
             p.__removeEventListener = p.removeEventListener
+            /**
+             * type {typeof Element.prototype.removeEventListener}
+             * @type {(eventName: string, handler: any, bubbling: boolean) => any}
+             */
             p.removeEventListener = function (eventName, handler, bubbling) {
-                var type = 'remove'
+                const type = 'remove'
                 return p.__handleEvent.apply(this, [type, arguments])
             }
         }
@@ -1079,8 +1162,8 @@ const DomHelper = function () {
      * @param {function} handle
      * @return {boolean}
      */
-    manager.stopWatchingHtmlElementListenerChanges = function (eventName, handle) {
-        var p = window.HTMLElement.prototype
+    static stopWatchingHtmlElementListenerChanges (eventName, handle) {
+        const p = /** @type {WatchedHTMLElement} */ (window.HTMLElement.prototype)
 
         if (!p.__listenerChangeHandles) {
             return false
@@ -1089,7 +1172,7 @@ const DomHelper = function () {
             return false
         }
 
-        var index = p.__listenerChangeHandles[eventName].indexOf(handle)
+        const index = p.__listenerChangeHandles[eventName].indexOf(handle)
         if (index >= 0) {
             p.__listenerChangeHandles[eventName].splice(index, 1)
         }
@@ -1118,14 +1201,14 @@ const DomHelper = function () {
      * @param {HTMLElement} el
      * @return {string[]}
      */
-    manager.getAvailableElementEvents = function (el) {
+    static getAvailableElementEvents (el) {
         // Don't use on anywhere because is easy to add "on".
         /**
          * @type {string[]}
          */
-        var arr = []
+         const arr = []
 
-        for (var key in el) {
+        for (let key in el) {
             if (key.substr(0, 2) === 'on') {
                 arr.push(key.substr(2))
             }
@@ -1139,18 +1222,18 @@ const DomHelper = function () {
      * @param {HTMLElement} el
      * @param {string[]} eventNames
      */
-    manager.htmlifyEvents = function (el, eventNames) {
+    static htmlifyEvents (el, eventNames) {
         /*
         There seems to be many plugins that duplicate an element or only take an HTML string.
         If events are placed beforehand then they are lost.
         */
 
         if (!eventNames) {
-            eventNames = manager.getAvailableElementEvents(el)
+            eventNames = DomHelper.getAvailableElementEvents(el)
         }
 
-        for (var i = 0; i < eventNames.length; i++) {
-            manager.htmlifyEvent(el, eventNames[i])
+        for (let i = 0; i < eventNames.length; i++) {
+            DomHelper.htmlifyEvent(el, eventNames[i])
         }
     }
 
@@ -1159,11 +1242,11 @@ const DomHelper = function () {
      * @param {HTMLElement} el
      * @param {string} eventName
      */
-    manager.htmlifyEvent = function (el, eventName) {
-        var key = '__htmlified_event_' + (Math.random() * 10000000)
+    static htmlifyEvent (el, eventName) {
+        const key = '__htmlified_event_' + (Math.random() * 10000000)
 
-        var event = new window.CustomEvent(eventName)
-        window[key] = function () {
+        const event = new window.CustomEvent(eventName);
+        (/** @type {any} */ (window))[key] = function () {
             // console.log('Sent event: ' + eventName)
             el.dispatchEvent(event)
         }
@@ -1175,9 +1258,12 @@ const DomHelper = function () {
      * @public
      * @param {HTMLElement} el
      */
-    manager.getParents = function (el) {
-        var parents = [] // From closest to furthest
-        var nextParent = el.parentElement
+    static getParents (el) {
+        /**
+         * @type {HTMLElement[]}
+         */
+        const parents = [] // From closest to furthest
+        let nextParent = el.parentElement
         while (nextParent) {
             parents.push(nextParent)
 
@@ -1193,10 +1279,10 @@ const DomHelper = function () {
      * @param {string} selector
      * @return {HTMLElement|null}
      */
-    manager.getClosestParent = function (el, selector) {
-        var parent = null
-        var parents = manager.getParents(el)
-        for (var i = 0; i < parents.length; i++) {
+    static getClosestParent (el, selector) {
+        let parent = null
+        const parents = DomHelper.getParents(el)
+        for (let i = 0; i < parents.length; i++) {
             if (parents[i].matches(selector)) {
                 parent = parents[i]
                 break
@@ -1209,9 +1295,9 @@ const DomHelper = function () {
     /**
      * @public
      */
-    manager.removeTabIndexes = function () {
-        const elements = /** @type {HTMLElement[]} */ (manager.getAllElements())
-        for (var i = 0; i < elements.length; i++) {
+    static removeTabIndexes () {
+        const elements = /** @type {HTMLElement[]} */ (DomHelper.getAllElements())
+        for (let i = 0; i < elements.length; i++) {
             elements[i].tabIndex = -1
         }
     }
@@ -1220,9 +1306,9 @@ const DomHelper = function () {
      * @public
      * @param {HTMLElement[]} elements
      */
-    manager.setTabIndexes = function (elements) {
+    static setTabIndexes (elements) {
         // Sets in order
-        for (var i = 0; i < elements.length; i++) {
+        for (let i = 0; i < elements.length; i++) {
             elements[i].tabIndex = i
         }
     }
@@ -1230,16 +1316,19 @@ const DomHelper = function () {
     /**
      * @public
      * @param {string} selector
-     * @return {HTMLElement|null}
+     * @return {DocumentFragment|null}
      */
-    manager.getHtmlImport = function (selector) {
-        var links = document.querySelectorAll('link[rel="import"]')
-        var element, link
-        for (var i = 0; i < links.length; i++) {
-            link = links[i]
-            element = link.import.querySelector(selector)
-            if (element) {
-                var clone = document.importNode(element.content, true)
+    static getHtmlImport (selector) {
+        const links = document.querySelectorAll('link[rel="import"]')
+        for (let i = 0; i < links.length; i++) {
+            const link = /** @type {HTMLLinkElement & { import?: Element }} */ (links[i])
+            const content = link.import
+            if (!content) {
+                throw new Error('link.import not supported')
+            }
+            const element = content.querySelector(selector)
+            if (element && element instanceof HTMLTemplateElement) {
+                const clone = document.importNode(element.content, true)
                 return clone
             }
         }
@@ -1253,7 +1342,7 @@ const DomHelper = function () {
      * @param {string} id
      * @return {HTMLElement|null|undefined}
      */
-    manager.e = function (id) {
+    static e (id) {
         const element = document.getElementById(id)
         return element
     }
@@ -1263,12 +1352,13 @@ const DomHelper = function () {
      * @param {string[]} ids
      * @return {HTMLElement[]}
      */
-    manager.getElementsByIds = function (ids) {
-        var elements = []
-        var element
-
-        for (var i = 0; i < ids.length; i++) {
-            element = manager.e(ids[i])
+    static getElementsByIds (ids) {
+        /**
+         * @type {HTMLElement[]}
+         */
+        const elements = []
+        for (let i = 0; i < ids.length; i++) {
+            const element = DomHelper.e(ids[i])
             if (element) {
                 elements.push(element)
             }
@@ -1282,15 +1372,12 @@ const DomHelper = function () {
      * @param {string[]} arr
      * @return {HTMLUListElement}
      */
-    manager.getDOMList = function (arr) {
-        var listEl = document.createElement('ul')
-        var itemEl
-        var item
+    static getDOMList (arr) {
+        const listEl = document.createElement('ul')
+        for (let i = 0; i < arr.length; i++) {
+            const item = arr[i]
 
-        for (var i = 0; i < arr.length; i++) {
-            item = arr[i]
-
-            itemEl = document.createElement('li')
+            const itemEl = document.createElement('li')
             itemEl.textContent = item
             listEl.appendChild(itemEl)
         }
@@ -1303,8 +1390,8 @@ const DomHelper = function () {
      * @param {string} src
      * @return {HTMLImageElement}
      */
-    manager.getDOMImage = function (src) {
-        var image = new window.Image()
+    static getDOMImage (src) {
+        const image = new window.Image()
         image.src = src
         return image
     }
@@ -1314,11 +1401,10 @@ const DomHelper = function () {
      * @param {HTMLInputElement[]} inputs
      * @return {HTMLTableElement}
      */
-    manager.getDOMInputsList = function (inputs) {
-        var listEl = document.createElement('table')
-        var inputRow
-        for (var i = 0; i < inputs.length; i++) {
-            inputRow = manager.getDOMInputRow(inputs[i])
+    static getDOMInputsList (inputs) {
+        const listEl = document.createElement('table')
+        for (let i = 0; i < inputs.length; i++) {
+            const inputRow = DomHelper.getDOMInputRow(inputs[i])
             listEl.appendChild(inputRow)
         }
 
@@ -1330,27 +1416,27 @@ const DomHelper = function () {
      * @param {HTMLInputElement} input Must contain name and value properties.
      * @return {HTMLTableRowElement}
      */
-    manager.getDOMInputRow = function (input) { // TODO: Not HTMLInputElement? Fix all connected.
+    static getDOMInputRow (input) { // TODO: Not HTMLInputElement? Fix all connected.
         /*
-          Input: {
-              name: "",
-              value: ""
-          }
-          */
+        Input: {
+            name: "",
+            value: ""
+        }
+        */
 
-        var rowEl = document.createElement('tr')
+        const rowEl = document.createElement('tr')
 
         // Name
-        var nameEl = document.createElement('th')
+        const nameEl = document.createElement('th')
         nameEl.textContent = input.name
         rowEl.appendChild(nameEl)
 
         // Input Cell
-        var inputCell = document.createElement('td')
+        const inputCell = document.createElement('td')
         rowEl.appendChild(inputCell)
 
         // Input
-        var inputEl = document.createElement('input')
+        const inputEl = document.createElement('input')
         inputEl.value = input.value
         inputCell.appendChild(inputEl)
 
@@ -1362,9 +1448,9 @@ const DomHelper = function () {
      * @param {HTMLElement} el
      * @param {function():void} onFileHandle
      */
-    manager.setClickFileHandler = function (el, onFileHandle) {
+    static setClickFileHandler (el, onFileHandle) {
         // Create input
-        var fileEl = document.createElement('input')
+        const fileEl = document.createElement('input')
         fileEl.style.position = 'absolute'
         fileEl.style.visibility = 'hidden'
         fileEl.setAttribute('type', 'file')
@@ -1396,11 +1482,11 @@ const DomHelper = function () {
      * @param {ElementPosition} elementPosition
      * @return {string|null}
      */
-    manager.getElementPositionData = function (elementPosition) {
-        var p = elementPosition
-        var el = p.element
-        var defaultData = null
-        var i, key
+    static getElementPositionData (elementPosition) {
+        const p = elementPosition
+        const el = p.element
+        let defaultData = null
+        let i, key
 
         if (!el) {
             return defaultData
@@ -1415,7 +1501,7 @@ const DomHelper = function () {
         }
 
         if (p.type === 'attributeKey' || p.type === 'attributeValue') {
-            var attributes = manager.getElementAttributes(el)
+            const attributes = DomHelper.getElementAttributes(el)
 
             i = 0
             for (key in attributes) {
@@ -1439,22 +1525,23 @@ const DomHelper = function () {
      * @public
      * @param {string} searchStr
      * @param {Partial<DOMSearchSettings>} optionalType
-     * @param {HTMLElement} el
-     * @return {ElementPosition[]}
+     * @param {HTMLElement|Document} el
+     * @return {ElementPosition[] | undefined}
      */
-    manager.searchDom = function (searchStr, optionalType = {}, el) {
-        if (!el) {
-            el = document
-        }
-        const type = manager.DOMSearchSettings(optionalType)
-        var children = manager.getAllChildren(el)
+    static searchDom (searchStr, optionalType = {}, el = document) {
+        const type = DomHelper.DOMSearchSettings(optionalType)
+        const children = DomHelper.getAllChildren(el)
         /**
          * @type {ElementPosition[]}
          */
-        var results = []
+         const results = []
 
         for (let i = 0; i < children.length; i++) {
             const curEl = children[i]
+            if (!(curEl instanceof HTMLElement)) {
+                return
+            }
+
             /**
              * @type {ElementPosition}
              */
@@ -1483,7 +1570,7 @@ const DomHelper = function () {
             }
 
             if (type.attributeKey || type.attributeValue) {
-                let attributes = manager.getElementAttributes(curEl)
+                let attributes = DomHelper.getElementAttributes(curEl)
                 let attributeIndex = 0
 
                 for (let key in attributes) {
@@ -1526,11 +1613,11 @@ const DomHelper = function () {
      * @param {{key: string, value: *}[]} objectInfoArray
      * @return {HTMLUListElement}
      */
-    manager.arrayInputter = function (objectInfoArray) {
-        var arr = objectInfoArray
-        var ul = document.createElement('ul')
+    static arrayInputter (objectInfoArray) {
+        const arr = objectInfoArray
+        const ul = document.createElement('ul')
 
-        for (var i = 0; i < arr.length; i++) {
+        for (let i = 0; i < arr.length; i++) {
             let objectInfo = arr[i]
 
             let li = document.createElement('li')
@@ -1553,7 +1640,7 @@ const DomHelper = function () {
      * @param {Object<string, *>} obj
      * @return {HTMLUListElement}
      */
-    manager.nestedInputter = function (obj) {
+    static nestedInputter (obj) {
         /*
 
         Data:
@@ -1566,7 +1653,7 @@ const DomHelper = function () {
         </ul>
         */
 
-        var ul = document.createElement('ul')
+        const ul = document.createElement('ul')
 
         for (const key in obj) {
             const li = document.createElement('li')
@@ -1580,7 +1667,7 @@ const DomHelper = function () {
             span = document.createElement('span')
 
             if (BaseObjectHelper.isObject(obj[key])) { // recursive
-                span.appendChild(manager.nestedInputter(obj[key]))
+                span.appendChild(DomHelper.nestedInputter(obj[key]))
             } else { // input
                 const input = document.createElement('input')
                 input.setAttribute('type', 'text')
@@ -1600,10 +1687,10 @@ const DomHelper = function () {
      * @param {HTMLElement} el
      * @return {Node[]} Text node
      */
-    manager.textNodesUnder = function (el) {
-        var n
-        var a = []
-        var walk = document.createTreeWalker(el, window.NodeFilter.SHOW_TEXT, null, false)
+    static textNodesUnder (el) {
+        let n
+        const a = []
+        const walk = document.createTreeWalker(el, window.NodeFilter.SHOW_TEXT, null)
         while ((n = walk.nextNode())) a.push(n)
         return a
     }
@@ -1612,18 +1699,14 @@ const DomHelper = function () {
      * @public
      * @see https://developer.mozilla.org/en-US/docs/Learn/CSS/Introduction_to_CSS/Selectors
      * @param {string[]} selectors
-     * @param {HTMLElement} baseElement
-     * @return {HTMLElement[]}
+     * @param {Element|HTMLElement|Document} [baseElement]
+     * @return {Element[]}
      */
-    manager.getElementsBySelectors = function (selectors, baseElement = null) {
+    static getElementsBySelectors (selectors, baseElement = document) {
         /**
          * @type {Element[]}
          */
         let elements = []
-
-        if (!baseElement) {
-            baseElement = document
-        }
 
         selectors.forEach(selector => {
             const matchedElements = [...Array.from(baseElement.querySelectorAll(selector))]
@@ -1636,21 +1719,17 @@ const DomHelper = function () {
     /**
      * @public
      * @param {string[]} selectors
-     * @param {HTMLElement|undefined} baseElement
+     * @param {HTMLElement|Document} [baseElement]
      */
-    manager.getElementsMappedToSelectors = function (selectors, baseElement = undefined) {
+    static getElementsMappedToSelectors (selectors, baseElement = document) {
         /**
          * @type {Object<string, HTMLElement[]>}
          */
         const selectorMap = {}
 
-        if (!baseElement) {
-            baseElement = document
-        }
-
         selectors.forEach(selector => {
             let matchedElements = baseElement.querySelectorAll(selector)
-            selectorMap[selector] = [...Array.from(matchedElements)]
+            selectorMap[selector] = /** @type {HTMLElement[]} */ (Array.from(matchedElements))
         })
 
         return selectorMap
@@ -1660,16 +1739,16 @@ const DomHelper = function () {
      * @public
      * @return {Element[]}
      */
-    manager.getAllElements = function () {
+    static getAllElements () {
         return [...Array.from(document.body.getElementsByTagName('*'))]
     }
 
     /**
      * @public
-     * @param {HTMLElement} el
+     * @param {HTMLElement|Document} el
      * @return {Element[]}
      */
-    manager.getAllChildren = function (el) {
+    static getAllChildren (el) {
         return [...Array.from(el.getElementsByTagName('*'))]
     }
 
@@ -1678,29 +1757,21 @@ const DomHelper = function () {
      * @param {string} attr
      * @return {HTMLElement[]}
      */
-    manager.getElementsWithAttribute = function (attr) {
-        var elements = manager.getAllElements()
-        var filtered = []
-        for (var i = 0; i < elements.length; i++) {
-            if (elements[i].hasAttribute(attr)) {
-                filtered.push(elements[i])
-            }
-        }
-
-        return filtered
+    static getElementsWithAttribute (attr) {
+        return /** @type {HTMLElement[]} */ (DomHelper.getAllElements().filter(element => element.hasAttribute(attr) && element instanceof HTMLElement))
     }
 
     /**
      * @public
      * @param {HTMLElement} el
      */
-    manager.getElementAttributes = function (el) {
+    static getElementAttributes (el) {
         /**
          * @type {Object<string, string>}
          */
-        var attr = {}
-        var nodeMap = el.attributes
-        for (var i = 0; i < nodeMap.length; i++) {
+         const attr = {}
+         const nodeMap = el.attributes
+        for (let i = 0; i < nodeMap.length; i++) {
             attr[nodeMap[i].nodeName] = nodeMap[i].nodeValue || ''
         }
 
@@ -1713,8 +1784,8 @@ const DomHelper = function () {
      * @param {string} value
      * @return {string}
      */
-    manager.getAttributeSelector = function (attr, value = '') {
-        var selector = ''
+    static getAttributeSelector (attr, value = '') {
+        let selector = ''
         selector += '[' + attr
         if (Utility.exists(value)) {
             selector += '=' + value
@@ -1730,22 +1801,22 @@ const DomHelper = function () {
      * @param {string} value
      * @return {NodeListOf<Element>}
      */
-    manager.getElementsByAttribute = function (attr, value) {
-        return document.querySelectorAll(manager.getAttributeSelector(attr, value))
+    static getElementsByAttribute (attr, value) {
+        return document.querySelectorAll(DomHelper.getAttributeSelector(attr, value))
     }
 
     /**
      * @public
-     * @param {Node} el
+     * @param {Element|Document} el
      * @param {string} attr
      * @return {string[]}
      */
-    manager.getNestedAttributeListFromElement = function (el, attr) {
+    static getNestedAttributeListFromElement (el, attr) {
         if (!el) {
             el = document
         }
 
-        var elements = manager.getElementsBySelectors([manager.getAttributeSelector(attr)], el)
+        const elements = DomHelper.getElementsBySelectors([DomHelper.getAttributeSelector(attr)], el)
         return elements.map(function (val) {
             return val.getAttribute(attr) || ''
         }).filter(e => !e)
@@ -1755,16 +1826,16 @@ const DomHelper = function () {
      * Sets as editable or non-editable.
      * Adds/removes onChange event depending on edit mode.
      * @param {HTMLElement} el
-     * @param {function():void} onChange
+     * @param {() => void} onChange
      * @param {Boolean} bool
      * @see https://stackoverflow.com/questions/8694054/onchange-event-with-contenteditable
      */
-    manager.setElementAsEditable = function (el, onChange, bool) {
+    static setElementAsEditable (el, onChange, bool) {
         // Ignore no change
-        if (el.contentEditable === bool) {
+        if (el.contentEditable === String(bool)) {
             return
         }
-        el.contentEditable = bool // TODO: Boolean string?
+        el.contentEditable = String(bool)
         if (bool) {
             el.addEventListener('input', onChange)
             // el.addEventListener("DOMNodeInserted", onChange, false)
@@ -1779,12 +1850,10 @@ const DomHelper = function () {
      * @param {string} attr
      * @param {boolean} bool
      */
-    manager.setEditMode = function (attr, bool) {
-        var elements = manager.getElementsWithAttribute(attr)
-        var element
-
-        for (var i = 0; i < elements.length; i++) {
-            element = elements[i]
+    static setEditMode (attr, bool) {
+        const elements = DomHelper.getElementsWithAttribute(attr)
+        for (let i = 0; i < elements.length; i++) {
+            const element = elements[i]
 
             // Set
             if (bool) {
@@ -1799,8 +1868,8 @@ const DomHelper = function () {
      * @public
      * @param {HTMLElement} el
      */
-    manager.centerFixElement = function (el) {
-        var s = el.style
+    static centerFixElement (el) {
+        const s = el.style
         s.zIndex = String(Number.MAX_SAFE_INTEGER)
         s.position = 'fixed'
         s.top = '50%'
@@ -1812,11 +1881,11 @@ const DomHelper = function () {
      * @public
      * @param {string} html
      */
-    manager.convertTableHtmlToArray = function (html) {
-        var element = document.createElement('div') // Wrapper
+    static convertTableHtmlToArray (html) {
+        const element = document.createElement('div') // Wrapper
         element.innerHTML = html
-        var table = element.getElementsByTagName('table')[0]
-        var arr = manager.convertTableElementToArray(table)
+        const table = element.getElementsByTagName('table')[0]
+        const arr = DomHelper.convertTableElementToArray(table)
 
         return arr
     }
@@ -1825,16 +1894,16 @@ const DomHelper = function () {
      * @public
      * @param {HTMLTableElement} table
      */
-    manager.convertTableElementToArray = function (table) {
-        var rows = table.getElementsByTagName('tr')
-        return manager.convertTableRowElementsToArray(Array.from(rows))
+    static convertTableElementToArray (table) {
+        const rows = table.getElementsByTagName('tr')
+        return DomHelper.convertTableRowElementsToArray(Array.from(rows))
     }
 
     /**
      * @public
      * @param {HTMLTableRowElement[]} rows
      */
-    manager.convertTableRowElementsToArray = function (rows) {
+    static convertTableRowElementsToArray (rows) {
         /**
          * @type {string[][]}
          */
@@ -1859,11 +1928,11 @@ const DomHelper = function () {
      * @param {Array<string[]>} arr
      * @return {HTMLTableElement}
      */
-    manager.convertArrToTableElement = function (arr) {
-        var i, j
+    static convertArrToTableElement (arr) {
+        let i, j
 
-        var table = document.createElement('table')
-        var tr, td
+        const table = document.createElement('table')
+        let tr, td
 
         for (i = 0; i < arr.length; i++) {
             tr = document.createElement('tr')
@@ -1885,17 +1954,43 @@ const DomHelper = function () {
      * @param {HTMLElement} el
      * @return {Object} chainer with functions represeting properties/functions of element all returning chainer
      */
-    manager.elementChainer = function (el) {
+    static elementChainer (el) {
+        /**
+         * TODO: Override return type of function?
+         * @template T Function being chained
+         * @template U Returned chainer
+         * Chained
+         */
+        /**
+         * 
+         * typedef {typeof HTMLElement.prototype.addEventListener} AddEventListener
+         * @typedef {(type: string, listener: (ev: Event) => void, options: any) => void} AddEventListener https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+         * @typedef {typeof Node.prototype.appendChild} AppendChild
+         */
+
+        /**
+         * @type {Record<string, (...arg: any[]) => typeof chainer>}
+         */
         const chainer = {
-            element: el,
+            /**
+             * type {AddEventListener}
+             */
             addEventListener: (event, handle, other) => {
                 el.addEventListener(event, handle, other)
                 return chainer
             },
+            /**
+             * type {(el: HTMLElement) => typeof chainer}
+             * type {AppendChild}
+             */
             appendChild: (child) => {
                 el.appendChild(child)
                 return chainer
             },
+            /**
+             * Function version of getter/setter.
+             * @param {string} html 
+             */
             innerHTML: (html) => {
                 el.innerHTML = html
                 return chainer
@@ -1920,14 +2015,27 @@ const DomHelper = function () {
                 el.setAttribute(name, val)
                 return chainer
             },
+            /**
+             * Function version of style object.
+             * param {keyof HTMLElement['style']} key TODO: Omit read-only length, parentRule
+             * @param {string} val
+             */
             style: (key, val) => {
                 el.style[key] = val
                 return chainer
             },
+            /**
+             * Function version of getter/setter.
+             * @param {string} str 
+             */
             textContent: (str) => {
                 el.textContent = str
                 return chainer
             },
+            /**
+             * Function version of getter/setter.
+             * @param {string} str 
+             */
             title: (str) => {
                 el.title = str
                 return chainer
@@ -1936,10 +2044,4 @@ const DomHelper = function () {
 
         return chainer
     }
-
-    return manager
-}
-
-if (typeof module !== 'undefined') {
-    module.exports = DomHelper
 }

@@ -2,18 +2,19 @@
  * Saving class.
  * Handles all possible saving methods in JavaScript.
  */
-var PersistentStateManager = function() {
-    var manager = {}
-    manager.settings = {
-        defaultMethod: 'localStorage'
+export default class PersistentStateManager {
+    constructor() {
+        this.settings = {
+            defaultMethod: 'localStorage'
+        }
     }
 
     /**
      * @param {string} method
      * @return {string}
      */
-    manager.fixMethod = function(method = '') {
-        if (!method) { method = manager.settings.defaultMethod }
+    fixMethod(method = '') {
+        if (!method) { method = this.settings.defaultMethod }
         return method
     }
 
@@ -22,13 +23,13 @@ var PersistentStateManager = function() {
      * @param {string} method
      * @return {*|boolean}
      */
-    manager.get = function(key, method) {
-        method = manager.fixMethod(method)
+    get(key, method) {
+        method = this.fixMethod(method)
 
         switch (method) {
             case 'localStorage':
                 return window.localStorage.getItem(key)
-                break
+                // break
 
             default:
                 console.error('Invalid method', method)
@@ -44,15 +45,15 @@ var PersistentStateManager = function() {
      * @param {string} method
      * @return {boolean}
      */
-    manager.set = function(key, value, method) {
-        method = manager.fixMethod(method)
+    set(key, value, method) {
+        method = this.fixMethod(method)
 
         switch (method) {
             case 'localStorage':
                 //https://developer.mozilla.org/en-US/docs/Web/API/Storage/setItem
                 window.localStorage.setItem(key, value)
                 return true
-                break
+                // break
 
             default:
                 console.error('Invalid method', method)
@@ -61,6 +62,4 @@ var PersistentStateManager = function() {
 
         return false
     }
-
-    return manager
 }

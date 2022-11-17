@@ -1,4 +1,4 @@
-class TrackManager {
+export default class TrackManager {
     constructor() {
         /**
          * Storing
@@ -18,7 +18,7 @@ class TrackManager {
      * @param {MediaStreamTrack} track
      */
     removeTrack(track) {
-        var index = this.getTrackIndex(track)
+        const index = this.getTrackIndex(track)
         if (index >= 0) {
             this.tracks.splice(index, 1)
         }
@@ -32,5 +32,3 @@ class TrackManager {
         return this.tracks.indexOf(track)
     }
 }
-
-module.exports = TrackManager

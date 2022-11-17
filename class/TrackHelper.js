@@ -1,6 +1,6 @@
-const StreamHelper = require('./StreamHelper')
+import StreamHelper from './StreamHelper'
 
-class TrackHelper {
+export default class TrackHelper {
     /**
      * @param {MediaStreamTrack} track
      * @return {boolean}
@@ -35,13 +35,13 @@ class TrackHelper {
 
     /**
      * @param {MediaStreamTrack} track
-     * @param {function} dataHandle
+     * @param {((this: MediaRecorder, ev: BlobEvent) => any) | null} dataHandle
      * @return
      */
     static startRecordingTrack(track, dataHandle) {
         // Should be abstract
 
-        var stream = TrackHelper.trackToStream(track)
+        const stream = TrackHelper.trackToStream(track)
 
         // Record stream
         return StreamHelper.startRecordingStream(stream, dataHandle)
@@ -53,10 +53,9 @@ class TrackHelper {
      * @return {MediaStream}
      */
     static trackToStream(track) {
-        var stream = new window.MediaStream()
+        const stream = new window.MediaStream()
         stream.addTrack(track)
 
         return stream
     }
 }
-module.exports = TrackHelper

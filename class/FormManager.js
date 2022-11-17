@@ -1,84 +1,213 @@
-const DomHelper = require('./DomHelper')
+import DomHelper from './DomHelper'
+
+/**
+ * @typedef {object} FormManagerSettings
+ * @property {boolean} useLabel
+ * @property {Object<string, string>} text
+ */
+
+/**
+ * @typedef {Object<string, *>} Dictionary
+ */
+
+/**
+ * @typedef {object} PageInputOptions
+ * @property {boolean} noHidden
+ * @property {boolean} hidden
+ */
+
+/**
+ * @typedef {object} A
+ * @description My description
+ * @property {string} b
+ */
+
+/**
+ * @typedef {object} C
+ * @property {string} d
+ * @description My description
+ */
+
+/**
+ * @typedef {HTMLInputElement|HTMLSelectElement|HTMLTextAreaElement} InputElement
+ */
+
+/**
+ * @typedef {Object} InputType
+ * @property {string} tag
+ * @property {boolean} placeholder
+ * @property {Object<string, string>} attributes
+ * @property {(value: any) => any} format // If handle: Number(val)
+ * @property {boolean} multiple
+ * @property {(element: InputElement) => any} value // Default = use .value. If handle: (el)=>{return el.value;}.
+ * @property {(element: InputElement, value: any) => void} setValue // Default = use .value. If handle: (el, val)=>{el.value = val;}.
+ * @description Object representing settings for an input type in inputTypes. Used for creating inputs.
+ */
+
+/**
+ * @description Object representing data of input element
+ * @typedef {object} InputObject
+ * @property {string} type
+ * @property {string} tag
+ * @property {Object<string, string>} attributes
+ * @property {string} key
+ * @property {string} label
+ * @property {any[]} values
+ * @property {string} rowHeader
+ * @property {string} initialSelection
+ * @property {boolean} required
+ */
+
+/**
+ * @description Object representing data for creating form
+ * @typedef {object} FormSettings
+ * @property {string} action
+ * @property {string} actionType
+ * @property {InputObject[]} inputs
+ */
+
+/**
+ * @typedef {object} ExtendedType
+ * @property {string} type
+ * @property {(type: InputType) => void} override
+ */
 
 /**
  * Collection of functions for handling forms.
  * Static class.
- * @param {object} settings
  */
-var FormManager = function (settings) { // ??Make static.
-  var manager = {}
-
-  manager.domHelper = DomHelper()
-
-  manager.constants = {
-    REQUIRED_ATTR: 'data-required'
-  }
+export default class FormManager {
 
   /**
-     * @typedef {object} FormManagerSettings
-     * @property {boolean} useLabel
-     * @property {Object<string, string>} text
-     */
+   * @param {Partial<FormManagerSettings>} [settings]
+   */
+  constructor(settings = {}) {
+    this.domHelper = DomHelper
 
-  /**
+    this.constants = {
+      REQUIRED_ATTR: 'data-required'
+    }
+
+    /**
      * @type {FormManagerSettings}
      */
-  manager.settings = {
-    useLabel: false,
-    text: {}
-  }
-  /**
-         * @typedef {Object<string, *>} Dictionary
+    this.settings = Object.assign({
+      useLabel: false,
+      text: {}
+    }, settings)
+
+    /**
+     * @type {Object<string, Partial<InputType>>}
+     */
+    this.inputTypes = {
+      text: {
+        'tag': 'input',
+        'placeholder': true,
+        'attributes': {
+          'type': 'text'
+        }
+      },
+      textarea: {
+        'placeholder': true,
+        'tag': 'textarea'
+      },
+      submit: {
+        'tag': 'input',
+        'attributes': {
+          'type': 'submit'
+        }
+      },
+      hidden: {
+        'tag': 'input',
+        'attributes': {
+          'type': 'hidden'
+        }
+      },
+      number: {
+        'tag': 'input',
+        'attributes': {
+          'type': 'number'
+        },
+        'format': Number
+      },
+      date: {
+        'tag': 'input',
+        'attributes': {
+          'type': 'date'
+        }
+      },
+      radio: {
+        'tag': 'input',
+        'attributes': {
+          'type': 'radio'
+        },
+        'multiple': true,
+        'value': (el) => {
+          if (!(el instanceof HTMLInputElement)) throw new Error('Not HTMLInputElement')
+          return !!el.checked
+        },
+        /**
+         * @param {boolean} val
          */
+        'setValue': (el, val) => {
+          if (!(el instanceof HTMLInputElement)) throw new Error('Not HTMLInputElement')
+          el.checked = val
+        }
+      },
+      checkbox: {
+        'tag': 'input',
+        'attributes': {
+          'type': 'checkbox'
+        },
+        'multiple': true,
+        'value': (el) => {
+          if (!(el instanceof HTMLInputElement)) throw new Error('Not HTMLInputElement')
+          return !!el.checked
+        },
+        /**
+         * @param {boolean} val
+         */
+        'setValue': (el, val) => {
+          if (!(el instanceof HTMLInputElement)) throw new Error('Not HTMLInputElement')
+          el.checked = val
+        }
+      },
+      password: {
+        'tag': 'input',
+        'attributes': {
+          'type': 'password'
+        }
+      },
+      select: {
+        'tag': 'select',
+        'multiple': true,
+        'value': (el) => {
+          if (!(el instanceof HTMLSelectElement)) throw new Error('Not HTMLSelectElement')
+          return el.options[el.selectedIndex].value
+        }
+      }
+    }
+
+    this.extendedTypes = {
+      /**
+       * @type {ExtendedType}
+       */
+      boolean: {
+        type: 'checkbox',
+        /**
+         * @param {InputType} inputType
+         */
+        override: function (inputType) {
+          inputType.multiple = false
+        }
+      }
+    }
+  }
 
   /**
-     * @typedef {object} PageInputOptions
-     * @property {boolean} noHidden
-     * @property {boolean} hidden
-     */
-
-  /**
-     * @typedef {object} A
-     * @description My description
-     * @property {string} b
-     */
-
-  /**
-     * @typedef {object} C
-     * @property {string} d
-     * @description My description
-     */
-
-  /**
-     * @typedef {Object} InputType
-     * @property {string} tag
-     * @property {boolean} placeholder
-     * @property {Object<string, string>} attributes
-     * @property {function} format // If handle: Number(val)
-     * @property {boolean} multiple
-     * @property {function(HTMLElement):*} value // Default = use .value. If handle: (el)=>{return el.value;}.
-     * @property {function(HTMLElement, *):void} setValue // Default = use .value. If handle: (el, val)=>{el.value = val;}.
-     * @description Object representing settings for an input type in inputTypes. Used for creating inputs.
-     */
-
-  /**
-   * @description Object representing data of input element
-     * @typedef {object} InputObject
-     * @property {string} type
-     * @property {string} tag
-     * @property {Object<string, string>} attributes
-     * @property {string} key
-     * @property {string} label
-     * @property {*[]} values
-     * @property {string} rowHeader
-     * @property {string} initialSelection
-     * @property {boolean} required
-     */
-
-  /**
-     * @return {InputObject}
-     */
-  manager.inputObject = function () {
+   * @return {InputObject}
+   */
+  inputObject() {
     return {
       type: '',
       tag: '',
@@ -93,18 +222,9 @@ var FormManager = function (settings) { // ??Make static.
   }
 
   /**
-   * @description Object representing data for creating form
-     * @typedef {object} FormSettings
-     * @property {string} action
-     * @property {string} actionType
-     * @property {HTMLElement[]} inputs
-     */
-
-  /**
-     * @property
-     * @return {FormSettings}
-     */
-  manager.formSettings = function () {
+   * @return {FormSettings}
+   */
+  formSettings() {
     return {
       action: '',
       actionType: '',
@@ -113,289 +233,181 @@ var FormManager = function (settings) { // ??Make static.
   }
 
   /**
-     * @type {Object<string, Partial<InputType>>} // TODO: Why is this not working?
-     */
-  manager.inputTypes = {
-    text: {
-      'tag': 'input',
-      'placeholder': true,
-      'attributes': {
-        'type': 'text'
-      }
-    },
-    textarea: {
-      'placeholder': true,
-      'tag': 'textarea'
-    },
-    submit: {
-      'tag': 'input',
-      'attributes': {
-        'type': 'submit'
-      }
-    },
-    hidden: {
-      'tag': 'input',
-      'attributes': {
-        'type': 'hidden'
-      }
-    },
-    number: {
-      'tag': 'input',
-      'attributes': {
-        'type': 'number'
-      },
-      'format': Number
-    },
-    date: {
-      'tag': 'input',
-      'attributes': {
-        'type': 'date'
-      }
-    },
-    radio: {
-      'tag': 'input',
-      'attributes': {
-        'type': 'radio'
-      },
-      'multiple': true,
-      /**
-     * @param {HTMLInputElement} el
-     */
-      'value': (el) => {
-        return !!el.checked
-      },
-      /**
-       * @param {HTMLInputElement} el
-       * @param {boolean} val
-       */
-      'setValue': (el, val) => {
-        el.checked = val
-      }
-    },
-    checkbox: {
-      'tag': 'input',
-      'attributes': {
-        'type': 'checkbox'
-      },
-      'multiple': true,
-      /**
-     * @param {HTMLInputElement} el
-     */
-      'value': (el) => {
-        return !!el.checked
-      },
-      /**
-       * @param {HTMLInputElement} el
-       * @param {boolean} val
-       */
-      'setValue': (el, val) => {
-        el.checked = val
-      }
-    },
-    password: {
-      'tag': 'input',
-      'attributes': {
-        'type': 'password'
-      }
-    },
-    select: {
-      'tag': 'select',
-      'multiple': true,
-      /**
-       * @param {HTMLSelectElement} el
-       */
-      'value': (el) => {
-        return el.options[el.selectedIndex].value
-      }
-    }
-  }
-
-  manager.extendedTypes = {
-    /**
-         * @type {object}
-         * @property {string} type
-         * @property {function} override
-         */
-    boolean: {
-      type: 'checkbox',
-      /**
-             * @param {InputType} inputType
-             */
-      override: function (inputType) {
-        inputType.multiple = false
-      }
-    }
-  }
-
-  /**
-     * @param {object} settings
-     */
-  manager.setup = function (settings = {}) {
-    for (var key in settings) {
-      manager.settings[key] = settings[key]
-    }
-  }
-
-  /**
-     * @param {FormSettings} settings
-     * @return {HTMLFormElement}
-     */
-  manager.settingsToForm = function (settings) {
+   * @param {FormSettings} settings
+   * @return {HTMLFormElement}
+   */
+  settingsToForm(settings) {
     // Start
-    var form = document.createElement('form')
-    var action = settings.action
-    var actionType = settings.actionType
-    form.addEventListener('submit', manager.handleSubmit)
+    const form = document.createElement('form')
+    const action = settings.action
+    const actionType = settings.actionType
+    form.addEventListener('submit', this.handleSubmit)
     form.setAttribute('action', action)
     form.setAttribute('actionType', actionType)
 
     // Inside
-    var inputs = manager.createInputs(settings.inputs)
-    manager.appendChildren(form, inputs)
+    const inputs = this.createInputs(settings.inputs)
+    this.appendChildren(form, inputs)
 
     return form
   }
 
   /**
-     * @param {object} settings
-     * @return {HTMLElement[]}
-     */
-  manager.createInputs = function (settings) {
+   * @param {InputObject[]} settings
+   * @return {HTMLElement[]}
+   */
+  createInputs(settings) {
     /**
-         * @type {HTMLElement[]}
-         */
-    var inputs = []
-    for (var key in settings) {
+     * @type {HTMLElement[]}
+     */
+    const inputs = []
+    for (let key in settings) {
       let input = settings[key]
-      input.key = key
+      // input.key = key // If settings is Record<string, InputObject>
 
-      inputs.push(manager.createInput(input))
+      inputs.push(this.createInput(input))
     }
 
     return inputs
   }
 
   /**
-     * @param {string} key
-     * @return {string}
-     */
-  manager.m = function (key) {
-    return manager.settings.text[key]
+   * @param {string} key
+   * @return {string}
+   */
+  m(key) {
+    return this.settings.text[key]
   }
 
   /**
-     * Input: <div><label>name</label> <div>{INPUT}</div></div>
-     * @param {InputObject} settings
-     * @return {HTMLElement}
-     */
-  manager.createInput = function (settings) {
+   * Input: <div><label>name</label> <div>{INPUT}</div></div>
+   * @param {InputObject} settings
+   * @return {HTMLElement}
+   */
+  createInput(settings) {
     /**
-         * @type {HTMLElement[]}
-         */
-    var children = []
-    /**
-     * @type {HTMLElement|}
+     * @type {import('./DomHelper').DomElementSettings[]}
      */
-    var el
+    const children = []
+    /**
+     * @type {HTMLElement|undefined}
+     */
+    let el
 
-    var NAME_SUFFIX = ': '
-    var useLabel = manager.settings.useLabel
+    const NAME_SUFFIX = ': '
+    const useLabel = this.settings.useLabel
 
     // Wrapper
-    var input = document.createElement('div')
+    const input = document.createElement('div')
 
-    var info = manager.inputTypes[settings.type]
+    const info = this.inputTypes[settings.type]
 
     // Name
-    var name = manager.m(settings.key)
-    var nameEl = document.createElement('label')
+    const name = this.m(settings.key)
+    const nameEl = document.createElement('label')
     nameEl.textContent = name + NAME_SUFFIX
     if (!useLabel) {
       nameEl.style.display = 'none'
     }
+    input.appendChild(nameEl)
 
     // Get tag
-    settings.tag = info.tag
+    settings.tag = info.tag || ''
 
     // Check tag
-    if (manager.hasSingleTag(settings.type)) {
+    if (this.hasSingleTag(settings.type)) {
       /**
-             * @type {object}
-             * @property {string} type
-             * @property {string} name
-             */
-      var attributes = {
+       * @typedef {{ type: string, name: string, placeholder: string }} InputAttributes
+       */
+      /**
+       * @type {InputAttributes}
+       */
+      const attributes = {
         type: settings.type,
-        name: settings.key
+        name: settings.key,
+        placeholder: ''
       }
       if (info.placeholder) {
         attributes.placeholder = name
       }
 
-      el = manager.createTag(
+      el = this.createTag(
         settings.tag,
         attributes,
         children
       )
     } else if (settings.tag === 'radio') { // Radio
       for (let i = 0; i < settings.values.length; i++) {
-        children.push(manager.createTag(settings.tag, {
-          type: 'radio',
-          name: settings.key,
-          value: settings.values[i]
+        children.push(DomHelper.DomElementSettings({
+          tag: settings.tag,
+          attributes: {
+            type: 'radio',
+            name: settings.key,
+            value: settings.values[i]
+          }
         }))
       }
-      el = manager.createTag('div', {}, children)
+      el = this.createTag('div', {}, children)
     } else if (settings.tag === 'checkbox') { // Checkbox
       for (let i = 0; i < settings.values.length; i++) {
-        children.push(manager.createTag(settings.tag, {
-          type: 'checkbox',
-          name: settings.key,
-          value: settings.values[i]
+        children.push(DomHelper.DomElementSettings({
+          tag: settings.tag,
+          attributes: {
+            type: 'checkbox',
+            name: settings.key,
+            value: settings.values[i]
+          },
         }))
       }
-      el = manager.createTag('div', {}, children)
+      el = this.createTag('div', {}, children)
     } else if (settings.tag === 'select') { // Select
       for (let i = 0; i < settings.values.length; i++) {
-        children.push(manager.createTag('option', {
-          value: settings.values[i]
+        children.push(DomHelper.DomElementSettings({
+          tag: 'option',
+          attributes: {
+            value: settings.values[i],
+          },
         }))
       }
-      el = manager.createTag('select', { name: settings.key }, children)
+      el = this.createTag('select', { name: settings.key }, children)
+    }
+
+    if (!el) {
+      throw new Error('Expected input element')
     }
 
     if (settings.required) {
-      manager.setInputAsRequired(el)
+      this.setInputAsRequired(el)
     }
 
-    input.appendChild(nameEl)
-    input.appendChild(document.createElement('div').appendChild(el))
+    input.appendChild(el)
 
     return input
   }
 
   /**
-     * @param {HTMLElement} el
-     */
-  manager.setInputAsRequired = function (el) {
-    el.setAttribute(manager.constants.REQUIRED_ATTR, '')
+   * @param {HTMLElement} el
+   */
+  setInputAsRequired(el) {
+    el.setAttribute(this.constants.REQUIRED_ATTR, '')
   }
 
   /**
-     * @param {HTMLFormElement} form
-     * TODO
-     */
-  manager.getRequiredInputs = function (form) {
-    return manager.domHelper.getElementsWithAttribute(manager.constants.REQUIRED_ATTR)
+   * @param {HTMLFormElement} form
+   * TODO
+   */
+  getRequiredInputs(form) {
+    return this.domHelper.getElementsWithAttribute(this.constants.REQUIRED_ATTR)
   }
 
   /**
-     * @param {Event} ev
-     * @return {boolean}
-     */
-  manager.handleSubmit = function (ev) { // ??Not called bug.
-    var form = ev.target
-    var bool = manager.checkRequiredInputs(form)
+   * @param {Event} ev
+   * @return {boolean}
+   */
+  handleSubmit(ev) { // TODO: Not called bug.
+    const form = ev.target
+    if (!(form instanceof HTMLFormElement)) throw new Error('Not form')
+    const bool = this.checkRequiredInputs(form)
     if (!bool || bool) {
       window.alert('Please fill in all required inputs.')
     }
@@ -404,14 +416,14 @@ var FormManager = function (settings) { // ??Make static.
   }
 
   /**
-     * @param {HTMLElement} form
+     * @param {HTMLFormElement} form
      * @return {boolean}
      */
-  manager.checkRequiredInputs = function (form) {
-    var inputs = manager.getRequiredInputs(form)
-    for (var i = 0; i < inputs.length; i++) {
+  checkRequiredInputs(form) {
+    const inputs = this.getRequiredInputs(form)
+    for (let i = 0; i < inputs.length; i++) {
       // FAILED
-      if (!manager.checkRequiredInput(inputs[i])) {
+      if (!this.checkRequiredInput(inputs[i])) {
         return false
       }
     }
@@ -421,26 +433,25 @@ var FormManager = function (settings) { // ??Make static.
   }
 
   /**
-     * @param {HTMLElement} el
-     * @return boolean
-     */
-  manager.checkRequiredInput = function (el) {
+   * @param {HTMLElement} el
+   */
+  checkRequiredInput(el) {
     /*
-      checkbox: .checked length > 0
-      radio: .checked has true
-      select: always selected.
-      */
+    checkbox: .checked length > 0
+    radio: .checked has true
+    select: always selected.
+    */
 
-    var type = el.getAttribute('type')
+    const type = el.getAttribute('type')
 
     // Checked
     if (
       el.tagName === 'input' &&
       (type === 'radio' || type === 'checkbox') &&
-      manager.getCheckedElements(el).length === 0
+      this.getCheckedElements(el).length === 0
     ) {
       return false
-    } else if (el.tagName === 'input' && !el.value) { // Input default
+    } else if (el instanceof HTMLInputElement && !el.value) { // Input default
       return false
     }
 
@@ -449,21 +460,21 @@ var FormManager = function (settings) { // ??Make static.
   }
 
   /**
-     * @param {HTMLElement} el
-     * @return {Element[]}
-     */
-  manager.getCheckedElements = function (el) {
+   * @param {HTMLElement} el
+   * @return {Element[]}
+   */
+  getCheckedElements(el) {
     const elements = [...Array.from(el.children)]
 
-    return elements.filter(element => element.checked)
+    return elements.filter(element => (element instanceof HTMLInputElement) && element.checked)
   }
 
   /**
-     * @param {string} type
-     * @return {boolean}
-     */
-  manager.hasSingleTag = function (type) {
-    if (!manager.inputTypes[type].multiple) {
+   * @param {string} type
+   * @return {boolean}
+   */
+  hasSingleTag(type) {
+    if (!this.inputTypes[type].multiple) {
       return true
     } else {
       return false
@@ -471,11 +482,11 @@ var FormManager = function (settings) { // ??Make static.
   }
 
   /**
-     * @param {*[]} arr
-     * @return {*[]}
-     */
-  manager.arrayifyAll = function (arr) {
-    for (var i = 0; i < arr.length; i++) {
+   * @param {any[]} arr
+   * @return {any[]}
+   */
+  arrayifyAll(arr) {
+    for (let i = 0; i < arr.length; i++) {
       arr[i] = [arr[i]]
     }
 
@@ -483,13 +494,13 @@ var FormManager = function (settings) { // ??Make static.
   }
 
   /**
-     * @param {string} tagName
-     * @param {Dictionary} attributes
-     * @param {HTMLElement[]} children
-     * @return {HTMLElement}
-     */
-  manager.createTag = function (tagName, attributes, children = []) {
-    return manager.domHelper.createElement({
+   * @param {string} tagName
+   * @param {Dictionary} attributes
+   * @param {import('./DomHelper').DomElementSettings[]} children
+   * @return {HTMLElement}
+   */
+  createTag(tagName, attributes, children = []) {
+    return this.domHelper.createElement({
       tag: tagName,
       attributes: attributes,
       children: children
@@ -497,57 +508,57 @@ var FormManager = function (settings) { // ??Make static.
   }
 
   /**
-     * @param {HTMLElement} el
-     * @param {HTMLElement[]} children
-     */
-  manager.appendChildren = function (el, children) {
-    manager.domHelper.appendChildren(el, children)
+   * @param {HTMLElement} el
+   * @param {HTMLElement[]} children
+   */
+  appendChildren(el, children) {
+    this.domHelper.appendChildren(el, children)
   }
 
   /**
-     * @param {HTMLElement} el
-     * @param {Dictionary} attributes
-     */
-  manager.setAttributes = function (el, attributes) {
-    manager.domHelper.setAttributes(el, attributes)
+   * @param {HTMLElement} el
+   * @param {Dictionary} attributes
+   */
+  setAttributes(el, attributes) {
+    this.domHelper.setAttributes(el, attributes)
   }
 
   /**
-     * @param {HTMLElement} el
-     * @return {string}
-     */
-  manager.getTableHeaderValue = function (el) {
-    var parentEl = manager.domHelper.getClosestParent(el, 'th')
-    return (parentEl ? parentEl.textContent : '') // TODO: failOnFalsy
+   * @param {HTMLElement} el
+   * @return {string}
+   */
+  getTableHeaderValue(el) {
+    const parentEl = this.domHelper.getClosestParent(el, 'th')
+    return (parentEl ? parentEl.textContent || '' : '')
   }
 
   /**
-     * @param {Dictionary} obj
-     * @return {Array<[string, *]>}
-     */
-  manager.keyValueObjToArrays = function (obj) {
+   * @param {Dictionary} obj
+   * @return {Array<[string, *]>}
+   */
+  keyValueObjToArrays(obj) {
     /*
-                            {
-                              key1, val1,
-                              keyn, valn,
-                              ...
-                            }
+    {
+      key1, val1,
+      keyn, valn,
+      ...
+    }
 
-                            >>
+    >>
 
-                            [
-                              [key1, val1]
-                              [keyn, valn]
-                              ....
-                            ]
-                            */
+    [
+      [key1, val1]
+      [keyn, valn]
+      ....
+    ]
+    */
 
     /**
-         * @type {Array<[string, *]>}
-         */
-    var arr = []
+     * @type {Array<[string, *]>}
+     */
+    const arr = []
 
-    for (var key in obj) {
+    for (let key in obj) {
       arr.push(
         [key, obj[key]]
       )
@@ -557,12 +568,12 @@ var FormManager = function (settings) { // ??Make static.
   }
 
   /**
-     * @param {Dictionary} attributes
-     * @return {string}
-     */
-  manager.attributesToSelector = function (attributes) {
-    var selector = ''
-    for (var key in attributes) {
+   * @param {Dictionary} attributes
+   * @return {string}
+   */
+  attributesToSelector(attributes) {
+    let selector = ''
+    for (let key in attributes) {
       selector += '[' + key + '=' + attributes[key] + ']'
     }
 
@@ -570,20 +581,20 @@ var FormManager = function (settings) { // ??Make static.
   }
 
   /**
-     * @param {Object<string, InputType>} inputTypes
-     * @return {string[]}
-     */
-  manager.inputTypesToSelectors = function (inputTypes) {
+   * @param {Object<string, Partial<InputType>>} inputTypes
+   * @return {string[]}
+   */
+  inputTypesToSelectors(inputTypes) {
     /**
-         * @type {string[]}
-         */
+     * @type {string[]}
+     */
     const selectors = []
-    for (var key in inputTypes) {
+    for (let key in inputTypes) {
       let inputType = inputTypes[key]
       let selector = ''
 
       if (inputType.tag) { selector += ' ' + inputType.tag }
-      if (inputType.attributes) { selector += manager.attributesToSelector(inputType.attributes) }
+      if (inputType.attributes) { selector += this.attributesToSelector(inputType.attributes) }
 
       selectors.push(selector)
     }
@@ -592,64 +603,62 @@ var FormManager = function (settings) { // ??Make static.
   }
 
   /**
-     * @param {HTMLElement[]} elements
-     * @return {InputObject[]}
-     */
-  manager.elementsToInputObjects = function (elements) {
-    var inputs = []
-    for (var i = 0; i < elements.length; i++) {
-      inputs.push(manager.elementToInputObject(elements[i]))
+   * @param {HTMLElement[]} elements
+   * @return {InputObject[]}
+   */
+  elementsToInputObjects(elements) {
+    const inputs = []
+    for (let i = 0; i < elements.length; i++) {
+      inputs.push(this.elementToInputObject(elements[i]))
     }
 
     return inputs
   }
 
   /**
-     * Should keep only necessary information for editing
-     * @param {HTMLElement} element
-     * @return {InputObject}
-     */
-  manager.elementToInputObject = function (element) {
-    var obj = manager.inputObject()
+   * Should keep only necessary information for editing
+   * @param {HTMLElement} element
+   * @return {InputObject}
+   */
+  elementToInputObject(element) {
+    const obj = this.inputObject()
 
     obj.tag = element.tagName
-    obj.attributes = manager.domHelper.getElementAttributes(element)
+    obj.attributes = this.domHelper.getElementAttributes(element)
 
     if (element instanceof HTMLInputElement || element instanceof HTMLSelectElement) {
       obj.values.push(element.value)
     }
 
-    obj.label = manager.getLabel(element)
-    obj.rowHeader = manager.getTableHeaderValue(element)
+    obj.label = this.getLabel(element)
+    obj.rowHeader = this.getTableHeaderValue(element)
     if (element instanceof HTMLSelectElement && obj.tag === 'select' && element.options.length > 0) {
-      obj.initialSelection = element.options[0]
+      const initialSelection = element.options[0];
+      obj.initialSelection = initialSelection.getAttribute('name') || '' // OK?
     }
 
     return obj
   }
 
   /**
-     * @param {HTMLElement} element
-     * @return {HTMLElement|undefined}
-     */
-  manager.getLabelElement = function (element) {
-    var labelEl
+   * @param {HTMLElement} element
+   * @return {HTMLElement|undefined}
+   */
+  getLabelElement(element) {
+    let labelEl
 
     // By wrap
-    var p = element.parentElement
+    const p = element.parentElement
     if (p && p.tagName === 'label') {
       labelEl = p
     }
 
     // By id
-    var id = element.getAttribute('id')
+    const id = element.getAttribute('id')
     if (id) {
       // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/label
       // Not connected to form by spec.
-      /**
-       * @type {HTMLLabelElement[]}
-       */
-      var elements = [...Array.from(document.querySelectorAll('[for=' + id + ']'))]
+      const elements = /** @type {HTMLLabelElement[]} */ ([...Array.from(document.querySelectorAll('[for=' + id + ']'))].filter(el => el instanceof HTMLLabelElement))
       if (elements[0]) {
         labelEl = elements[0]
       }
@@ -659,49 +668,49 @@ var FormManager = function (settings) { // ??Make static.
   }
 
   /**
-     * @param {HTMLElement} element
-     * @return {string}
-     */
-  manager.getLabel = function (element) {
-    var label = ''
-    var labelEl = manager.getLabelElement(element)
+   * @param {HTMLElement} element
+   * @return {string}
+   */
+  getLabel(element) {
+    let label = ''
+    const labelEl = this.getLabelElement(element)
 
     if (labelEl) {
-      label = labelEl.textContent
+      label = labelEl.textContent || ''
     }
 
     return label
   }
 
   /**
-     * @param {Partial<PageInputOptions>} options
-     * @return {HTMLElement[]}
-     */
-  manager.getCurrentPageInputs = function (options = {}) {
+   * @param {Partial<PageInputOptions>} options
+   * @return {HTMLElement[]}
+   */
+  getCurrentPageInputs(options = {}) {
     /**
-     * @type {Partial<PageInputOptions>}
+     * @type {Record<string, Partial<InputType>>}
      */
-    var settings
+    let settings
     if (options.noHidden) {
-      settings = Object.assign({}, options)
+      settings = Object.assign({}, this.inputTypes)
       delete settings.hidden
     } else {
-      settings = manager.inputTypes
+      settings = this.inputTypes
     }
 
-    var selectors = manager.inputTypesToSelectors(settings)
-    var elements = manager.domHelper.getElementsBySelectors(selectors)
+    const selectors = this.inputTypesToSelectors(settings)
+    const elements = /** @type {HTMLElement[]} */ (this.domHelper.getElementsBySelectors(selectors).filter(element => element instanceof HTMLElement))
 
     return elements
   }
 
   /**
-     * Gets input type from element
-     * @param {HTMLElement} el
-     * @return {Partial<InputType> | null} InputType. Default if not found.
-     */
-  manager.getElementInputType = function (el) {
-    const settings = manager.inputTypes
+   * Gets input type from element
+   * @param {HTMLElement} el
+   * @return {Partial<InputType> | null} InputType. Default if not found.
+   */
+  getElementInputType(el) {
+    const settings = this.inputTypes
     let type = null // DEFAULT
     for (let key in settings) {
       const setting = settings[key]
@@ -728,12 +737,12 @@ var FormManager = function (settings) { // ??Make static.
   }
 
   /**
-     * Gets input value of any form element.
-     * @param {HTMLInputElement|HTMLSelectElement} el
-     * @return {*} input value
-     */
-  manager.getInputValue = function (el) {
-    const type = manager.getElementInputType(el)
+   * Gets input value of any form element.
+   * @param {HTMLInputElement|HTMLSelectElement} el
+   * @return input value
+   */
+  getInputValue(el) {
+    const type = this.getElementInputType(el)
     if (!type) {
       throw new Error('No type')
     }
@@ -746,26 +755,26 @@ var FormManager = function (settings) { // ??Make static.
   }
 
   /**
-     * Sets input values from a map
-     * @param {Object} map {selector1: val1, ...}
-     */
-  manager.setInputValues = function (map) {
+   * Sets input values from a map
+   * @param {Object} map {selector1: val1, ...}
+   */
+  setInputValues(map) {
     for (let selector in map) {
-      const val = map[selector]
-      const elements = document.querySelectorAll(selector)
+      const val = map[/** @type {keyof map} */ (selector)]
+      const elements = /** @type {(HTMLInputElement|HTMLSelectElement)[]}*/ (Array.from(document.querySelectorAll(selector)).filter(el => el instanceof HTMLInputElement || el instanceof HTMLSelectElement))
       elements.forEach((el) => {
-        manager.setInputValue(el, val)
+        this.setInputValue(el, val)
       })
     }
   }
 
   /**
-     * Sets single input element's value
-     * @param {HTMLInputElement|HTMLSelectElement} el
-     * @param {*} val
-     */
-  manager.setInputValue = function (el, val) {
-    const type = manager.getElementInputType(el)
+   * Sets single input element's value
+   * @param {HTMLInputElement|HTMLSelectElement} el
+   * @param {any} val
+   */
+  setInputValue(el, val) {
+    const type = this.getElementInputType(el)
     if (!type) {
       throw new Error('No type')
     }
@@ -777,17 +786,20 @@ var FormManager = function (settings) { // ??Make static.
   }
 
   /**
-     * Focuses on first element found.
-     * Useful for having forms that auto focus.
-     * @param {HTMLElement} el
+   * Focuses on first element found.
+   * Useful for having forms that auto focus.
+   * @param {HTMLElement} el
+   */
+  focusOnFirstInput(el) {
+    /**
+     * @param {HTMLElement} el 
      */
-  manager.focusOnFirstInput = function (el) {
     const getFirstInput = (el) => {
-      const children = [...el.children]
+      const children = /** @type {HTMLElement[]} */ (Array.from(el.children).filter(element => element instanceof HTMLElement))
       for (let i = 0; i < children.length; i++) {
         let child = children[i]
 
-        if (manager.isInput(child)) {
+        if (this.isInput(child)) {
           return child
         }
       }
@@ -801,21 +813,10 @@ var FormManager = function (settings) { // ??Make static.
   }
 
   /**
-     * @param {HTMLElement} el
-     * @return {boolean}
-     */
-  manager.isInput = function (el) {
-    return !manager.getElementInputType(el)
+   * @param {HTMLElement} el
+   * @return {boolean}
+   */
+  isInput(el) {
+    return !this.getElementInputType(el)
   }
-
-  manager.setup(settings)
-
-  return manager
-}
-
-if (typeof window === 'object') {
-  window.FormManager = FormManager
-}
-if (typeof module !== 'undefined') {
-  module.exports = FormManager
 }

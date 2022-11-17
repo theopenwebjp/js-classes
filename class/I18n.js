@@ -19,17 +19,29 @@
  * Name deprecated. Use I18n class instead.
  * Similar libary exists: https://github.com/i18next/i18next
  * Should use similar library and unite functions over time. However some functions may be unique here.
- * @param {TextManagerSettings} settings
- * @returns
  */
-var TextManager = function (settings) {
-  var manager = {}
+export default class I18n {
+  /**
+   * @param {TextManagerSettings} settings 
+   */
+  constructor(settings) {
+      
+    /**
+     * @type {TextManagerSettings}
+     */
+    this.settings = this.Settings()
+    
+    // Alias
+    this.m = this.getMessage
+
+    this.setup(settings)
+  }
 
   /**
    * @param {Partial<TextManagerSettings>} options
    * @return {TextManagerSettings}
    */
-  manager.Settings = function (options = {}) {
+  Settings(options = {}) {
     return Object.assign({
       auto: true,
       languageParam: 'language',
@@ -45,36 +57,31 @@ var TextManager = function (settings) {
   }
 
   /**
-   * @type {TextManagerSettings}
-   */
-  manager.settings = manager.Settings()
-
-  /**
    * @return {object}
    */
-  manager.Language = function () {
+  Language() {
     return {
       // key value pairs
     }
   }
 
-  manager.help = function () {
+  help() {
     window.alert('Language codes use: ' + 'iso639-3')
   }
 
   /**
    * @param {Partial<TextManagerSettings>} options
    */
-  manager.setup = function (options) {
-    manager.settings = manager.Settings(options)
+  setup(options) {
+    this.settings = this.Settings(options)
 
     // Default language
-    if (manager.settings.auto) {
-      manager.setLanguageFromEnvironment()
+    if (this.settings.auto) {
+      this.setLanguageFromEnvironment()
     }
 
     // Check
-    if (!manager.check()) {
+    if (!this.check()) {
       throw Error('Check failed. Please check log.')
     }
   }
@@ -83,14 +90,14 @@ var TextManager = function (settings) {
    * Setup checks
    * @return {Boolean} Whether check failed or not
    */
-  manager.check = function () {
+  check() {
     /*
     Should allow languageFormat + character sets
     */
 
-    if (manager.settings.languageFormat === 'iso639-3') {
+    if (this.settings.languageFormat === 'iso639-3') {
       // Basic check for now to avoid likely bugs.
-      var l = manager.settings.languages
+      const l = this.settings.languages
       if (l['en'] || l['jp'] || l['english'] || l['japanese']) {
         console.error(
           'Invalid language format. Check https://en.wikipedia.org/wiki/List_of_ISO_639-3_codes'
@@ -99,7 +106,7 @@ var TextManager = function (settings) {
       }
     }
 
-    if (manager.settings.characterSet === 'standard') {
+    if (this.settings.characterSet === 'standard') {
       // Allow any. Should use lowercase.
       // Examples: https://en.wikipedia.org/wiki/List_of_writing_systems
     }
@@ -111,8 +118,8 @@ var TextManager = function (settings) {
    * Get current language name
    * @return {String}
    */
-  manager.getLanguage = function () {
-    return manager.settings.language
+  getLanguage() {
+    return this.settings.language
   }
 
   /**
@@ -120,9 +127,9 @@ var TextManager = function (settings) {
    * @param {String} language
    * @return {Boolean} Whether was able to set or not.
    */
-  manager.setLanguage = function (language) {
-    if (language && manager.settings.languages[language]) {
-      manager.settings.language = language
+  setLanguage(language) {
+    if (language && this.settings.languages[language]) {
+      this.settings.language = language
       return true
     } else {
       return false
@@ -133,8 +140,8 @@ var TextManager = function (settings) {
    * Get default language name
    * @return {String}
    */
-  manager.getDefaultLanguage = function () {
-    return manager.settings.defaultLanguage
+  getDefaultLanguage() {
+    return this.settings.defaultLanguage
   }
 
   /**
@@ -142,31 +149,29 @@ var TextManager = function (settings) {
    * @param {String} language
    * @return {Boolean} Whether was able to set or not.
    */
-  manager.setDefaultLanguage = function (language) {
-    if (language && manager.settings.languages[language]) {
-      manager.settings.defaultLanguage = language
+  setDefaultLanguage(language) {
+    if (language && this.settings.languages[language]) {
+      this.settings.defaultLanguage = language
       return true
     } else {
       return false
     }
   }
 
-  manager.getCurrentLanguageData = function () {
-    return manager.getCommonLanguageData('language')
+  getCurrentLanguageData() {
+    return this.getCommonLanguageData('language')
   }
 
-  manager.getDefaultLanguageData = function () {
-    return manager.getCommonLanguageData('defaultLanguage')
+  getDefaultLanguageData() {
+    return this.getCommonLanguageData('defaultLanguage')
   }
 
   /**
-   * @param {string} key
+   * @param {'language'|'defaultLanguage'} key
    */
-  manager.getCommonLanguageData = function (key) {
-    var language, data
-
-    language = manager.settings[key]
-    data = manager.settings.languages[language]
+  getCommonLanguageData(key) {
+    const language = this.settings[key]
+    const data = this.settings.languages[language]
     if (data) {
       return data
     }
@@ -179,17 +184,17 @@ var TextManager = function (settings) {
    * @param {string} key
    * @return {string}
    */
-  manager.getMessage = function (key) {
-    var data
+  getMessage(key) {
+    let data
 
     // Normal
-    data = manager.getCurrentLanguageData()
+    data = this.getCurrentLanguageData()
     if (data && data[key]) {
       return data[key]
     }
 
     // Default
-    data = manager.getDefaultLanguageData()
+    data = this.getDefaultLanguageData()
     if (data && data[key]) {
       return data[key]
     }
@@ -198,19 +203,16 @@ var TextManager = function (settings) {
     return ''
   }
 
-  // Alias
-  manager.m = manager.getMessage
-
   /**
    * @param {string[]} keys
    */
-  manager.getMessageObject = function (keys) {
+  getMessageObject(keys) {
     /**
      * @type {Object<string, *>}
      */
     const obj = {}
     keys.forEach(key => {
-      obj[key] = manager.getMessage(key)
+      obj[key] = this.getMessage(key)
     })
 
     return obj
@@ -220,9 +222,9 @@ var TextManager = function (settings) {
    * @param {string[]} keys
    * @return {string[]}
    */
-  manager.getMessageArray = function (keys) {
+  getMessageArray(keys) {
     return keys.map(key => {
-      return manager.getMessage(key)
+      return this.getMessage(key)
     })
   }
 
@@ -231,8 +233,8 @@ var TextManager = function (settings) {
    * @param {string} val
    * @return {boolean}
    */
-  manager.setMessage = function (key, val) {
-    var data = manager.getCurrentLanguageData()
+  setMessage(key, val) {
+    const data = this.getCurrentLanguageData()
     if (data) {
       data[key] = val
       return true
@@ -245,32 +247,32 @@ var TextManager = function (settings) {
   /**
    * @return {string[]}
    */
-  manager.getAvailableLanguages = function () {
-    var languages = manager.settings.languages
+  getAvailableLanguages() {
+    const languages = this.settings.languages
     return Object.keys(languages)
   }
 
-  manager.setLanguageFromEnvironment = function () {
-    if (!manager.setLanguageFromUrlParam().current) {
-      manager.setLanguageFromBrowserLanguage()
+  setLanguageFromEnvironment() {
+    if (!this.setLanguageFromUrlParam().current) {
+      this.setLanguageFromBrowserLanguage()
     }
   }
 
-  manager.setLanguageFromBrowserLanguage = function () {
-    var l = navigator.language
-    var key = l.split('-')[0]
-    manager.setLanguage(key)
+  setLanguageFromBrowserLanguage() {
+    const l = navigator.language
+    const key = l.split('-')[0]
+    this.setLanguage(key)
   }
 
   /**
    * @param {Partial<{current: string, default: string}>} keys GET keys to be used {current, default}
-   * @return {Object} Implemented languages by key {current, default}
+   * @return Implemented languages by key {current, default}
    */
-  manager.setLanguageFromUrlParam = function (keys = {}) {
+  setLanguageFromUrlParam(keys = {}) {
     // Default keys
     const getKeys = {
-      current: keys.current || manager.settings.languageParam,
-      default: keys.default || manager.settings.defaultLanguageParam
+      current: keys.current || this.settings.languageParam,
+      default: keys.default || this.settings.defaultLanguageParam
     }
 
     const url = window.location.href
@@ -281,20 +283,8 @@ var TextManager = function (settings) {
     }
 
     return {
-      current: getValues.current ? manager.setLanguage(getValues.current) : false,
-      default: getValues.default ? manager.setDefaultLanguage(getValues.default) : false
+      current: getValues.current ? this.setLanguage(getValues.current) : false,
+      default: getValues.default ? this.setDefaultLanguage(getValues.default) : false
     }
   }
-
-  manager.setup(settings)
-
-  return manager
-}
-
-if (typeof window === 'object') {
-  window.I18n = TextManager
-  window.TextManager = TextManager
-}
-if (typeof module !== 'undefined') {
-  module.exports = TextManager
 }

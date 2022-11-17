@@ -1,18 +1,21 @@
+<!DOCTYPE html>
 <html>
     <head>
+        <meta charset="utf-8">
         <title>js-classes basic test</title>
-        <script src="./../../dist/bundle.js"></script>
-        <script>
-            window.addEventListener('load', function(){
-                
-            });
+        <!--<script src="./../../dist/bundle.js"></script>-->
+        <script type="module">
+            // import JSClasses from './../../dist/bundle.js'
+            import JSClasses from '../index.js'
+            window.JSClasses = JSClasses
+            console.log('window:', { JSClasses })
         </script>
     </head>
 
     <body>
         <h1>js-classes basic test</h1>
         <div>
-            Check logs for issues.
+            Check logs for issues and variables.
         </div>
     </body>
 </html>

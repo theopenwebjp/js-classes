@@ -1,0 +1,28 @@
+{
+  "extends": "eslint:recommended",
+  "parser": "@babel/eslint-parser",
+  "parserOptions": {
+      "ecmaVersion": 2018,
+      "sourceType": "module",
+      "allowImportExortEverywhere": true,
+      "requireConfigFile": false
+  },
+  "env": {
+      "browser": true,
+      "node": true,
+      "es6": true,
+      "mocha": true
+  },
+  "rules": {
+      "no-console": "off",
+      "no-redeclare": "warn",
+      "no-unused-vars": "warn",
+      "no-var": "error",
+      "no-use-before-define": ["off", {
+          "variables": false
+      }]
+  },
+  "ignorePatterns": [
+    "**/*.html"
+  ]
+}

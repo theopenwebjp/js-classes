@@ -15,6 +15,11 @@ However, the above also works with the new keyword, for example: `var myClass = 
 Future coding will be written in the latest JavaScript. Please use a transcompiler like Babel if using on older browsers is required.
 Due to above, using new to instatiate a class is preferred.
 
+## Standards
+
+* "Manager" suffixed files have state.
+* "Helper" suffixed files are static.
+
 ## Status
 
 This project is currently under development. There are small bugs and class-wide bugs remaining. The following classes have relatively few problems:  
@@ -24,6 +29,20 @@ This project is currently under development. There are small bugs and class-wide
 * Log
 * Drawer
 * DrawableCanvas
+
+## Testing
+
+Typescript:
+
+```bash
+npm run ts-check
+```
+
+Eslint:
+
+```bash
+npm run eslint
+```
 
 ## Examples
 

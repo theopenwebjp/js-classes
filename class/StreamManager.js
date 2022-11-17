@@ -1,12 +1,12 @@
-const StreamHelper = require('./StreamHelper')
-const TrackHelper = require('./TrackHelper')
-const TrackManager = require('./TrackManager')
+import StreamHelper from './StreamHelper'
+import TrackHelper from './TrackHelper'
+import TrackManager from './TrackManager'
 
 /**
  * Stream functions.
  * Should change so is StreamHelper and is static.
  */
-class StreamManager {
+export default class StreamManager {
   constructor() {
     /**
      * Storing
@@ -58,7 +58,7 @@ class StreamManager {
    */
   removeStream(stream) {
     const NOT_EXIST_INDEX = -1
-    var index = this.getStreamIndex(stream)
+    const index = this.getStreamIndex(stream)
     if (index !== NOT_EXIST_INDEX) {
       const SINGLE_ITEM = 1
       this.streams.splice(index, SINGLE_ITEM)
@@ -73,12 +73,3 @@ class StreamManager {
     return this.streams.indexOf(stream)
   }
 }
-
-if (typeof module === 'object') {
-  module.exports = StreamManager
-}
-if (typeof window === 'object') {
-  window.StreamManager = StreamManager
-}
-
-module.exports = StreamManager

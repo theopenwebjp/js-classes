@@ -11,20 +11,31 @@
  */
 
 /**
- * Page loading class.
- * Functions:
- * 1. Load dynamic page area.
- * 2. Load based on url param.
- * 3. Create menu based on pages info.
- * @param {PageManagerSettings} settings
+ * @typedef {Record<string, (v: string) => string>} Actions
  */
-var PageManager = function (settings) {
 
-    var manager = {}
+ export default class PageManager { 
+
+    /**
+     * Page loading class.
+     * Functions:
+     * 1. Load dynamic page area.
+     * 2. Load based on url param.
+     * 3. Create menu based on pages info.
+     * @param {PageManagerSettings} settings
+     */
+    constructor (settings) {
+        /**
+         * @type {PageManagerSettings}
+         */
+        this.settings = this.PageManagerSettings()
+        this.setup(settings)
+    }
+
     /**
      * @param {Partial<PageManagerSettings>} options
      */
-    manager.PageManagerSettings = function (options = {}) {
+    PageManagerSettings (options = {}) {
         return Object.assign({
             param: 'page',
             defaultKey: '',
@@ -43,32 +54,27 @@ var PageManager = function (settings) {
     }
 
     /**
-     * @type {PageManagerSettings}
-     */
-    manager.settings = manager.PageManagerSettings()
-
-    /**
      * @param {Partial<PageManagerSettings>} options
      */
-    manager.setup = function (options) {
-        if (!window.uriActionHandler) { throw Error('Requires uriActionHandler') }
-        if (!window.setUriParam) { throw Error('Requires setUriParam') }
-
-        manager.settings = manager.PageManagerSettings(options)
+    setup (options) {
+        this.settings = this.PageManagerSettings(options)
     }
 
     /**
      * @return {string}
      */
-    manager.getCurrentPageKey = function () {
-        var param = manager.settings.param
-        var defaultKey = manager.settings.defaultKey
+    getCurrentPageKey () {
+        const param = this.settings.param
+        const defaultKey = this.settings.defaultKey
 
-        var actions = {}
+        /**
+         * @type {Actions}
+         */
+        const actions = {}
         actions[param] = function (val) { return val }
 
-        var results = uriActionHandler(window.location.href, actions)
-        var key = results[param]
+        const results = uriActionHandler(window.location.href, actions)
+        let key = results[param]
 
         //Default
         if (!key) {
@@ -82,10 +88,10 @@ var PageManager = function (settings) {
      * @param {*} parent TODO
      * @param {object} settings
      */
-    manager.setupCurrentPage = function (parent, settings) {
-        var key = manager.getCurrentPageKey()
+    setupCurrentPage (parent, settings) {
+        const key = this.getCurrentPageKey()
         if (key) {
-            manager.setupPage(parent, key, settings)
+            this.setupPage(parent, key, settings)
         }
     }
 
@@ -93,17 +99,17 @@ var PageManager = function (settings) {
      * @param {object} pages
      * @return {HTMLElement}
      */
-    manager.getMenu = function (pages) {
+    getMenu (pages) {
         // Requires key for url. Consider adding language handling.
-        var nav = document.createElement('nav')
-        var ul = document.createElement('ul')
-        var li, a
-        for (var key in pages) {
+        const nav = document.createElement('nav')
+        const ul = document.createElement('ul')
+        let li, a
+        for (let key in pages) {
             li = document.createElement('li')
 
             a = document.createElement('a')
             a.textContent = key
-            a.setAttribute('href', setUriParam(window.location.href, 'page', key)) // TODO: Needs fix. See dependency checks at top. Was here: https://github.com/goldingdamien/js-functions/blob/8b88837bc275013c749af205f15b457fa1f4abdb/docs/file/src/dependent-functions.js.html
+            a.setAttribute('href', setUriParam(window.location.href, 'page', key))
 
             li.appendChild(a)
 
@@ -120,8 +126,8 @@ var PageManager = function (settings) {
      * @param {*[]} args
      * @return {*}
      */
-    manager.handleEvent = function (name, args) {
-        var handle = manager.settings.events[name]
+    handleEvent (name, args) {
+        const handle = this.settings.events[name]
         if (handle) {
             return handle.apply(this, args)
         } else {
@@ -134,13 +140,37 @@ var PageManager = function (settings) {
      * @param {string} key
      * @param {object} settings
      */
-    manager.setupPage = function (parent, key, settings) {
-        manager.handleEvent('getpage', [key, settings, function (args) {
-            manager.handleEvent('pagecomplete', [args, parent])
+    setupPage (parent, key, settings) {
+        this.handleEvent('getpage', [key, settings, /** @param {any} args */ (args) => {
+            this.handleEvent('pagecomplete', [args, parent])
         }])
     }
-
-    manager.setup(settings)
-
-    return manager
 }
+
+/**
+ * @param {string} url
+ * @param {string} key 
+ * @param {string} value
+ */
+function setUriParam(url, key, value) {
+    const u = new URL(url)
+    u.searchParams.set(key, value)
+    return u.toString()
+}
+
+/**
+ * 
+ * @param {string} uri 
+ * @param {Actions} actions 
+ */
+function uriActionHandler(uri, actions){
+    const u = (new URL(uri))
+    
+    const results = Object.fromEntries(Object.entries(actions).map(([key, action]) => {
+        const queryParamValue = u.searchParams.get(key)
+        const val = action(queryParamValue || '')
+        return [key, val]
+    }))
+    
+    return results;
+  }
