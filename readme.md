@@ -6,14 +6,15 @@
 * Should move into own project once gets of a substantial size.
 * May have varying formats, as is an ungrouped collection of classes.
 
+## Installation
+
+```bash
+npm install @theopenweb/js-classes
+```
+
 ## Technical Info
 
-Originally written using old custom JavaScript classes that simply returned an object.  
-For example: `var myClass = TargetClass();`  
-However, the above also works with the new keyword, for example: `var myClass = new TargetClass();`  
-
-Future coding will be written in the latest JavaScript. Please use a transcompiler like Babel if using on older browsers is required.
-Due to above, using new to instatiate a class is preferred.
+All code has been converted to es6 modules.
 
 ## Standards
 
