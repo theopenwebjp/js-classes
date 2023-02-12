@@ -12,6 +12,10 @@
 npm install @theopenweb/js-classes
 ```
 
+## Documentation
+
+Generated documentation is accessible from: [./api_docs/modules.md](./api_docs/modules.md)
+
 ## Technical Info
 
 All code has been converted to es6 modules.
@@ -33,18 +37,6 @@ This project is currently under development. There are small bugs and class-wide
 
 ## Testing
 
-Typescript:
-
 ```bash
-npm run ts-check
+npm run test
 ```
-
-Eslint:
-
-```bash
-npm run eslint
-```
-
-## Examples
-
-Check ./examples/
