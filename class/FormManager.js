@@ -819,4 +819,70 @@ export default class FormManager {
   isInput(el) {
     return !this.getElementInputType(el)
   }
+
+/**
+* Clicks many radio inputs for when want to automatically test large radio input lists.
+* Even works in frameworks such as React = MUI.
+* @example clickRadioInputs(document.querySelector('form'))
+* @param {HTMLElement} wrapper Usually a form.
+*/
+clickRadioInputs(wrapper) {
+    const radioInputs = /** @type {HTMLInputElement[]} */ (Array.from(wrapper.querySelectorAll('input[type=radio]')))
+
+    // Group by name
+    /**
+    * @type {Record<string, HTMLInputElement[]>}
+    */
+    const radioInputsByName = {}
+    radioInputs.forEach(r => {
+      const name = r.getAttribute('name') || ''
+      if (!radioInputsByName[name]) {
+        radioInputsByName[name] = []
+      }
+
+      radioInputsByName[name].push(r)
+    })
+
+    // Randomly click grouped
+    Object.entries(radioInputsByName).forEach(([name, inputs]) => {
+      const input = getRandomItemFromArray(inputs)
+      input.click()
+    })
+  }
+  
+  /**
+  * @example enterTextInputs(document.querySelector('form'))
+  * @param {HTMLElement} wrapper Usually a form.
+  */
+  enterTextInputs(wrapper) {
+    const selectors = ['input[type=text]', 'textarea']
+    const inputs = /** @type {HTMLInputElement[]} */ (Array.from(wrapper.querySelectorAll(selectors.join(', '))))
+    inputs.forEach(input => {
+      const createRandomText = () => {
+        return (Math.random() + 1).toString(36).substring(7)
+      }
+
+      input.value = createRandomText()
+      input.dispatchEvent(new Event('change', {bubbles:true}));
+    })
+  }
+
+  /**
+  * Randomly inputs form inputs.
+  * @example enterTextInputs(document.querySelector('form'))
+  * @param {HTMLElement} wrapper Usually a form.
+  */
+  enterFormInputs(wrapper) {
+    this.clickRadioInputs(wrapper)
+    this.enterTextInputs(wrapper)
+  }
+}
+
+/**
+/* TODO: js-functions:
+* @param {any[]} items
+*/
+function getRandomItemFromArray(items) {
+  const index = Math.floor(Math.random() * items.length)
+  return items[index]
 }
