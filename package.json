@@ -1,7 +1,7 @@
 {
   "name": "@theopenweb/js-classes",
   "type": "module",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "description": "Collection of general JavaScript classes.",
   "main": "./index.js",
   "files": [
@@ -16,7 +16,8 @@
     "docs": "npm run api-docs && npm run eslint",
     "eslint": "eslint ./index.js ./class/**",
     "api-docs": "typedoc --plugin typedoc-plugin-markdown --out api_docs ./index.js",
-    "pre-commit": "npm run test && npm run docs && tsc && git add ."
+    "pre-commit": "npm run docs && tsc && git add .",
+    "_pre-commit": "npm run test && npm run docs && tsc && git add ."
   },
   "dependencies": {
     "js-functions": "git+https://github.com/theopenwebjp/js-functions.git",

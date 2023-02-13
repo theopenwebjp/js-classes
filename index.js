@@ -1,32 +1,43 @@
-// Loop files in ./class, includes each file as [Camel case]: require('./class/CanvasManager).
-const classes = {
-    CanvasChangeChecker: import('./class/CanvasChangeChecker'),
-    CanvasHelper: import('./class/CanvasHelper'),
-    CanvasManager: import('./class/CanvasManager'),
-    CanvasRenderer: import('./class/CanvasRenderer'),
-    DomHelper: import('./class/DomHelper'),
-    DrawableCanvas: removed('./class/DrawableCanvas'),
-    Drawer: removed('./class/Drawer'),
-    FormatConverter: removed('Removed due to becoming redundant.'),
-    FormManager: import('./class/FormManager'),
-    FunctionWrapper: import('./class/FunctionWrapper'),
-    ImageEditor: removed('Removed due to better library elsewhere. Use the following or other library: https://github.com/fabricjs/fabric.js/'),
-    ImagePrompter: removed('Removed due to becoming too large for this library'),
-    InputCopier: import('./class/InputCopier'),
-    I18n: import('./class/I18n'),
-    Log: removed('./class/Log'),
-    PageManager: import('./class/PageManager'),
-    PersistentStateManager: import('./class/PersistentStateManager'),
-    Sharer: import('./class/Sharer'),
-    StandardUnitHelper: import('./class/StandardUnitHelper'),
-    StreamManager: import('./class/StreamManager'),
-    StreamHelper: import('./class/StreamHelper'),
-    TextManager: deprecated(import('./class/I18n'), 'Use I18n instead of TextManager'),
-    TrackHelper: import('./class/TrackHelper'),
-    TrackManager: import('./class/TrackManager')
-}
+// Exported
+import CanvasChangeChecker from './class/CanvasChangeChecker';
+import CanvasHelper from './class/CanvasHelper';
+import CanvasManager from './class/CanvasManager';
+import CanvasRenderer from './class/CanvasRenderer';
+import DomHelper from './class/DomHelper';
+import FormManager from './class/FormManager';
+import FunctionWrapper from './class/FunctionWrapper';
+import InputCopier from './class/InputCopier';
+import I18n from './class/I18n';
+import PageManager from './class/PageManager';
+import PersistentStateManager from './class/PersistentStateManager';
+import Sharer from './class/Sharer';
+import StandardUnitHelper from './class/StandardUnitHelper';
+import StreamManager from './class/StreamManager';
+import StreamHelper from './class/StreamHelper';
+import TrackHelper from './class/TrackHelper';
+import TrackManager from './class/TrackManager';
 
-export default classes
+// Other
+const DrawableCanvas = removed('./class/DrawableCanvas')
+const Drawer = removed('./class/Drawer')
+const FormatConverter = removed('Removed due to becoming redundant.')
+const ImageEditor = removed('Removed due to better library elsewhere. Use the following or other library: https://github.com/fabricjs/fabric.js/')
+const ImagePrompter = removed('Removed due to becoming too large for this library')
+const Log = removed('./class/Log')
+const TextManager = deprecated(import('./class/I18n'), 'Use I18n instead of TextManager')
+
+export {
+    CanvasChangeChecker, CanvasHelper, CanvasManager, CanvasRenderer, DomHelper,
+    FormManager, FunctionWrapper,
+    InputCopier, I18n,
+    PageManager, PersistentStateManager, Sharer, StandardUnitHelper, StreamManager, StreamHelper,
+    TrackHelper, TrackManager,
+    // 
+    DrawableCanvas, Drawer, FormatConverter, 
+    ImageEditor,ImagePrompter,
+    Log,
+    TextManager,
+};
 
 /**
  * TODO: Do the same as deprecated TODO.
@@ -45,7 +56,7 @@ function removed(str) {
  * @return {*} Same variable
  */
 function deprecated(variable, info = '') {
-    variable = String(variable).substr(0, 100) // Limit size for now.
+    variable = String(variable).substring(0, 100) // Limit size for now.
     console.log(`Deprecated: ${variable}: ${info}`)
     return variable
 }

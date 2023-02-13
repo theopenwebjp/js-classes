@@ -25,16 +25,6 @@ All code has been converted to es6 modules.
 * "Manager" suffixed files have state.
 * "Helper" suffixed files are static.
 
-## Status
-
-This project is currently under development. There are small bugs and class-wide bugs remaining. The following classes have relatively few problems:  
-
-* CanvasManager
-* DOMHelper
-* Log
-* Drawer
-* DrawableCanvas
-
 ## Testing
 
 ```bash

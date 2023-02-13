@@ -14,6 +14,10 @@
 npm install @theopenweb/js-classes
 ```
 
+## Documentation
+
+Generated documentation is accessible from: [./api_docs/modules.md](./api_docs/modules.md)
+
 ## Technical Info
 
 All code has been converted to es6 modules.
@@ -23,30 +27,8 @@ All code has been converted to es6 modules.
 * "Manager" suffixed files have state.
 * "Helper" suffixed files are static.
 
-## Status
-
-This project is currently under development. There are small bugs and class-wide bugs remaining. The following classes have relatively few problems:  
-
-* CanvasManager
-* DOMHelper
-* Log
-* Drawer
-* DrawableCanvas
-
 ## Testing
 
-Typescript:
-
 ```bash
-npm run ts-check
+npm run test
 ```
-
-Eslint:
-
-```bash
-npm run eslint
-```
-
-## Examples
-
-Check ./examples/

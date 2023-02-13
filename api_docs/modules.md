@@ -4,51 +4,138 @@
 
 ## Table of contents
 
+### Classes
+
+- [CanvasChangeChecker](classes/CanvasChangeChecker.md)
+- [CanvasHelper](classes/CanvasHelper.md)
+- [CanvasManager](classes/CanvasManager.md)
+- [CanvasRenderer](classes/CanvasRenderer.md)
+- [DomHelper](classes/DomHelper.md)
+- [FormManager](classes/FormManager.md)
+- [FunctionWrapper](classes/FunctionWrapper.md)
+- [I18n](classes/I18n.md)
+- [InputCopier](classes/InputCopier.md)
+- [PageManager](classes/PageManager.md)
+- [PersistentStateManager](classes/PersistentStateManager.md)
+- [Sharer](classes/Sharer.md)
+- [StandardUnitHelper](classes/StandardUnitHelper.md)
+- [StreamHelper](classes/StreamHelper.md)
+- [StreamManager](classes/StreamManager.md)
+- [TrackHelper](classes/TrackHelper.md)
+- [TrackManager](classes/TrackManager.md)
+
 ### Variables
 
-- [default](modules.md#default)
+- [DrawableCanvas](modules.md#drawablecanvas)
+- [Drawer](modules.md#drawer)
+- [FormatConverter](modules.md#formatconverter)
+- [ImageEditor](modules.md#imageeditor)
+- [ImagePrompter](modules.md#imageprompter)
+- [Log](modules.md#log)
+- [TextManager](modules.md#textmanager)
 
 ## Variables
 
-### default
+### DrawableCanvas
 
-• `Const` **default**: `Object`
+• `Const` **DrawableCanvas**: `Object`
 
 #### Type declaration
 
 | Name | Type |
 | :------ | :------ |
-| `CanvasChangeChecker` | `Promise`<`__module`\> |
-| `CanvasHelper` | `Promise`<`__module`\> |
-| `CanvasManager` | `Promise`<`__module`\> |
-| `CanvasRenderer` | `Promise`<`__module`\> |
-| `DomHelper` | `Promise`<`__module`\> |
-| `DrawableCanvas` | { `message`: `string` = str } |
-| `DrawableCanvas.message` | `string` |
-| `Drawer` | { `message`: `string` = str } |
-| `Drawer.message` | `string` |
-| `FormManager` | `Promise`<`__module`\> |
-| `FormatConverter` | { `message`: `string` = str } |
-| `FormatConverter.message` | `string` |
-| `FunctionWrapper` | `Promise`<`__module`\> |
-| `I18n` | `Promise`<`__module`\> |
-| `ImageEditor` | { `message`: `string` = str } |
-| `ImageEditor.message` | `string` |
-| `ImagePrompter` | { `message`: `string` = str } |
-| `ImagePrompter.message` | `string` |
-| `InputCopier` | `Promise`<`__module`\> |
-| `Log` | { `message`: `string` = str } |
-| `Log.message` | `string` |
-| `PageManager` | `Promise`<`__module`\> |
-| `PersistentStateManager` | `Promise`<`__module`\> |
-| `Sharer` | `Promise`<`__module`\> |
-| `StandardUnitHelper` | `Promise`<`__module`\> |
-| `StreamHelper` | `Promise`<`__module`\> |
-| `StreamManager` | `Promise`<`__module`\> |
-| `TextManager` | `any` |
-| `TrackHelper` | `Promise`<`__module`\> |
-| `TrackManager` | `Promise`<`__module`\> |
+| `message` | `string` |
 
 #### Defined in
 
-[index.js:2](https://github.com/theopenwebjp/js-classes/blob/8f89c69/index.js#L2)
+[index.js:21](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/index.js#L21)
+
+___
+
+### Drawer
+
+• `Const` **Drawer**: `Object`
+
+#### Type declaration
+
+| Name | Type |
+| :------ | :------ |
+| `message` | `string` |
+
+#### Defined in
+
+[index.js:22](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/index.js#L22)
+
+___
+
+### FormatConverter
+
+• `Const` **FormatConverter**: `Object`
+
+#### Type declaration
+
+| Name | Type |
+| :------ | :------ |
+| `message` | `string` |
+
+#### Defined in
+
+[index.js:23](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/index.js#L23)
+
+___
+
+### ImageEditor
+
+• `Const` **ImageEditor**: `Object`
+
+#### Type declaration
+
+| Name | Type |
+| :------ | :------ |
+| `message` | `string` |
+
+#### Defined in
+
+[index.js:24](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/index.js#L24)
+
+___
+
+### ImagePrompter
+
+• `Const` **ImagePrompter**: `Object`
+
+#### Type declaration
+
+| Name | Type |
+| :------ | :------ |
+| `message` | `string` |
+
+#### Defined in
+
+[index.js:25](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/index.js#L25)
+
+___
+
+### Log
+
+• `Const` **Log**: `Object`
+
+#### Type declaration
+
+| Name | Type |
+| :------ | :------ |
+| `message` | `string` |
+
+#### Defined in
+
+[index.js:26](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/index.js#L26)
+
+___
+
+### TextManager
+
+• `Const` **TextManager**: `any`
+
+#### Defined in
+
+[index.js:27](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/index.js#L27)
