@@ -17,46 +17,10 @@ import StreamHelper from './class/StreamHelper';
 import TrackHelper from './class/TrackHelper';
 import TrackManager from './class/TrackManager';
 
-// Other
-const DrawableCanvas = removed('./class/DrawableCanvas')
-const Drawer = removed('./class/Drawer')
-const FormatConverter = removed('Removed due to becoming redundant.')
-const ImageEditor = removed('Removed due to better library elsewhere. Use the following or other library: https://github.com/fabricjs/fabric.js/')
-const ImagePrompter = removed('Removed due to becoming too large for this library')
-const Log = removed('./class/Log')
-const TextManager = deprecated(import('./class/I18n'), 'Use I18n instead of TextManager')
-
 export {
     CanvasChangeChecker, CanvasHelper, CanvasManager, CanvasRenderer, DomHelper,
     FormManager, FunctionWrapper,
     InputCopier, I18n,
     PageManager, PersistentStateManager, Sharer, StandardUnitHelper, StreamManager, StreamHelper,
     TrackHelper, TrackManager,
-    // 
-    DrawableCanvas, Drawer, FormatConverter, 
-    ImageEditor,ImagePrompter,
-    Log,
-    TextManager,
 };
-
-/**
- * TODO: Do the same as deprecated TODO.
- * @param {String} str
- */
-function removed(str) {
-    return {
-        'message': str
-    }
-}
-
-/**
- * TODO: This is very useful. Should be able to pass in any variable and have it include deprecation info and logs to the end user.
- * @param {*} variable
- * @param {String} info
- * @return {*} Same variable
- */
-function deprecated(variable, info = '') {
-    variable = String(variable).substring(0, 100) // Limit size for now.
-    console.log(`Deprecated: ${variable}: ${info}`)
-    return variable
-}
