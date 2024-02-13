@@ -30,6 +30,14 @@ import { failOnFalsy } from './Utility.js'
  * @property {boolean} a
  */
 
+/**
+ * @typedef {[number, number, number, number]} RGBA
+ */
+
+/**
+ * @typedef {{ rgba: RGBA, count: number, index: number }} RGBACount
+ */
+
 export default class CanvasHelper {  
   /**
   * @param {HTMLCanvasElement} canvas
@@ -425,5 +433,90 @@ export default class CanvasHelper {
     const cRender = new CanvasHelper.CanvasRenderer(settings)
     return cRender
   }
+
+  /**
+   * @param {ImageData} imgData 
+   * @param {(rgba: RGBA, index: number) => void} onPixel
+   */
+  static loopImageData(imgData, onPixel) {
+    for (let i = 0; i < imgData.height * imgData.height; i += 4) {
+      /** @type {RGBA} */
+      // @ts-ignore
+      const rgba = [
+        ...imgData.data.slice(i, 4)
+      ]
+      onPixel(rgba, i)
+    }
+  }
+
+  /**
+   * @param {RGBA} rgba1
+   * @param {RGBA} rgba2 
+   */
+  static diffRGBA(rgba1, rgba2) {
+    const [r1, g1, b1, a1] = rgba1
+    const [r2, g2, b2, a2] = rgba2
+
+    return (
+      Math.abs(r1 - r2) + Math.abs(g1 - g2) + Math.abs(b1 - b2) + Math.abs(a1 - a2)
+    )
+  }
+
+  /**
+  * @param {ImageData} imgData
+  * @param {number} [threshold]
+  */
+  static getMainColor(imgData, threshold = 0) {
+    /** @type {RGBACount[]} */
+    const colors = []
+    CanvasHelper.loopImageData(imgData, (rgba, index) => {
+      let exists = false
+      colors.forEach(color => {
+        const rgba2 = color.rgba
+        const rgbaDiff = CanvasHelper.diffRGBA(rgba, rgba2)
+        if (rgbaDiff === 0) {
+          exists = true
+        }
+        if (rgbaDiff <= threshold) {
+          color.count += 1
+        }
+      })
+      if (!exists) {
+        colors.push({
+          rgba,
+          count: 1,
+          index,
+        })
+      }
+    })
+    return CanvasHelper.getMaxRGBACount(colors)
+  }
+
+  /**
+   * @param {RGBACount[]} colors 
+   */
+  static getMaxRGBACount(colors) {
+    /**
+     * @type {RGBACount | null}
+     */
+    let max = null
+    colors.forEach(color => {
+      if (!max || color.count > max.count) {
+        max = color
+      }
+    })
+    // @ts-ignore
+    return max ? max.rgba : null
+  }
+
+  /**
+  * Similar to getMainColor, but checks from edges.
+  * @param {ImageData} imgData
+  */
+  /*
+  static getBackgroundColor(imgData) {
+    // TODO
+  }
+  */
 }
 CanvasHelper.CanvasRenderer = CanvasRenderer

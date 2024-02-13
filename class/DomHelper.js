@@ -2044,4 +2044,73 @@ export default class DomHelper {
 
         return chainer
     }
+
+    
+  /**
+  * Gets bounding rect of all DOM.
+  * Usually, checking the size of "body" is enough. However, static, aboslute elements and badly cleared elements may cause the size of body to be different.
+  * This function gets the bounding rect by checking each element.
+  */
+  static getUsedDOMBoundingRect() {
+    const elements = Array.from(document.querySelectorAll('*'))
+    return DomHelper.getElementsBoundingRect(elements)
+  }
+  
+  /**
+  * Same as normal get bounding rect, but treats multiple elements as a single group.
+  * @param {Element[]} elements
+  */
+  static getElementsBoundingRect(elements) {
+    const rect = {
+      top: 0,
+      right: 0,
+      bottom: 0,
+      left: 0,
+      width: 0,
+      height: 0,
+    }
+    elements.forEach(element => {
+      const curRect = element.getBoundingClientRect()
+      /**
+      * Relative to document: https://stackoverflow.com/a/18673641/1764521
+      */
+      const curRectD = {
+        top: curRect.top + document.documentElement.scrollTop,
+        right: curRect.right + document.documentElement.scrollLeft,
+        bottom: curRect.bottom + document.documentElement.scrollTop,
+        left: curRect.left + document.documentElement.scrollLeft,
+        width: curRect.width,
+        height: curRect.height,
+      }
+      if (curRectD.top < rect.top) rect.top = curRectD.top
+      if (curRectD.right > rect.right) rect.right = curRectD.right
+      if (curRectD.bottom > rect.bottom) rect.bottom = curRectD.bottom
+      if (curRectD.left < rect.left) rect.left = curRectD.left
+  
+    })
+    rect.width = rect.right - rect.left
+    rect.height = rect.bottom - rect.top
+  
+    return rect
+  }
+
+  /**
+  * Attempts to update nested textContent.
+  * Usually if element.textContent = '...' is used, any nested elements will be overwritten.
+  * Sometimes this is not desired, and any nested might not be known or may change.
+  * This function attempts to update the textContent by checking for any elements with ONLY the same text, no nested elements, and then updating that element's textContent if the element exists.
+  * @param {Element} element
+  * @param {string} textContent
+  */
+  static attemptUpdateNestedTextContent(element, textContent) {
+    const candidates = [element, Array.from(element.querySelectorAll('*'))]
+    for (let i = 0; i < candidates.length; i++) {
+      const candidate = /** @type {HTMLElement} */ (candidates[i])
+      if (candidate.children.length === 0 && candidate.textContent === element.textContent) {
+        candidate.textContent = textContent
+        return true
+      }
+    }
+    return false
+  }
 }
