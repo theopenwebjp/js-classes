@@ -48,7 +48,7 @@ Extra features:
 
 #### Defined in
 
-[class/CanvasRenderer.js:45](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/CanvasRenderer.js#L45)
+CanvasRenderer.js:32
 
 ## Properties
 
@@ -58,9 +58,9 @@ Extra features:
 
 #### Defined in
 
-[class/CanvasRenderer.js:83](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/CanvasRenderer.js#L83)
+CanvasRenderer.js:70
 
-[class/CanvasRenderer.js:87](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/CanvasRenderer.js#L87)
+CanvasRenderer.js:74
 
 ___
 
@@ -70,7 +70,7 @@ ___
 
 #### Defined in
 
-[class/CanvasRenderer.js:49](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/CanvasRenderer.js#L49)
+CanvasRenderer.js:36
 
 ___
 
@@ -88,7 +88,7 @@ ___
 
 #### Defined in
 
-[class/CanvasRenderer.js:51](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/CanvasRenderer.js#L51)
+CanvasRenderer.js:38
 
 ## Methods
 
@@ -102,7 +102,7 @@ ___
 
 #### Defined in
 
-[class/CanvasRenderer.js:82](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/CanvasRenderer.js#L82)
+CanvasRenderer.js:69
 
 ___
 
@@ -116,7 +116,7 @@ ___
 
 #### Defined in
 
-[class/CanvasRenderer.js:67](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/CanvasRenderer.js#L67)
+CanvasRenderer.js:54
 
 ___
 
@@ -130,7 +130,7 @@ ___
 
 #### Defined in
 
-[class/CanvasRenderer.js:107](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/CanvasRenderer.js#L107)
+CanvasRenderer.js:94
 
 ___
 
@@ -144,7 +144,7 @@ ___
 
 #### Defined in
 
-[class/CanvasRenderer.js:74](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/CanvasRenderer.js#L74)
+CanvasRenderer.js:61
 
 ___
 
@@ -158,7 +158,7 @@ ___
 
 #### Defined in
 
-[class/CanvasRenderer.js:90](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/CanvasRenderer.js#L90)
+CanvasRenderer.js:77
 
 ___
 
@@ -172,7 +172,7 @@ ___
 
 #### Defined in
 
-[class/CanvasRenderer.js:86](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/CanvasRenderer.js#L86)
+CanvasRenderer.js:73
 
 ___
 
@@ -192,4 +192,4 @@ ___
 
 #### Defined in
 
-[class/CanvasRenderer.js:100](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/CanvasRenderer.js#L100)
+CanvasRenderer.js:87

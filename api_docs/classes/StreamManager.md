@@ -52,7 +52,7 @@ Should change so is StreamHelper and is static.
 
 #### Defined in
 
-[class/StreamManager.js:10](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/StreamManager.js#L10)
+StreamManager.js:10
 
 ## Properties
 
@@ -70,7 +70,7 @@ Should change so is StreamHelper and is static.
 
 #### Defined in
 
-[class/StreamManager.js:28](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/StreamManager.js#L28)
+StreamManager.js:28
 
 ___
 
@@ -80,7 +80,7 @@ ___
 
 #### Defined in
 
-[class/StreamManager.js:40](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/StreamManager.js#L40)
+StreamManager.js:40
 
 ___
 
@@ -100,7 +100,7 @@ Connection between stream, video and url due to revoking and updating.
 
 #### Defined in
 
-[class/StreamManager.js:29](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/StreamManager.js#L29)
+StreamManager.js:29
 
 ___
 
@@ -110,7 +110,7 @@ ___
 
 #### Defined in
 
-[class/StreamManager.js:18](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/StreamManager.js#L18)
+StreamManager.js:18
 
 ___
 
@@ -136,7 +136,7 @@ Create video element from stream
 
 #### Defined in
 
-[class/StreamManager.js:35](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/StreamManager.js#L35)
+StreamManager.js:35
 
 ___
 
@@ -160,7 +160,7 @@ ___
 
 #### Defined in
 
-[class/StreamManager.js:23](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/StreamManager.js#L23)
+StreamManager.js:23
 
 ___
 
@@ -184,7 +184,7 @@ ___
 
 #### Defined in
 
-[class/StreamManager.js:25](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/StreamManager.js#L25)
+StreamManager.js:25
 
 ___
 
@@ -210,7 +210,7 @@ ___
 
 #### Defined in
 
-[class/StreamManager.js:27](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/StreamManager.js#L27)
+StreamManager.js:27
 
 ___
 
@@ -235,7 +235,7 @@ ___
 
 #### Defined in
 
-[class/StreamManager.js:24](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/StreamManager.js#L24)
+StreamManager.js:24
 
 ___
 
@@ -260,7 +260,7 @@ ___
 
 #### Defined in
 
-[class/StreamManager.js:26](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/StreamManager.js#L26)
+StreamManager.js:26
 
 ___
 
@@ -293,7 +293,7 @@ This was used as during early adoption of this feature, but now it is standardiz
 
 #### Defined in
 
-[class/StreamManager.js:19](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/StreamManager.js#L19)
+StreamManager.js:19
 
 ___
 
@@ -326,7 +326,7 @@ Falls back to simpler constraints on fail.
 
 #### Defined in
 
-[class/StreamManager.js:32](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/StreamManager.js#L32)
+StreamManager.js:32
 
 ___
 
@@ -351,7 +351,7 @@ ___
 
 #### Defined in
 
-[class/StreamManager.js:20](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/StreamManager.js#L20)
+StreamManager.js:20
 
 ___
 
@@ -371,7 +371,7 @@ Old navigator version of getUserMedia
 
 #### Defined in
 
-[class/StreamManager.js:30](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/StreamManager.js#L30)
+StreamManager.js:30
 
 ___
 
@@ -397,7 +397,7 @@ ___
 
 #### Defined in
 
-[class/StreamManager.js:33](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/StreamManager.js#L33)
+StreamManager.js:33
 
 ___
 
@@ -421,7 +421,7 @@ ___
 
 #### Defined in
 
-[class/StreamManager.js:21](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/StreamManager.js#L21)
+StreamManager.js:21
 
 ___
 
@@ -448,7 +448,7 @@ Stops stream and related data
 
 #### Defined in
 
-[class/StreamManager.js:22](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/StreamManager.js#L22)
+StreamManager.js:22
 
 ___
 
@@ -472,7 +472,7 @@ ___
 
 #### Defined in
 
-[class/StreamManager.js:34](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/StreamManager.js#L34)
+StreamManager.js:34
 
 ___
 
@@ -498,7 +498,7 @@ Checks if audio exists
 
 #### Defined in
 
-[class/StreamManager.js:37](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/StreamManager.js#L37)
+StreamManager.js:37
 
 ___
 
@@ -524,7 +524,7 @@ Checks if video exists
 
 #### Defined in
 
-[class/StreamManager.js:36](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/StreamManager.js#L36)
+StreamManager.js:36
 
 ___
 
@@ -536,7 +536,7 @@ Storing
 
 #### Defined in
 
-[class/StreamManager.js:15](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/StreamManager.js#L15)
+StreamManager.js:15
 
 ___
 
@@ -560,13 +560,13 @@ ___
 
 #### Defined in
 
-[class/StreamManager.js:38](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/StreamManager.js#L38)
+StreamManager.js:38
 
 ___
 
 ### webcamToElement
 
-• **webcamToElement**: (`constraints`: `MediaStreamConstraints`, `element`: `HTMLElement`, `callback`: (`streamObject`: `StreamError` \| `StreamObject`) => `void`) => `void`
+• **webcamToElement**: (`constraints`: `MediaStreamConstraints`, `element`: `HTMLElement`, `callback`: (`streamObject`: `StreamObject` \| `StreamError`) => `void`) => `void`
 
 #### Type declaration
 
@@ -580,7 +580,7 @@ Quick method to get webcam and show in element
 | :------ | :------ |
 | `constraints` | `MediaStreamConstraints` |
 | `element` | `HTMLElement` |
-| `callback` | (`streamObject`: `StreamError` \| `StreamObject`) => `void` |
+| `callback` | (`streamObject`: `StreamObject` \| `StreamError`) => `void` |
 
 ##### Returns
 
@@ -588,7 +588,7 @@ Quick method to get webcam and show in element
 
 #### Defined in
 
-[class/StreamManager.js:31](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/StreamManager.js#L31)
+StreamManager.js:31
 
 ## Methods
 
@@ -608,7 +608,7 @@ Quick method to get webcam and show in element
 
 #### Defined in
 
-[class/StreamManager.js:52](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/StreamManager.js#L52)
+StreamManager.js:52
 
 ___
 
@@ -628,7 +628,7 @@ ___
 
 #### Defined in
 
-[class/StreamManager.js:72](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/StreamManager.js#L72)
+StreamManager.js:72
 
 ___
 
@@ -648,7 +648,7 @@ ___
 
 #### Defined in
 
-[class/StreamManager.js:59](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/StreamManager.js#L59)
+StreamManager.js:59
 
 ___
 
@@ -662,4 +662,4 @@ ___
 
 #### Defined in
 
-[class/StreamManager.js:45](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/StreamManager.js#L45)
+StreamManager.js:45

@@ -2,10 +2,6 @@
 
 # Class: StreamHelper
 
-**`Property`**
-
-**`Property`**
-
 ## Table of contents
 
 ### Constructors
@@ -57,7 +53,7 @@
 
 #### Defined in
 
-[class/StreamHelper.js:338](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/StreamHelper.js#L338)
+StreamHelper.js:319
 
 ___
 
@@ -73,7 +69,7 @@ Connection between stream, video and url due to revoking and updating.
 
 #### Defined in
 
-[class/StreamHelper.js:349](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/StreamHelper.js#L349)
+StreamHelper.js:330
 
 ___
 
@@ -95,7 +91,7 @@ Create video element from stream
 
 #### Defined in
 
-[class/StreamHelper.js:106](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/StreamHelper.js#L106)
+StreamHelper.js:87
 
 ___
 
@@ -111,7 +107,7 @@ Attempts to get best constraints with best video.
 
 #### Defined in
 
-[class/StreamHelper.js:429](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/StreamHelper.js#L429)
+StreamHelper.js:410
 
 ___
 
@@ -125,7 +121,7 @@ ___
 
 #### Defined in
 
-[class/StreamHelper.js:501](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/StreamHelper.js#L501)
+StreamHelper.js:482
 
 ___
 
@@ -141,7 +137,7 @@ Old navigator version of getUserMedia
 
 #### Defined in
 
-[class/StreamHelper.js:373](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/StreamHelper.js#L373)
+StreamHelper.js:354
 
 ___
 
@@ -161,7 +157,7 @@ ___
 
 #### Defined in
 
-[class/StreamHelper.js:441](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/StreamHelper.js#L441)
+StreamHelper.js:422
 
 ___
 
@@ -181,7 +177,7 @@ ___
 
 #### Defined in
 
-[class/StreamHelper.js:257](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/StreamHelper.js#L257)
+StreamHelper.js:238
 
 ___
 
@@ -201,7 +197,7 @@ ___
 
 #### Defined in
 
-[class/StreamHelper.js:311](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/StreamHelper.js#L311)
+StreamHelper.js:292
 
 ___
 
@@ -223,7 +219,7 @@ ___
 
 #### Defined in
 
-[class/StreamHelper.js:330](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/StreamHelper.js#L330)
+StreamHelper.js:311
 
 ___
 
@@ -244,7 +240,7 @@ ___
 
 #### Defined in
 
-[class/StreamHelper.js:270](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/StreamHelper.js#L270)
+StreamHelper.js:251
 
 ___
 
@@ -265,7 +261,7 @@ ___
 
 #### Defined in
 
-[class/StreamHelper.js:320](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/StreamHelper.js#L320)
+StreamHelper.js:301
 
 ___
 
@@ -279,7 +275,7 @@ ___
 
 #### Defined in
 
-[class/StreamHelper.js:419](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/StreamHelper.js#L419)
+StreamHelper.js:400
 
 ___
 
@@ -308,7 +304,7 @@ This was used as during early adoption of this feature, but now it is standardiz
 
 #### Defined in
 
-[class/StreamHelper.js:148](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/StreamHelper.js#L148)
+StreamHelper.js:129
 
 ___
 
@@ -337,7 +333,7 @@ Falls back to simpler constraints on fail.
 
 #### Defined in
 
-[class/StreamHelper.js:470](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/StreamHelper.js#L470)
+StreamHelper.js:451
 
 ___
 
@@ -358,7 +354,7 @@ ___
 
 #### Defined in
 
-[class/StreamHelper.js:183](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/StreamHelper.js#L183)
+StreamHelper.js:164
 
 ___
 
@@ -374,7 +370,7 @@ Old navigator version of getUserMedia
 
 #### Defined in
 
-[class/StreamHelper.js:360](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/StreamHelper.js#L360)
+StreamHelper.js:341
 
 ___
 
@@ -396,7 +392,7 @@ ___
 
 #### Defined in
 
-[class/StreamHelper.js:85](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/StreamHelper.js#L85)
+StreamHelper.js:66
 
 ___
 
@@ -416,7 +412,7 @@ ___
 
 #### Defined in
 
-[class/StreamHelper.js:211](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/StreamHelper.js#L211)
+StreamHelper.js:192
 
 ___
 
@@ -439,7 +435,7 @@ Stops stream and related data
 
 #### Defined in
 
-[class/StreamHelper.js:228](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/StreamHelper.js#L228)
+StreamHelper.js:209
 
 ___
 
@@ -459,7 +455,7 @@ ___
 
 #### Defined in
 
-[class/StreamHelper.js:97](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/StreamHelper.js#L97)
+StreamHelper.js:78
 
 ___
 
@@ -481,7 +477,7 @@ Checks if audio exists
 
 #### Defined in
 
-[class/StreamHelper.js:132](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/StreamHelper.js#L132)
+StreamHelper.js:113
 
 ___
 
@@ -503,7 +499,7 @@ Checks if video exists
 
 #### Defined in
 
-[class/StreamHelper.js:119](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/StreamHelper.js#L119)
+StreamHelper.js:100
 
 ___
 
@@ -519,7 +515,7 @@ Quick method to get webcam and show in element
 | :------ | :------ |
 | `constraints` | `MediaStreamConstraints` |
 | `element` | `HTMLElement` |
-| `callback` | (`streamObject`: `StreamError` \| `StreamObject`) => `void` |
+| `callback` | (`streamObject`: `StreamObject` \| `StreamError`) => `void` |
 
 #### Returns
 
@@ -527,4 +523,4 @@ Quick method to get webcam and show in element
 
 #### Defined in
 
-[class/StreamHelper.js:390](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/StreamHelper.js#L390)
+StreamHelper.js:371

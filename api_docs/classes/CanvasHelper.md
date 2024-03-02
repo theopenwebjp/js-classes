@@ -2,14 +2,6 @@
 
 # Class: CanvasHelper
 
-**`Property`**
-
-**`Property`**
-
-**`Property`**
-
-**`Property`**
-
 ## Table of contents
 
 ### Constructors
@@ -31,13 +23,17 @@
 - [canvasToImageFile](CanvasHelper.md#canvastoimagefile)
 - [canvasToStream](CanvasHelper.md#canvastostream)
 - [checkCanvasChangeOnEvent](CanvasHelper.md#checkcanvaschangeonevent)
+- [diffRGBA](CanvasHelper.md#diffrgba)
 - [drawableToCanvas](CanvasHelper.md#drawabletocanvas)
 - [drawableToDataURL](CanvasHelper.md#drawabletodataurl)
 - [drawableToImage](CanvasHelper.md#drawabletoimage)
 - [fitCanvasToBoundingRect](CanvasHelper.md#fitcanvastoboundingrect)
 - [getContext](CanvasHelper.md#getcontext)
 - [getContextBoundingRect](CanvasHelper.md#getcontextboundingrect)
+- [getMainColor](CanvasHelper.md#getmaincolor)
+- [getMaxRGBACount](CanvasHelper.md#getmaxrgbacount)
 - [isImageDataSame](CanvasHelper.md#isimagedatasame)
+- [loopImageData](CanvasHelper.md#loopimagedata)
 - [streamToCanvasRenderer](CanvasHelper.md#streamtocanvasrenderer)
 - [watchCanvas](CanvasHelper.md#watchcanvas)
 - [watchForCanvasStop](CanvasHelper.md#watchforcanvasstop)
@@ -56,7 +52,7 @@
 
 #### Defined in
 
-[class/CanvasHelper.js:429](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/CanvasHelper.js#L429)
+CanvasHelper.js:483
 
 ## Methods
 
@@ -70,7 +66,7 @@
 
 #### Defined in
 
-[class/CanvasHelper.js:400](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/CanvasHelper.js#L400)
+CanvasHelper.js:369
 
 ___
 
@@ -93,7 +89,7 @@ ___
 
 #### Defined in
 
-[class/CanvasHelper.js:190](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/CanvasHelper.js#L190)
+CanvasHelper.js:159
 
 ___
 
@@ -113,7 +109,7 @@ ___
 
 #### Defined in
 
-[class/CanvasHelper.js:71](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/CanvasHelper.js#L71)
+CanvasHelper.js:43
 
 ___
 
@@ -134,7 +130,7 @@ ___
 
 #### Defined in
 
-[class/CanvasHelper.js:318](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/CanvasHelper.js#L318)
+CanvasHelper.js:287
 
 ___
 
@@ -156,7 +152,7 @@ ___
 
 #### Defined in
 
-[class/CanvasHelper.js:233](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/CanvasHelper.js#L233)
+CanvasHelper.js:202
 
 ___
 
@@ -179,7 +175,7 @@ Abstract canvas to image function
 
 #### Defined in
 
-[class/CanvasHelper.js:119](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/CanvasHelper.js#L119)
+CanvasHelper.js:91
 
 ___
 
@@ -202,7 +198,7 @@ ___
 
 #### Defined in
 
-[class/CanvasHelper.js:245](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/CanvasHelper.js#L245)
+CanvasHelper.js:214
 
 ___
 
@@ -223,7 +219,7 @@ ___
 
 #### Defined in
 
-[class/CanvasHelper.js:102](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/CanvasHelper.js#L102)
+CanvasHelper.js:74
 
 ___
 
@@ -251,7 +247,28 @@ ___
 
 #### Defined in
 
-[class/CanvasHelper.js:57](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/CanvasHelper.js#L57)
+CanvasHelper.js:29
+
+___
+
+### diffRGBA
+
+▸ `Static` **diffRGBA**(`rgba1`, `rgba2`): `number`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `rgba1` | `RGBA` |
+| `rgba2` | `RGBA` |
+
+#### Returns
+
+`number`
+
+#### Defined in
+
+CanvasHelper.js:417
 
 ___
 
@@ -272,7 +289,7 @@ ___
 
 #### Defined in
 
-[class/CanvasHelper.js:205](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/CanvasHelper.js#L205)
+CanvasHelper.js:174
 
 ___
 
@@ -294,7 +311,7 @@ ___
 
 #### Defined in
 
-[class/CanvasHelper.js:222](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/CanvasHelper.js#L222)
+CanvasHelper.js:191
 
 ___
 
@@ -314,7 +331,7 @@ ___
 
 #### Defined in
 
-[class/CanvasHelper.js:176](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/CanvasHelper.js#L176)
+CanvasHelper.js:145
 
 ___
 
@@ -335,7 +352,7 @@ ___
 
 #### Defined in
 
-[class/CanvasHelper.js:348](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/CanvasHelper.js#L348)
+CanvasHelper.js:317
 
 ___
 
@@ -358,7 +375,7 @@ Caching allows for higher speed.
 
 #### Defined in
 
-[class/CanvasHelper.js:85](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/CanvasHelper.js#L85)
+CanvasHelper.js:57
 
 ___
 
@@ -378,7 +395,48 @@ ___
 
 #### Defined in
 
-[class/CanvasHelper.js:364](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/CanvasHelper.js#L364)
+CanvasHelper.js:333
+
+___
+
+### getMainColor
+
+▸ `Static` **getMainColor**(`imgData`, `threshold?`): `any`
+
+#### Parameters
+
+| Name | Type | Default value |
+| :------ | :------ | :------ |
+| `imgData` | `ImageData` | `undefined` |
+| `threshold?` | `number` | `0` |
+
+#### Returns
+
+`any`
+
+#### Defined in
+
+CanvasHelper.js:430
+
+___
+
+### getMaxRGBACount
+
+▸ `Static` **getMaxRGBACount**(`colors`): `any`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `colors` | `RGBACount`[] |
+
+#### Returns
+
+`any`
+
+#### Defined in
+
+CanvasHelper.js:459
 
 ___
 
@@ -401,7 +459,28 @@ Returns boolean for quick imageData checking.
 
 #### Defined in
 
-[class/CanvasHelper.js:296](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/CanvasHelper.js#L296)
+CanvasHelper.js:265
+
+___
+
+### loopImageData
+
+▸ `Static` **loopImageData**(`imgData`, `onPixel`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `imgData` | `ImageData` |
+| `onPixel` | (`rgba`: `RGBA`, `index`: `number`) => `void` |
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+CanvasHelper.js:402
 
 ___
 
@@ -422,7 +501,7 @@ ___
 
 #### Defined in
 
-[class/CanvasHelper.js:413](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/CanvasHelper.js#L413)
+CanvasHelper.js:382
 
 ___
 
@@ -450,7 +529,7 @@ ___
 
 #### Defined in
 
-[class/CanvasHelper.js:39](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/CanvasHelper.js#L39)
+CanvasHelper.js:11
 
 ___
 
@@ -476,4 +555,4 @@ Stops on first stop.
 
 #### Defined in
 
-[class/CanvasHelper.js:270](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/CanvasHelper.js#L270)
+CanvasHelper.js:239

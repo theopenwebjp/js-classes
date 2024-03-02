@@ -42,7 +42,7 @@ Functions:
 
 #### Defined in
 
-[class/PageManager.js:27](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/PageManager.js#L27)
+PageManager.js:11
 
 ## Properties
 
@@ -52,15 +52,15 @@ Functions:
 
 #### Defined in
 
-[class/PageManager.js:31](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/PageManager.js#L31)
+PageManager.js:15
 
-[class/PageManager.js:60](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/PageManager.js#L60)
+PageManager.js:44
 
 ## Methods
 
 ### PageManagerSettings
 
-▸ **PageManagerSettings**(`options?`): { `defaultKey`: `string` = ''; `events`: `Object` ; `param`: `string` = 'page'; `parent`: ``null`` \| `HTMLElement` = null } & `Partial`<`PageManagerSettings`\>
+▸ **PageManagerSettings**(`options?`): { `defaultKey`: `string` = ''; `events`: `EventListenersMap` ; `param`: `string` = 'page'; `parent`: ``null`` \| `HTMLElement` = null } & `Partial`<`PageManagerSettings`\>
 
 #### Parameters
 
@@ -70,11 +70,11 @@ Functions:
 
 #### Returns
 
-{ `defaultKey`: `string` = ''; `events`: `Object` ; `param`: `string` = 'page'; `parent`: ``null`` \| `HTMLElement` = null } & `Partial`<`PageManagerSettings`\>
+{ `defaultKey`: `string` = ''; `events`: `EventListenersMap` ; `param`: `string` = 'page'; `parent`: ``null`` \| `HTMLElement` = null } & `Partial`<`PageManagerSettings`\>
 
 #### Defined in
 
-[class/PageManager.js:38](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/PageManager.js#L38)
+PageManager.js:22
 
 ___
 
@@ -88,7 +88,7 @@ ___
 
 #### Defined in
 
-[class/PageManager.js:66](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/PageManager.js#L66)
+PageManager.js:50
 
 ___
 
@@ -108,7 +108,7 @@ ___
 
 #### Defined in
 
-[class/PageManager.js:102](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/PageManager.js#L102)
+PageManager.js:86
 
 ___
 
@@ -129,7 +129,7 @@ ___
 
 #### Defined in
 
-[class/PageManager.js:129](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/PageManager.js#L129)
+PageManager.js:113
 
 ___
 
@@ -149,7 +149,7 @@ ___
 
 #### Defined in
 
-[class/PageManager.js:59](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/PageManager.js#L59)
+PageManager.js:43
 
 ___
 
@@ -170,7 +170,7 @@ ___
 
 #### Defined in
 
-[class/PageManager.js:91](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/PageManager.js#L91)
+PageManager.js:75
 
 ___
 
@@ -192,4 +192,4 @@ ___
 
 #### Defined in
 
-[class/PageManager.js:143](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/PageManager.js#L143)
+PageManager.js:127

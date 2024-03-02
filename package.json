@@ -1,27 +1,21 @@
 {
   "name": "@theopenweb/js-classes",
   "type": "module",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "description": "Collection of general JavaScript classes.",
-  "main": "./index.js",
+  "main": "./src/index.js",
   "files": [
-    "class",
     "data",
-    "index.js",
+    "src",
     "package.json",
     "readme.md"
   ],
   "scripts": {
     "test": "mocha ./test/tests/**/*.js",
     "docs": "npm run api-docs && npm run eslint",
-    "eslint": "eslint ./index.js ./class/**",
-    "api-docs": "typedoc --plugin typedoc-plugin-markdown --out api_docs ./index.js",
-    "pre-commit": "npm run docs && tsc && git add .",
-    "_pre-commit": "npm run test && npm run docs && tsc && git add ."
-  },
-  "dependencies": {
-    "js-functions": "git+https://github.com/theopenwebjp/js-functions.git",
-    "object-traverser": "git+https://github.com/goldingdamien/object-traverser.git"
+    "eslint": "eslint ./src/**/*.js",
+    "api-docs": "typedoc --plugin typedoc-plugin-markdown --out api_docs ./src/index.js",
+    "pre-commit": "npm run test && npm run docs && tsc"
   },
   "devDependencies": {
     "@babel/core": "^7.20.2",
@@ -58,5 +52,8 @@
     "url": "https://github.com/theopenwebjp/js-classes/issues"
   },
   "private": false,
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "@theopenweb/js-functions": "^1.2.0"
+  }
 }

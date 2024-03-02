@@ -32,7 +32,7 @@ Copy inputs from one list to another.
 
 #### Defined in
 
-[class/InputCopier.js:52](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/InputCopier.js#L52)
+InputCopier.js:7
 
 ## Properties
 
@@ -42,7 +42,7 @@ Copy inputs from one list to another.
 
 #### Defined in
 
-[class/InputCopier.js:56](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/InputCopier.js#L56)
+InputCopier.js:11
 
 ___
 
@@ -52,7 +52,7 @@ ___
 
 #### Defined in
 
-[class/InputCopier.js:64](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/InputCopier.js#L64)
+InputCopier.js:19
 
 ___
 
@@ -60,19 +60,15 @@ ___
 
 • **state**: `Object`
 
-**`Property`**
-
-// TODO: What is this?
-
 #### Type declaration
 
 | Name | Type |
 | :------ | :------ |
-| `copy` | ``null`` |
+| `copy` | `any` |
 
 #### Defined in
 
-[class/InputCopier.js:73](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/InputCopier.js#L73)
+InputCopier.js:27
 
 ## Methods
 
@@ -105,7 +101,7 @@ ___
 
 #### Defined in
 
-[class/InputCopier.js:89](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/InputCopier.js#L89)
+InputCopier.js:43
 
 ___
 
@@ -141,7 +137,7 @@ ___
 
 #### Defined in
 
-[class/InputCopier.js:320](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/InputCopier.js#L320)
+InputCopier.js:274
 
 ___
 
@@ -155,7 +151,7 @@ ___
 
 #### Defined in
 
-[class/InputCopier.js:310](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/InputCopier.js#L310)
+InputCopier.js:264
 
 ___
 
@@ -175,7 +171,7 @@ ___
 
 #### Defined in
 
-[class/InputCopier.js:330](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/InputCopier.js#L330)
+InputCopier.js:284
 
 ___
 
@@ -189,4 +185,4 @@ ___
 
 #### Defined in
 
-[class/InputCopier.js:79](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/InputCopier.js#L79)
+InputCopier.js:33

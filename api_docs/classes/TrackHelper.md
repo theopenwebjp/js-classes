@@ -39,7 +39,7 @@
 
 #### Defined in
 
-[class/TrackHelper.js:41](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/TrackHelper.js#L41)
+TrackHelper.js:41
 
 ___
 
@@ -59,7 +59,7 @@ ___
 
 #### Defined in
 
-[class/TrackHelper.js:8](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/TrackHelper.js#L8)
+TrackHelper.js:8
 
 ___
 
@@ -81,4 +81,4 @@ Creates stream with tracks added
 
 #### Defined in
 
-[class/TrackHelper.js:55](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/TrackHelper.js#L55)
+TrackHelper.js:55

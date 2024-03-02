@@ -71,7 +71,7 @@ Static class.
 
 #### Defined in
 
-[class/FormManager.js:84](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FormManager.js#L84)
+FormManager.js:12
 
 ## Properties
 
@@ -87,7 +87,7 @@ Static class.
 
 #### Defined in
 
-[class/FormManager.js:87](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FormManager.js#L87)
+FormManager.js:15
 
 ___
 
@@ -97,7 +97,7 @@ ___
 
 #### Defined in
 
-[class/FormManager.js:85](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FormManager.js#L85)
+FormManager.js:13
 
 ___
 
@@ -113,7 +113,7 @@ ___
 
 #### Defined in
 
-[class/FormManager.js:191](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FormManager.js#L191)
+FormManager.js:119
 
 ___
 
@@ -123,7 +123,7 @@ ___
 
 #### Defined in
 
-[class/FormManager.js:102](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FormManager.js#L102)
+FormManager.js:30
 
 ___
 
@@ -133,7 +133,7 @@ ___
 
 #### Defined in
 
-[class/FormManager.js:94](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FormManager.js#L94)
+FormManager.js:22
 
 ## Methods
 
@@ -154,7 +154,7 @@ ___
 
 #### Defined in
 
-[class/FormManager.js:514](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FormManager.js#L514)
+FormManager.js:439
 
 ___
 
@@ -174,7 +174,7 @@ ___
 
 #### Defined in
 
-[class/FormManager.js:488](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FormManager.js#L488)
+FormManager.js:413
 
 ___
 
@@ -186,7 +186,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `attributes` | `Object` |
+| `attributes` | `Dictionary` |
 
 #### Returns
 
@@ -194,7 +194,7 @@ ___
 
 #### Defined in
 
-[class/FormManager.js:574](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FormManager.js#L574)
+FormManager.js:499
 
 ___
 
@@ -214,7 +214,7 @@ ___
 
 #### Defined in
 
-[class/FormManager.js:438](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FormManager.js#L438)
+FormManager.js:363
 
 ___
 
@@ -234,7 +234,7 @@ ___
 
 #### Defined in
 
-[class/FormManager.js:422](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FormManager.js#L422)
+FormManager.js:347
 
 ___
 
@@ -263,7 +263,7 @@ clickRadioInputs(document.querySelector('form'))
 
 #### Defined in
 
-[class/FormManager.js:829](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FormManager.js#L829)
+FormManager.js:754
 
 ___
 
@@ -285,7 +285,7 @@ Input: <div><label>name</label> <div>{INPUT}</div></div>
 
 #### Defined in
 
-[class/FormManager.js:287](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FormManager.js#L287)
+FormManager.js:215
 
 ___
 
@@ -305,7 +305,7 @@ ___
 
 #### Defined in
 
-[class/FormManager.js:259](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FormManager.js#L259)
+FormManager.js:187
 
 ___
 
@@ -318,7 +318,7 @@ ___
 | Name | Type | Default value |
 | :------ | :------ | :------ |
 | `tagName` | `string` | `undefined` |
-| `attributes` | `Object` | `undefined` |
+| `attributes` | `Dictionary` | `undefined` |
 | `children` | `DomElementSettings`[] | `[]` |
 
 #### Returns
@@ -327,7 +327,7 @@ ___
 
 #### Defined in
 
-[class/FormManager.js:502](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FormManager.js#L502)
+FormManager.js:427
 
 ___
 
@@ -349,7 +349,7 @@ Should keep only necessary information for editing
 
 #### Defined in
 
-[class/FormManager.js:623](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FormManager.js#L623)
+FormManager.js:548
 
 ___
 
@@ -369,7 +369,7 @@ ___
 
 #### Defined in
 
-[class/FormManager.js:609](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FormManager.js#L609)
+FormManager.js:534
 
 ___
 
@@ -397,7 +397,7 @@ enterTextInputs(document.querySelector('form'))
 
 #### Defined in
 
-[class/FormManager.js:875](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FormManager.js#L875)
+FormManager.js:800
 
 ___
 
@@ -423,7 +423,7 @@ enterTextInputs(document.querySelector('form'))
 
 #### Defined in
 
-[class/FormManager.js:857](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FormManager.js#L857)
+FormManager.js:782
 
 ___
 
@@ -446,7 +446,7 @@ Useful for having forms that auto focus.
 
 #### Defined in
 
-[class/FormManager.js:793](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FormManager.js#L793)
+FormManager.js:718
 
 ___
 
@@ -460,7 +460,7 @@ ___
 
 #### Defined in
 
-[class/FormManager.js:227](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FormManager.js#L227)
+FormManager.js:155
 
 ___
 
@@ -480,7 +480,7 @@ ___
 
 #### Defined in
 
-[class/FormManager.js:466](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FormManager.js#L466)
+FormManager.js:391
 
 ___
 
@@ -500,7 +500,7 @@ ___
 
 #### Defined in
 
-[class/FormManager.js:689](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FormManager.js#L689)
+FormManager.js:614
 
 ___
 
@@ -524,7 +524,7 @@ InputType. Default if not found.
 
 #### Defined in
 
-[class/FormManager.js:712](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FormManager.js#L712)
+FormManager.js:637
 
 ___
 
@@ -548,7 +548,7 @@ input value
 
 #### Defined in
 
-[class/FormManager.js:744](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FormManager.js#L744)
+FormManager.js:669
 
 ___
 
@@ -568,7 +568,7 @@ ___
 
 #### Defined in
 
-[class/FormManager.js:674](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FormManager.js#L674)
+FormManager.js:599
 
 ___
 
@@ -588,7 +588,7 @@ ___
 
 #### Defined in
 
-[class/FormManager.js:647](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FormManager.js#L647)
+FormManager.js:572
 
 ___
 
@@ -608,7 +608,7 @@ ___
 
 #### Defined in
 
-[class/FormManager.js:399](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FormManager.js#L399)
+FormManager.js:324
 
 ___
 
@@ -628,7 +628,7 @@ ___
 
 #### Defined in
 
-[class/FormManager.js:530](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FormManager.js#L530)
+FormManager.js:455
 
 ___
 
@@ -648,7 +648,7 @@ ___
 
 #### Defined in
 
-[class/FormManager.js:407](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FormManager.js#L407)
+FormManager.js:332
 
 ___
 
@@ -668,7 +668,7 @@ ___
 
 #### Defined in
 
-[class/FormManager.js:476](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FormManager.js#L476)
+FormManager.js:401
 
 ___
 
@@ -682,7 +682,7 @@ ___
 
 #### Defined in
 
-[class/FormManager.js:210](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FormManager.js#L210)
+FormManager.js:138
 
 ___
 
@@ -702,7 +702,7 @@ ___
 
 #### Defined in
 
-[class/FormManager.js:587](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FormManager.js#L587)
+FormManager.js:512
 
 ___
 
@@ -722,7 +722,7 @@ ___
 
 #### Defined in
 
-[class/FormManager.js:819](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FormManager.js#L819)
+FormManager.js:744
 
 ___
 
@@ -734,7 +734,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `obj` | `Object` |
+| `obj` | `Dictionary` |
 
 #### Returns
 
@@ -742,7 +742,7 @@ ___
 
 #### Defined in
 
-[class/FormManager.js:539](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FormManager.js#L539)
+FormManager.js:464
 
 ___
 
@@ -762,7 +762,7 @@ ___
 
 #### Defined in
 
-[class/FormManager.js:278](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FormManager.js#L278)
+FormManager.js:206
 
 ___
 
@@ -775,7 +775,7 @@ ___
 | Name | Type |
 | :------ | :------ |
 | `el` | `HTMLElement` |
-| `attributes` | `Object` |
+| `attributes` | `Dictionary` |
 
 #### Returns
 
@@ -783,7 +783,7 @@ ___
 
 #### Defined in
 
-[class/FormManager.js:522](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FormManager.js#L522)
+FormManager.js:447
 
 ___
 
@@ -803,7 +803,7 @@ ___
 
 #### Defined in
 
-[class/FormManager.js:391](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FormManager.js#L391)
+FormManager.js:316
 
 ___
 
@@ -826,7 +826,7 @@ Sets single input element's value
 
 #### Defined in
 
-[class/FormManager.js:776](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FormManager.js#L776)
+FormManager.js:701
 
 ___
 
@@ -848,7 +848,7 @@ Sets input values from a map
 
 #### Defined in
 
-[class/FormManager.js:761](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FormManager.js#L761)
+FormManager.js:686
 
 ___
 
@@ -868,4 +868,4 @@ ___
 
 #### Defined in
 
-[class/FormManager.js:239](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FormManager.js#L239)
+FormManager.js:167

@@ -31,7 +31,7 @@
 
 #### Defined in
 
-[class/CanvasManager.js:7](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/CanvasManager.js#L7)
+CanvasManager.js:7
 
 ## Properties
 
@@ -41,7 +41,7 @@
 
 #### Defined in
 
-[class/CanvasManager.js:8](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/CanvasManager.js#L8)
+CanvasManager.js:8
 
 ___
 
@@ -51,7 +51,7 @@ ___
 
 #### Defined in
 
-[class/CanvasManager.js:13](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/CanvasManager.js#L13)
+CanvasManager.js:13
 
 ## Methods
 
@@ -65,4 +65,4 @@ typeof [`CanvasHelper`](CanvasHelper.md)
 
 #### Defined in
 
-[class/CanvasManager.js:16](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/CanvasManager.js#L16)
+CanvasManager.js:16

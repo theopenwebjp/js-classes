@@ -31,7 +31,7 @@
 
 #### Defined in
 
-[class/CanvasChangeChecker.js:5](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/CanvasChangeChecker.js#L5)
+CanvasChangeChecker.js:5
 
 ## Properties
 
@@ -41,7 +41,7 @@
 
 #### Defined in
 
-[class/CanvasChangeChecker.js:6](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/CanvasChangeChecker.js#L6)
+CanvasChangeChecker.js:6
 
 ___
 
@@ -51,9 +51,9 @@ ___
 
 #### Defined in
 
-[class/CanvasChangeChecker.js:7](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/CanvasChangeChecker.js#L7)
+CanvasChangeChecker.js:7
 
-[class/CanvasChangeChecker.js:14](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/CanvasChangeChecker.js#L14)
+CanvasChangeChecker.js:14
 
 ## Methods
 
@@ -67,4 +67,4 @@ ___
 
 #### Defined in
 
-[class/CanvasChangeChecker.js:10](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/CanvasChangeChecker.js#L10)
+CanvasChangeChecker.js:10

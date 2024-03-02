@@ -46,11 +46,11 @@ Data sharing handling.
 
 | Name | Type |
 | :------ | :------ |
-| `settings` | `Object` |
+| `settings` | `any` |
 
 #### Defined in
 
-[class/Sharer.js:52](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/Sharer.js#L52)
+Sharer.js:33
 
 ## Properties
 
@@ -60,7 +60,7 @@ Data sharing handling.
 
 #### Defined in
 
-[class/Sharer.js:60](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/Sharer.js#L60)
+Sharer.js:41
 
 ___
 
@@ -70,7 +70,7 @@ ___
 
 #### Defined in
 
-[class/Sharer.js:56](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/Sharer.js#L56)
+Sharer.js:37
 
 ## Methods
 
@@ -90,7 +90,7 @@ ___
 
 #### Defined in
 
-[class/Sharer.js:248](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/Sharer.js#L248)
+Sharer.js:229
 
 ___
 
@@ -110,7 +110,7 @@ ___
 
 #### Defined in
 
-[class/Sharer.js:292](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/Sharer.js#L292)
+Sharer.js:273
 
 ___
 
@@ -124,7 +124,7 @@ ___
 
 #### Defined in
 
-[class/Sharer.js:228](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/Sharer.js#L228)
+Sharer.js:209
 
 ___
 
@@ -138,7 +138,7 @@ ___
 
 #### Defined in
 
-[class/Sharer.js:153](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/Sharer.js#L153)
+Sharer.js:134
 
 ___
 
@@ -152,7 +152,7 @@ ___
 
 #### Defined in
 
-[class/Sharer.js:132](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/Sharer.js#L132)
+Sharer.js:113
 
 ___
 
@@ -172,7 +172,7 @@ ___
 
 #### Defined in
 
-[class/Sharer.js:92](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/Sharer.js#L92)
+Sharer.js:73
 
 ___
 
@@ -186,7 +186,7 @@ ___
 
 #### Defined in
 
-[class/Sharer.js:97](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/Sharer.js#L97)
+Sharer.js:78
 
 ___
 
@@ -207,7 +207,7 @@ ___
 
 #### Defined in
 
-[class/Sharer.js:270](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/Sharer.js#L270)
+Sharer.js:251
 
 ___
 
@@ -227,7 +227,7 @@ ___
 
 #### Defined in
 
-[class/Sharer.js:261](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/Sharer.js#L261)
+Sharer.js:242
 
 ___
 
@@ -249,7 +249,7 @@ ___
 
 #### Defined in
 
-[class/Sharer.js:102](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/Sharer.js#L102)
+Sharer.js:83
 
 ___
 
@@ -269,7 +269,7 @@ ___
 
 #### Defined in
 
-[class/Sharer.js:125](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/Sharer.js#L125)
+Sharer.js:106
 
 ___
 
@@ -289,7 +289,7 @@ ___
 
 #### Defined in
 
-[class/Sharer.js:186](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/Sharer.js#L186)
+Sharer.js:167
 
 ___
 
@@ -309,7 +309,7 @@ ___
 
 #### Defined in
 
-[class/Sharer.js:117](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/Sharer.js#L117)
+Sharer.js:98
 
 ___
 
@@ -321,7 +321,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `settings` | `Object` |
+| `settings` | `any` |
 
 #### Returns
 
@@ -329,7 +329,7 @@ ___
 
 #### Defined in
 
-[class/Sharer.js:68](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/Sharer.js#L68)
+Sharer.js:49
 
 ___
 
@@ -350,7 +350,7 @@ ___
 
 #### Defined in
 
-[class/Sharer.js:85](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/Sharer.js#L85)
+Sharer.js:66
 
 ___
 
@@ -364,7 +364,7 @@ ___
 
 #### Defined in
 
-[class/Sharer.js:75](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/Sharer.js#L75)
+Sharer.js:56
 
 ___
 
@@ -378,7 +378,7 @@ ___
 
 #### Defined in
 
-[class/Sharer.js:195](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/Sharer.js#L195)
+Sharer.js:176
 
 ___
 
@@ -398,4 +398,4 @@ ___
 
 #### Defined in
 
-[class/Sharer.js:174](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/Sharer.js#L174)
+Sharer.js:155

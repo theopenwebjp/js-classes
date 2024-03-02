@@ -26,7 +26,7 @@
 
 #### Defined in
 
-[class/TrackManager.js:2](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/TrackManager.js#L2)
+TrackManager.js:2
 
 ## Properties
 
@@ -38,7 +38,7 @@ Storing
 
 #### Defined in
 
-[class/TrackManager.js:7](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/TrackManager.js#L7)
+TrackManager.js:7
 
 ## Methods
 
@@ -58,7 +58,7 @@ Storing
 
 #### Defined in
 
-[class/TrackManager.js:13](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/TrackManager.js#L13)
+TrackManager.js:13
 
 ___
 
@@ -80,7 +80,7 @@ index
 
 #### Defined in
 
-[class/TrackManager.js:31](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/TrackManager.js#L31)
+TrackManager.js:31
 
 ___
 
@@ -100,4 +100,4 @@ ___
 
 #### Defined in
 
-[class/TrackManager.js:20](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/TrackManager.js#L20)
+TrackManager.js:20

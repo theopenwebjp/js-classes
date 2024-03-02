@@ -14,7 +14,7 @@ npm install @theopenweb/js-classes
 
 ## Documentation
 
-Generated documentation is accessible from: [./api_docs/modules.md](./api_docs/modules.md)
+Generated documentation is accessible from: [/api_docs/modules.md](/api_docs/modules.md)
 
 ## Technical Info
 

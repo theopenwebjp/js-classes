@@ -1,4 +1,4 @@
-import * as JsClasses from '../../index.js'
+import * as JsClasses from '../../src/index.js'
 import chai from 'chai'
 
 describe('index.js', function () {

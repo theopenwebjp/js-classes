@@ -29,7 +29,7 @@ Handles all possible saving methods in JavaScript.
 
 #### Defined in
 
-[class/PersistentStateManager.js:6](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/PersistentStateManager.js#L6)
+PersistentStateManager.js:6
 
 ## Properties
 
@@ -45,7 +45,7 @@ Handles all possible saving methods in JavaScript.
 
 #### Defined in
 
-[class/PersistentStateManager.js:7](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/PersistentStateManager.js#L7)
+PersistentStateManager.js:7
 
 ## Methods
 
@@ -65,7 +65,7 @@ Handles all possible saving methods in JavaScript.
 
 #### Defined in
 
-[class/PersistentStateManager.js:16](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/PersistentStateManager.js#L16)
+PersistentStateManager.js:16
 
 ___
 
@@ -86,7 +86,7 @@ ___
 
 #### Defined in
 
-[class/PersistentStateManager.js:26](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/PersistentStateManager.js#L26)
+PersistentStateManager.js:26
 
 ___
 
@@ -108,4 +108,4 @@ ___
 
 #### Defined in
 
-[class/PersistentStateManager.js:48](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/PersistentStateManager.js#L48)
+PersistentStateManager.js:48

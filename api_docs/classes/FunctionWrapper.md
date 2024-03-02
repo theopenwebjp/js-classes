@@ -64,7 +64,7 @@ Any function from FunctionWrapper should not be stack traced.
 
 #### Defined in
 
-[class/FunctionWrapper.js:76](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FunctionWrapper.js#L76)
+FunctionWrapper.js:13
 
 ## Properties
 
@@ -82,7 +82,7 @@ Any function from FunctionWrapper should not be stack traced.
 
 #### Defined in
 
-[class/FunctionWrapper.js:77](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FunctionWrapper.js#L77)
+FunctionWrapper.js:14
 
 ___
 
@@ -100,7 +100,7 @@ ___
 
 #### Defined in
 
-[class/FunctionWrapper.js:83](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FunctionWrapper.js#L83)
+FunctionWrapper.js:20
 
 ## Methods
 
@@ -114,7 +114,7 @@ ___
 
 #### Defined in
 
-[class/FunctionWrapper.js:152](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FunctionWrapper.js#L152)
+FunctionWrapper.js:89
 
 ___
 
@@ -128,7 +128,7 @@ ___
 
 #### Defined in
 
-[class/FunctionWrapper.js:162](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FunctionWrapper.js#L162)
+FunctionWrapper.js:99
 
 ___
 
@@ -136,12 +136,14 @@ ___
 
 ▸ **attemptWrapFunction**(`data`, `reference`, `options`): `any`
 
+Attempts to wrap function. Because is "attempt", if not function, is ignored.
+
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
 | `data` | `any` |
-| `reference` | `any` |
+| `reference` | `Reference` |
 | `options` | `Partial`<`WrapperOptions`\> |
 
 #### Returns
@@ -150,7 +152,7 @@ ___
 
 #### Defined in
 
-[class/FunctionWrapper.js:660](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FunctionWrapper.js#L660)
+FunctionWrapper.js:595
 
 ___
 
@@ -172,7 +174,7 @@ ___
 
 #### Defined in
 
-[class/FunctionWrapper.js:648](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FunctionWrapper.js#L648)
+FunctionWrapper.js:582
 
 ___
 
@@ -193,7 +195,7 @@ ___
 
 #### Defined in
 
-[class/FunctionWrapper.js:311](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FunctionWrapper.js#L311)
+FunctionWrapper.js:248
 
 ___
 
@@ -214,7 +216,7 @@ ___
 
 #### Defined in
 
-[class/FunctionWrapper.js:634](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FunctionWrapper.js#L634)
+FunctionWrapper.js:571
 
 ___
 
@@ -228,7 +230,7 @@ ___
 
 #### Defined in
 
-[class/FunctionWrapper.js:125](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FunctionWrapper.js#L125)
+FunctionWrapper.js:62
 
 ___
 
@@ -250,7 +252,7 @@ ___
 
 #### Defined in
 
-[class/FunctionWrapper.js:784](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FunctionWrapper.js#L784)
+FunctionWrapper.js:719
 
 ___
 
@@ -273,7 +275,7 @@ ___
 
 #### Defined in
 
-[class/FunctionWrapper.js:733](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FunctionWrapper.js#L733)
+FunctionWrapper.js:668
 
 ___
 
@@ -293,7 +295,7 @@ ___
 
 #### Defined in
 
-[class/FunctionWrapper.js:759](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FunctionWrapper.js#L759)
+FunctionWrapper.js:694
 
 ___
 
@@ -314,7 +316,7 @@ ___
 
 #### Defined in
 
-[class/FunctionWrapper.js:615](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FunctionWrapper.js#L615)
+FunctionWrapper.js:552
 
 ___
 
@@ -335,7 +337,7 @@ ___
 
 #### Defined in
 
-[class/FunctionWrapper.js:209](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FunctionWrapper.js#L209)
+FunctionWrapper.js:146
 
 ___
 
@@ -356,7 +358,7 @@ ___
 
 #### Defined in
 
-[class/FunctionWrapper.js:255](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FunctionWrapper.js#L255)
+FunctionWrapper.js:192
 
 ___
 
@@ -378,7 +380,7 @@ ___
 
 #### Defined in
 
-[class/FunctionWrapper.js:586](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FunctionWrapper.js#L586)
+FunctionWrapper.js:523
 
 ___
 
@@ -398,7 +400,7 @@ ___
 
 #### Defined in
 
-[class/FunctionWrapper.js:597](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FunctionWrapper.js#L597)
+FunctionWrapper.js:534
 
 ___
 
@@ -418,7 +420,7 @@ ___
 
 #### Defined in
 
-[class/FunctionWrapper.js:701](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FunctionWrapper.js#L701)
+FunctionWrapper.js:636
 
 ___
 
@@ -438,7 +440,7 @@ ___
 
 #### Defined in
 
-[class/FunctionWrapper.js:724](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FunctionWrapper.js#L724)
+FunctionWrapper.js:659
 
 ___
 
@@ -458,7 +460,7 @@ ___
 
 #### Defined in
 
-[class/FunctionWrapper.js:683](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FunctionWrapper.js#L683)
+FunctionWrapper.js:618
 
 ___
 
@@ -478,7 +480,7 @@ ___
 
 #### Defined in
 
-[class/FunctionWrapper.js:832](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FunctionWrapper.js#L832)
+FunctionWrapper.js:767
 
 ___
 
@@ -499,7 +501,7 @@ ___
 
 #### Defined in
 
-[class/FunctionWrapper.js:821](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FunctionWrapper.js#L821)
+FunctionWrapper.js:756
 
 ___
 
@@ -520,7 +522,7 @@ ___
 
 #### Defined in
 
-[class/FunctionWrapper.js:809](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FunctionWrapper.js#L809)
+FunctionWrapper.js:744
 
 ___
 
@@ -534,7 +536,7 @@ ___
 
 #### Defined in
 
-[class/FunctionWrapper.js:176](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FunctionWrapper.js#L176)
+FunctionWrapper.js:113
 
 ___
 
@@ -555,7 +557,7 @@ ___
 
 #### Defined in
 
-[class/FunctionWrapper.js:238](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FunctionWrapper.js#L238)
+FunctionWrapper.js:175
 
 ___
 
@@ -589,7 +591,7 @@ ___
 
 #### Defined in
 
-[class/FunctionWrapper.js:185](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FunctionWrapper.js#L185)
+FunctionWrapper.js:122
 
 ___
 
@@ -609,7 +611,7 @@ ___
 
 #### Defined in
 
-[class/FunctionWrapper.js:568](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FunctionWrapper.js#L568)
+FunctionWrapper.js:505
 
 ___
 
@@ -625,7 +627,7 @@ All info is non-wrap function info.
 
 #### Defined in
 
-[class/FunctionWrapper.js:139](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FunctionWrapper.js#L139)
+FunctionWrapper.js:76
 
 ___
 
@@ -653,7 +655,7 @@ ___
 
 #### Defined in
 
-[class/FunctionWrapper.js:454](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FunctionWrapper.js#L454)
+FunctionWrapper.js:391
 
 ___
 
@@ -675,7 +677,7 @@ ___
 
 #### Defined in
 
-[class/FunctionWrapper.js:383](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FunctionWrapper.js#L383)
+FunctionWrapper.js:320
 
 ___
 
@@ -695,7 +697,7 @@ ___
 
 #### Defined in
 
-[class/FunctionWrapper.js:491](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FunctionWrapper.js#L491)
+FunctionWrapper.js:428
 
 ___
 
@@ -711,7 +713,7 @@ TODO
 
 #### Defined in
 
-[class/FunctionWrapper.js:524](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FunctionWrapper.js#L524)
+FunctionWrapper.js:461
 
 ___
 
@@ -731,7 +733,7 @@ ___
 
 #### Defined in
 
-[class/FunctionWrapper.js:546](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FunctionWrapper.js#L546)
+FunctionWrapper.js:483
 
 ___
 
@@ -745,7 +747,7 @@ ___
 
 #### Defined in
 
-[class/FunctionWrapper.js:532](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FunctionWrapper.js#L532)
+FunctionWrapper.js:469
 
 ___
 
@@ -767,7 +769,7 @@ ___
 
 #### Defined in
 
-[class/FunctionWrapper.js:275](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FunctionWrapper.js#L275)
+FunctionWrapper.js:212
 
 ___
 
@@ -788,7 +790,7 @@ ___
 
 #### Defined in
 
-[class/FunctionWrapper.js:624](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FunctionWrapper.js#L624)
+FunctionWrapper.js:561
 
 ___
 
@@ -808,4 +810,4 @@ ___
 
 #### Defined in
 
-[class/FunctionWrapper.js:106](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/FunctionWrapper.js#L106)
+FunctionWrapper.js:43

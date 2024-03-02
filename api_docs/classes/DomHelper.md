@@ -27,6 +27,7 @@ Static class.
 - [appendChildren](DomHelper.md#appendchildren)
 - [applyMarginsToDimensions](DomHelper.md#applymarginstodimensions)
 - [arrayInputter](DomHelper.md#arrayinputter)
+- [attemptUpdateNestedTextContent](DomHelper.md#attemptupdatenestedtextcontent)
 - [centerFixElement](DomHelper.md#centerfixelement)
 - [clearForm](DomHelper.md#clearform)
 - [convertArrToTableElement](DomHelper.md#convertarrtotableelement)
@@ -63,6 +64,7 @@ Static class.
 - [getElementPageDimensions](DomHelper.md#getelementpagedimensions)
 - [getElementPositionData](DomHelper.md#getelementpositiondata)
 - [getElementScreenDimensions](DomHelper.md#getelementscreendimensions)
+- [getElementsBoundingRect](DomHelper.md#getelementsboundingrect)
 - [getElementsByAttribute](DomHelper.md#getelementsbyattribute)
 - [getElementsByIds](DomHelper.md#getelementsbyids)
 - [getElementsBySelectors](DomHelper.md#getelementsbyselectors)
@@ -71,6 +73,7 @@ Static class.
 - [getHtmlImport](DomHelper.md#gethtmlimport)
 - [getNestedAttributeListFromElement](DomHelper.md#getnestedattributelistfromelement)
 - [getParents](DomHelper.md#getparents)
+- [getUsedDOMBoundingRect](DomHelper.md#getuseddomboundingrect)
 - [groupify](DomHelper.md#groupify)
 - [htmlifyEvent](DomHelper.md#htmlifyevent)
 - [htmlifyEvents](DomHelper.md#htmlifyevents)
@@ -119,7 +122,7 @@ Settings for lists
 
 #### Defined in
 
-[class/DomHelper.js:185](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L185)
+DomHelper.js:49
 
 ___
 
@@ -139,7 +142,7 @@ ___
 
 #### Defined in
 
-[class/DomHelper.js:170](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L170)
+DomHelper.js:34
 
 ___
 
@@ -161,7 +164,7 @@ Represent customizable parts of an HTML Element.
 
 #### Defined in
 
-[class/DomHelper.js:153](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L153)
+DomHelper.js:17
 
 ___
 
@@ -181,7 +184,7 @@ ___
 
 #### Defined in
 
-[class/DomHelper.js:849](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L849)
+DomHelper.js:713
 
 ___
 
@@ -201,7 +204,7 @@ ___
 
 #### Defined in
 
-[class/DomHelper.js:418](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L418)
+DomHelper.js:282
 
 ___
 
@@ -215,7 +218,7 @@ ___
 
 #### Defined in
 
-[class/DomHelper.js:800](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L800)
+DomHelper.js:664
 
 ___
 
@@ -238,7 +241,7 @@ ___
 
 #### Defined in
 
-[class/DomHelper.js:766](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L766)
+DomHelper.js:630
 
 ___
 
@@ -260,7 +263,7 @@ ___
 
 #### Defined in
 
-[class/DomHelper.js:735](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L735)
+DomHelper.js:599
 
 ___
 
@@ -280,7 +283,7 @@ ___
 
 #### Defined in
 
-[class/DomHelper.js:714](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L714)
+DomHelper.js:578
 
 ___
 
@@ -301,7 +304,7 @@ ___
 
 #### Defined in
 
-[class/DomHelper.js:696](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L696)
+DomHelper.js:560
 
 ___
 
@@ -322,7 +325,7 @@ ___
 
 #### Defined in
 
-[class/DomHelper.js:676](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L676)
+DomHelper.js:540
 
 ___
 
@@ -343,7 +346,7 @@ ___
 
 #### Defined in
 
-[class/DomHelper.js:779](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L779)
+DomHelper.js:643
 
 ___
 
@@ -364,7 +367,7 @@ ___
 
 #### Defined in
 
-[class/DomHelper.js:994](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L994)
+DomHelper.js:858
 
 ___
 
@@ -384,7 +387,33 @@ ___
 
 #### Defined in
 
-[class/DomHelper.js:1616](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L1616)
+DomHelper.js:1480
+
+___
+
+### attemptUpdateNestedTextContent
+
+▸ `Static` **attemptUpdateNestedTextContent**(`element`, `textContent`): `boolean`
+
+Attempts to update nested textContent.
+Usually if element.textContent = '...' is used, any nested elements will be overwritten.
+Sometimes this is not desired, and any nested might not be known or may change.
+This function attempts to update the textContent by checking for any elements with ONLY the same text, no nested elements, and then updating that element's textContent if the element exists.
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `element` | `Element` |
+| `textContent` | `string` |
+
+#### Returns
+
+`boolean`
+
+#### Defined in
+
+DomHelper.js:1963
 
 ___
 
@@ -404,7 +433,7 @@ ___
 
 #### Defined in
 
-[class/DomHelper.js:1871](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L1871)
+DomHelper.js:1735
 
 ___
 
@@ -424,7 +453,7 @@ ___
 
 #### Defined in
 
-[class/DomHelper.js:619](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L619)
+DomHelper.js:483
 
 ___
 
@@ -444,7 +473,7 @@ ___
 
 #### Defined in
 
-[class/DomHelper.js:1931](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L1931)
+DomHelper.js:1795
 
 ___
 
@@ -464,7 +493,7 @@ ___
 
 #### Defined in
 
-[class/DomHelper.js:1897](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L1897)
+DomHelper.js:1761
 
 ___
 
@@ -484,7 +513,7 @@ ___
 
 #### Defined in
 
-[class/DomHelper.js:1884](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L1884)
+DomHelper.js:1748
 
 ___
 
@@ -504,7 +533,7 @@ ___
 
 #### Defined in
 
-[class/DomHelper.js:1906](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L1906)
+DomHelper.js:1770
 
 ___
 
@@ -525,7 +554,7 @@ ___
 
 #### Defined in
 
-[class/DomHelper.js:559](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L559)
+DomHelper.js:423
 
 ___
 
@@ -548,7 +577,7 @@ Common in Android settings pages.
 
 #### Defined in
 
-[class/DomHelper.js:814](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L814)
+DomHelper.js:678
 
 ___
 
@@ -568,7 +597,7 @@ ___
 
 #### Defined in
 
-[class/DomHelper.js:217](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L217)
+DomHelper.js:81
 
 ___
 
@@ -594,7 +623,7 @@ createElementList([{name: 'a', value: 'b'}])
 
 #### Defined in
 
-[class/DomHelper.js:279](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L279)
+DomHelper.js:143
 
 ___
 
@@ -615,7 +644,7 @@ ___
 
 #### Defined in
 
-[class/DomHelper.js:201](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L201)
+DomHelper.js:65
 
 ___
 
@@ -643,7 +672,7 @@ createHeadedArrayElement()
 
 #### Defined in
 
-[class/DomHelper.js:347](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L347)
+DomHelper.js:211
 
 ___
 
@@ -664,7 +693,7 @@ ___
 
 #### Defined in
 
-[class/DomHelper.js:409](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L409)
+DomHelper.js:273
 
 ___
 
@@ -685,7 +714,7 @@ ___
 
 #### Defined in
 
-[class/DomHelper.js:399](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L399)
+DomHelper.js:263
 
 ___
 
@@ -706,7 +735,7 @@ ___
 
 #### Defined in
 
-[class/DomHelper.js:389](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L389)
+DomHelper.js:253
 
 ___
 
@@ -732,7 +761,7 @@ createKeyValueList({ name1: 'value1', name2: 'value2' })
 
 #### Defined in
 
-[class/DomHelper.js:300](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L300)
+DomHelper.js:164
 
 ___
 
@@ -758,7 +787,7 @@ createList(['a', 'b'])
 
 #### Defined in
 
-[class/DomHelper.js:319](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L319)
+DomHelper.js:183
 
 ___
 
@@ -784,7 +813,7 @@ createTable([[1, 2][3, 4]])
 
 #### Defined in
 
-[class/DomHelper.js:253](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L253)
+DomHelper.js:117
 
 ___
 
@@ -805,7 +834,7 @@ ___
 
 #### Defined in
 
-[class/DomHelper.js:1045](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L1045)
+DomHelper.js:909
 
 ___
 
@@ -826,7 +855,7 @@ ___
 
 #### Defined in
 
-[class/DomHelper.js:1014](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L1014)
+DomHelper.js:878
 
 ___
 
@@ -846,7 +875,7 @@ ___
 
 #### Defined in
 
-[class/DomHelper.js:1345](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L1345)
+DomHelper.js:1209
 
 ___
 
@@ -871,7 +900,7 @@ chainer with functions represeting properties/functions of element all returning
 
 #### Defined in
 
-[class/DomHelper.js:1957](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L1957)
+DomHelper.js:1821
 
 ___
 
@@ -892,7 +921,7 @@ ___
 
 #### Defined in
 
-[class/DomHelper.js:865](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L865)
+DomHelper.js:729
 
 ___
 
@@ -912,7 +941,7 @@ ___
 
 #### Defined in
 
-[class/DomHelper.js:1751](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L1751)
+DomHelper.js:1615
 
 ___
 
@@ -926,7 +955,7 @@ ___
 
 #### Defined in
 
-[class/DomHelper.js:1742](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L1742)
+DomHelper.js:1606
 
 ___
 
@@ -947,7 +976,7 @@ ___
 
 #### Defined in
 
-[class/DomHelper.js:1787](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L1787)
+DomHelper.js:1651
 
 ___
 
@@ -967,7 +996,7 @@ ___
 
 #### Defined in
 
-[class/DomHelper.js:1204](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L1204)
+DomHelper.js:1068
 
 ___
 
@@ -988,7 +1017,7 @@ ___
 
 #### Defined in
 
-[class/DomHelper.js:1282](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L1282)
+DomHelper.js:1146
 
 ___
 
@@ -1008,7 +1037,7 @@ ___
 
 #### Defined in
 
-[class/DomHelper.js:1393](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L1393)
+DomHelper.js:1257
 
 ___
 
@@ -1028,7 +1057,7 @@ ___
 
 #### Defined in
 
-[class/DomHelper.js:1419](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L1419)
+DomHelper.js:1283
 
 ___
 
@@ -1048,7 +1077,7 @@ ___
 
 #### Defined in
 
-[class/DomHelper.js:1404](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L1404)
+DomHelper.js:1268
 
 ___
 
@@ -1068,7 +1097,7 @@ ___
 
 #### Defined in
 
-[class/DomHelper.js:1375](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L1375)
+DomHelper.js:1239
 
 ___
 
@@ -1088,7 +1117,7 @@ ___
 
 #### Defined in
 
-[class/DomHelper.js:1768](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L1768)
+DomHelper.js:1632
 
 ___
 
@@ -1108,7 +1137,7 @@ ___
 
 #### Defined in
 
-[class/DomHelper.js:936](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L936)
+DomHelper.js:800
 
 ___
 
@@ -1132,7 +1161,7 @@ Would be used where position remains same but data can vary.
 
 #### Defined in
 
-[class/DomHelper.js:1485](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L1485)
+DomHelper.js:1349
 
 ___
 
@@ -1152,7 +1181,38 @@ ___
 
 #### Defined in
 
-[class/DomHelper.js:928](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L928)
+DomHelper.js:792
+
+___
+
+### getElementsBoundingRect
+
+▸ `Static` **getElementsBoundingRect**(`elements`): `Object`
+
+Same as normal get bounding rect, but treats multiple elements as a single group.
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `elements` | `Element`[] |
+
+#### Returns
+
+`Object`
+
+| Name | Type |
+| :------ | :------ |
+| `bottom` | `number` |
+| `height` | `number` |
+| `left` | `number` |
+| `right` | `number` |
+| `top` | `number` |
+| `width` | `number` |
+
+#### Defined in
+
+DomHelper.js:1921
 
 ___
 
@@ -1173,7 +1233,7 @@ ___
 
 #### Defined in
 
-[class/DomHelper.js:1804](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L1804)
+DomHelper.js:1668
 
 ___
 
@@ -1193,7 +1253,7 @@ ___
 
 #### Defined in
 
-[class/DomHelper.js:1355](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L1355)
+DomHelper.js:1219
 
 ___
 
@@ -1218,7 +1278,7 @@ https://developer.mozilla.org/en-US/docs/Learn/CSS/Introduction_to_CSS/Selectors
 
 #### Defined in
 
-[class/DomHelper.js:1705](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L1705)
+DomHelper.js:1569
 
 ___
 
@@ -1239,7 +1299,7 @@ ___
 
 #### Defined in
 
-[class/DomHelper.js:1724](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L1724)
+DomHelper.js:1588
 
 ___
 
@@ -1259,7 +1319,7 @@ ___
 
 #### Defined in
 
-[class/DomHelper.js:1760](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L1760)
+DomHelper.js:1624
 
 ___
 
@@ -1279,7 +1339,7 @@ ___
 
 #### Defined in
 
-[class/DomHelper.js:1321](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L1321)
+DomHelper.js:1185
 
 ___
 
@@ -1300,7 +1360,7 @@ ___
 
 #### Defined in
 
-[class/DomHelper.js:1814](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L1814)
+DomHelper.js:1678
 
 ___
 
@@ -1320,7 +1380,34 @@ ___
 
 #### Defined in
 
-[class/DomHelper.js:1261](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L1261)
+DomHelper.js:1125
+
+___
+
+### getUsedDOMBoundingRect
+
+▸ `Static` **getUsedDOMBoundingRect**(): `Object`
+
+Gets bounding rect of all DOM.
+Usually, checking the size of "body" is enough. However, static, aboslute elements and badly cleared elements may cause the size of body to be different.
+This function gets the bounding rect by checking each element.
+
+#### Returns
+
+`Object`
+
+| Name | Type |
+| :------ | :------ |
+| `bottom` | `number` |
+| `height` | `number` |
+| `left` | `number` |
+| `right` | `number` |
+| `top` | `number` |
+| `width` | `number` |
+
+#### Defined in
+
+DomHelper.js:1912
 
 ___
 
@@ -1340,7 +1427,7 @@ ___
 
 #### Defined in
 
-[class/DomHelper.js:603](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L603)
+DomHelper.js:467
 
 ___
 
@@ -1361,7 +1448,7 @@ ___
 
 #### Defined in
 
-[class/DomHelper.js:1245](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L1245)
+DomHelper.js:1109
 
 ___
 
@@ -1382,7 +1469,7 @@ ___
 
 #### Defined in
 
-[class/DomHelper.js:1225](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L1225)
+DomHelper.js:1089
 
 ___
 
@@ -1402,7 +1489,7 @@ ___
 
 #### Defined in
 
-[class/DomHelper.js:1643](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L1643)
+DomHelper.js:1507
 
 ___
 
@@ -1416,7 +1503,7 @@ ___
 
 #### Defined in
 
-[class/DomHelper.js:1298](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L1298)
+DomHelper.js:1162
 
 ___
 
@@ -1442,7 +1529,7 @@ Should get position as best as possible so can replace if needed.
 
 #### Defined in
 
-[class/DomHelper.js:1531](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L1531)
+DomHelper.js:1395
 
 ___
 
@@ -1463,7 +1550,7 @@ ___
 
 #### Defined in
 
-[class/DomHelper.js:790](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L790)
+DomHelper.js:654
 
 ___
 
@@ -1486,7 +1573,7 @@ Helper for applying array of items to element settings.
 
 #### Defined in
 
-[class/DomHelper.js:241](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L241)
+DomHelper.js:105
 
 ___
 
@@ -1507,7 +1594,7 @@ ___
 
 #### Defined in
 
-[class/DomHelper.js:1451](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L1451)
+DomHelper.js:1315
 
 ___
 
@@ -1528,7 +1615,7 @@ ___
 
 #### Defined in
 
-[class/DomHelper.js:1853](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L1853)
+DomHelper.js:1717
 
 ___
 
@@ -1557,7 +1644,7 @@ https://stackoverflow.com/questions/8694054/onchange-event-with-contenteditable
 
 #### Defined in
 
-[class/DomHelper.js:1833](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L1833)
+DomHelper.js:1697
 
 ___
 
@@ -1578,7 +1665,7 @@ ___
 
 #### Defined in
 
-[class/DomHelper.js:961](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L961)
+DomHelper.js:825
 
 ___
 
@@ -1601,7 +1688,7 @@ ___
 
 #### Defined in
 
-[class/DomHelper.js:973](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L973)
+DomHelper.js:837
 
 ___
 
@@ -1622,7 +1709,7 @@ ___
 
 #### Defined in
 
-[class/DomHelper.js:951](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L951)
+DomHelper.js:815
 
 ___
 
@@ -1642,7 +1729,7 @@ ___
 
 #### Defined in
 
-[class/DomHelper.js:1309](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L1309)
+DomHelper.js:1173
 
 ___
 
@@ -1673,7 +1760,7 @@ This function is bloated. Should standardize and use what is necessary.
 
 #### Defined in
 
-[class/DomHelper.js:451](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L451)
+DomHelper.js:315
 
 ___
 
@@ -1695,7 +1782,7 @@ ___
 
 #### Defined in
 
-[class/DomHelper.js:1071](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L1071)
+DomHelper.js:935
 
 ___
 
@@ -1716,7 +1803,7 @@ ___
 
 #### Defined in
 
-[class/DomHelper.js:1109](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L1109)
+DomHelper.js:973
 
 ___
 
@@ -1737,7 +1824,7 @@ ___
 
 #### Defined in
 
-[class/DomHelper.js:1165](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L1165)
+DomHelper.js:1029
 
 ___
 
@@ -1759,7 +1846,7 @@ Text node
 
 #### Defined in
 
-[class/DomHelper.js:1690](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L1690)
+DomHelper.js:1554
 
 ___
 
@@ -1780,4 +1867,4 @@ ___
 
 #### Defined in
 
-[class/DomHelper.js:1094](https://github.com/theopenwebjp/js-classes/blob/3f0dc33/class/DomHelper.js#L1094)
+DomHelper.js:958

@@ -24,8 +24,8 @@
     "allowSyntheticDefaultImports": true
   },
   "include": [
-    "./index.js",
-    "./class/*.js"
+    "src/*.js",
+    "test/*.js"
   ],
   "exclude": [
     "node_modules",
