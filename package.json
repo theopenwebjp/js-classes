@@ -1,7 +1,7 @@
 {
   "name": "@theopenweb/js-classes",
   "type": "module",
-  "version": "3.1.0",
+  "version": "3.2.0",
   "description": "Collection of general JavaScript classes.",
   "main": "./src/index.js",
   "files": [
@@ -54,6 +54,6 @@
   "private": false,
   "license": "MIT",
   "dependencies": {
-    "@theopenweb/js-functions": "^1.2.0"
+    "@theopenweb/js-functions": "^2.0.1"
   }
 }

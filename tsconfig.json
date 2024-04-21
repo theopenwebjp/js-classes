@@ -21,7 +21,11 @@
     "declarationDir": "./declarations",
     "declarationMap": true,
     "extendedDiagnostics": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": "./node_modules",
+    "paths": {
+      "@theopenweb/js-functions/src/*": ["@theopenweb/js-functions/declarations/*"]
+    }
   },
   "include": [
     "src/*.js",

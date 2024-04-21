@@ -4,7 +4,6 @@
  * Any string allowed, but using ISO standard preferred.
  * http://www-01.sil.org/iso639-3/codes.asp // same as wordpress and newer than many others.
  * Old: http://www.loc.gov/standards/iso639-2/php/English_list.php
- * Name deprecated. Use I18n class instead.
  * Similar libary exists: https://github.com/i18next/i18next
  * Should use similar library and unite functions over time. However some functions may be unique here.
  */

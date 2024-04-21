@@ -1,31 +1,4 @@
-export type SimpleDOMRect = {
-    top: number;
-    bottom: number;
-    left: number;
-    right: number;
-};
-export type CachedHTMLCanvasElement = HTMLCanvasElement & {
-    _context?: CanvasRenderingContext2D | null | undefined;
-};
-export type CanvasImageOptions = {
-    format: string;
-    serialization: 'data_url' | 'image';
-    on_load: (...args: any[]) => any;
-    conversion_options: number | null;
-};
-export type RGBASelection = {
-    r: boolean;
-    g: boolean;
-    b: boolean;
-    a: boolean;
-};
-export type RGBA = [number, number, number, number];
-export type RGBACount = {
-    rgba: [number, number, number, number];
-    count: number;
-    index: number;
-};
-export type CanvasImageSourceData = string | HTMLImageElement;
+import { InputType } from "@theopenweb/js-functions/declarations/types/ts";
 export type CanvasRenderOptions = {
     renderable: Renderable | null;
     canvas: HTMLCanvasElement | null;
@@ -33,92 +6,6 @@ export type CanvasRenderOptions = {
     muted: boolean;
 };
 export type Renderable = HTMLImageElement | HTMLVideoElement | HTMLCanvasElement;
-export type CustomDOMRect = {
-    width: number;
-    height: number;
-    x: number;
-    y: number;
-    top: number;
-    left: number;
-};
-export type NameValue = {
-    name: string;
-    value: any;
-};
-export type ElementPosition = {
-    element: HTMLElement;
-    type: string | null;
-    attributeIndex: number;
-    stringIndex: number;
-    stringLength: number;
-};
-export type Link = {
-    text: string;
-    url: string;
-};
-export type ChildrenSettings = {
-    replacements: {
-        [x: string]: any;
-    };
-    format: DomElementSettings;
-    items: any[];
-};
-export type DomElementSettings = {
-    tag: string;
-    children: DomElementSettings[];
-    attributes: {
-        [x: string]: string;
-    };
-    textContent: string;
-    innerHTML: string;
-    events: {
-        [x: string]: (...args: any[]) => any;
-    };
-};
-export type DOMSearchSettings = {
-    tag: boolean;
-    textContent: boolean;
-    attributeKey: boolean;
-    attributeValue: boolean;
-    handle: ((arg0: HTMLElement) => any) | null;
-};
-export type Margins = {
-    top: number | null;
-    left: number | null;
-};
-export type FormOptions = {
-    method: string;
-    action: string | ((event: SubmitEvent) => void);
-    controls: {
-        reset: boolean;
-        submit: boolean;
-    };
-};
-export type MenuListItem = {
-    type: string;
-    click: () => void;
-    text: string;
-    id: string;
-    class: string;
-    empty: boolean;
-    orientation: 'vertical' | 'horizontal';
-};
-export type MenuListSettings = {
-    items: MenuListItem[];
-    element: HTMLElement | undefined;
-    isChild: boolean;
-    hide: boolean;
-    header: {
-        text: string;
-        id: string;
-    };
-};
-export type WatchedHTMLElement = HTMLElement & {
-    __listenerChangeHandles: any;
-    __handleEvent: any;
-    __addEventListener: any;
-    __removeEventListener: any;
-};
 export type AddEventListener = (type: string, listener: (ev: Event) => void, options: any) => void;
 export type AppendChild = typeof Node.prototype.appendChild;
 export type FormManagerSettings = {
@@ -137,35 +24,6 @@ export type PageInputOptions = {
 export type A = object;
 export type C = {
     d: string;
-};
-export type InputType = {
-    tag: string;
-    placeholder: boolean;
-    attributes: {
-        [x: string]: string;
-    };
-    format: (value: any) => any;
-    multiple: boolean;
-    value: (element: InputElement) => any;
-    setValue: (element: InputElement, value: any) => void;
-};
-export type InputObject = {
-    type: string;
-    tag: string;
-    attributes: {
-        [x: string]: string;
-    };
-    key: string;
-    label: string;
-    values: any[];
-    rowHeader: string;
-    initialSelection: string;
-    required: boolean;
-};
-export type FormSettings = {
-    action: string;
-    actionType: string;
-    inputs: InputObject[];
 };
 export type ExtendedType = {
     type: string;
@@ -275,7 +133,6 @@ export type PageState = {
     receiver: boolean;
     sender: boolean;
 };
-export type InputElement = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
 export type EventListenersMap = {
     [x: string]: Function | null | undefined;
 };
@@ -323,21 +180,4 @@ export type NumberUnit = {
     calculate: () => number;
     toString: () => string;
 };
-export type NavigatorGetUserMedia = (constraints: MediaStreamConstraints, onStream: (stream: MediaStream) => void, onError: (error: Error) => void) => void;
-export type GetUserMediaPolyfilledNavigator = Navigator & {
-    getUserMedia?: NavigatorGetUserMedia;
-    mozGetUserMedia?: NavigatorGetUserMedia;
-    webkitGetUserMedia?: NavigatorGetUserMedia;
-};
-export type NavigatorUserMediaSuccessCallback = (stream: MediaStream) => void;
-export type StreamObject = {
-    stream: MediaStream | null;
-    object_url: string | null;
-    video: HTMLVideoElement | null;
-};
-export type StreamError = {
-    error: Error | null;
-    isError: boolean;
-};
-export type Falsy = undefined | null | false | 0 | '';
 //# sourceMappingURL=index.d.ts.map

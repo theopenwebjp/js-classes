@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script type="module">
+      import * as JSClasses from '../src/index.js'
+      window.JSClasses = JSClasses
+
+      Object.entries(JSClasses).forEach(([k, v]) => window[k] = v)
+
+      console.log({ JSClasses })
+    </script>
+  </head>
+  <body>
+    <h1>Playground</h1>
+    <ul>
+      <li>Use server to open from project root.</li>
+      <li>Check console.</li>
+    </ul>
+  </body>
+</html>

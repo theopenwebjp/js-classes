@@ -1,4 +1,4 @@
-const isInput = /** @param {Element} e @return {e is import("./types/ts").InputElement}*/ (e) => e instanceof HTMLInputElement || e instanceof HTMLSelectElement || e instanceof HTMLTextAreaElement
+const isInput = /** @param {Element} e @return {e is import("@theopenweb/js-functions/declarations/types/ts").InputElement}*/ (e) => e instanceof HTMLInputElement || e instanceof HTMLSelectElement || e instanceof HTMLTextAreaElement
 
 /**
  * Copy inputs from one list to another.

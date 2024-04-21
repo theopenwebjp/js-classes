@@ -47,7 +47,7 @@ Collection of functions for handling units.
 
 #### Defined in
 
-StandardUnitHelper.js:117
+[StandardUnitHelper.js:117](https://github.com/theopenwebjp/js-classes/blob/3046fa5/src/StandardUnitHelper.js#L117)
 
 ___
 
@@ -61,7 +61,7 @@ ___
 
 #### Defined in
 
-StandardUnitHelper.js:109
+[StandardUnitHelper.js:109](https://github.com/theopenwebjp/js-classes/blob/3046fa5/src/StandardUnitHelper.js#L109)
 
 ___
 
@@ -81,7 +81,7 @@ ___
 
 #### Defined in
 
-StandardUnitHelper.js:241
+[StandardUnitHelper.js:241](https://github.com/theopenwebjp/js-classes/blob/3046fa5/src/StandardUnitHelper.js#L241)
 
 ___
 
@@ -101,7 +101,7 @@ ___
 
 #### Defined in
 
-StandardUnitHelper.js:297
+[StandardUnitHelper.js:297](https://github.com/theopenwebjp/js-classes/blob/3046fa5/src/StandardUnitHelper.js#L297)
 
 ___
 
@@ -121,7 +121,7 @@ ___
 
 #### Defined in
 
-StandardUnitHelper.js:336
+[StandardUnitHelper.js:336](https://github.com/theopenwebjp/js-classes/blob/3046fa5/src/StandardUnitHelper.js#L336)
 
 ___
 
@@ -149,7 +149,7 @@ ONLY returns strings. Check should be done elsewhere.
 
 #### Defined in
 
-StandardUnitHelper.js:282
+[StandardUnitHelper.js:282](https://github.com/theopenwebjp/js-classes/blob/3046fa5/src/StandardUnitHelper.js#L282)
 
 ___
 
@@ -169,7 +169,7 @@ ___
 
 #### Defined in
 
-StandardUnitHelper.js:233
+[StandardUnitHelper.js:233](https://github.com/theopenwebjp/js-classes/blob/3046fa5/src/StandardUnitHelper.js#L233)
 
 ___
 
@@ -190,7 +190,7 @@ ___
 
 #### Defined in
 
-StandardUnitHelper.js:223
+[StandardUnitHelper.js:223](https://github.com/theopenwebjp/js-classes/blob/3046fa5/src/StandardUnitHelper.js#L223)
 
 ___
 
@@ -204,7 +204,7 @@ ___
 
 #### Defined in
 
-StandardUnitHelper.js:356
+[StandardUnitHelper.js:356](https://github.com/theopenwebjp/js-classes/blob/3046fa5/src/StandardUnitHelper.js#L356)
 
 ___
 
@@ -226,7 +226,7 @@ Alias function for ease-of-use.
 
 #### Defined in
 
-StandardUnitHelper.js:149
+[StandardUnitHelper.js:149](https://github.com/theopenwebjp/js-classes/blob/3046fa5/src/StandardUnitHelper.js#L149)
 
 ___
 
@@ -246,7 +246,7 @@ ___
 
 #### Defined in
 
-StandardUnitHelper.js:198
+[StandardUnitHelper.js:198](https://github.com/theopenwebjp/js-classes/blob/3046fa5/src/StandardUnitHelper.js#L198)
 
 ___
 
@@ -266,7 +266,7 @@ ___
 
 #### Defined in
 
-StandardUnitHelper.js:182
+[StandardUnitHelper.js:182](https://github.com/theopenwebjp/js-classes/blob/3046fa5/src/StandardUnitHelper.js#L182)
 
 ___
 
@@ -287,7 +287,7 @@ ___
 
 #### Defined in
 
-StandardUnitHelper.js:207
+[StandardUnitHelper.js:207](https://github.com/theopenwebjp/js-classes/blob/3046fa5/src/StandardUnitHelper.js#L207)
 
 ___
 
@@ -307,7 +307,7 @@ ___
 
 #### Defined in
 
-StandardUnitHelper.js:190
+[StandardUnitHelper.js:190](https://github.com/theopenwebjp/js-classes/blob/3046fa5/src/StandardUnitHelper.js#L190)
 
 ___
 
@@ -329,7 +329,7 @@ Ideal should be following format: [1 DIGIT].[DECIMALS] [EXPONENT]
 
 #### Defined in
 
-StandardUnitHelper.js:255
+[StandardUnitHelper.js:255](https://github.com/theopenwebjp/js-classes/blob/3046fa5/src/StandardUnitHelper.js#L255)
 
 ___
 
@@ -349,4 +349,4 @@ ___
 
 #### Defined in
 
-StandardUnitHelper.js:319
+[StandardUnitHelper.js:319](https://github.com/theopenwebjp/js-classes/blob/3046fa5/src/StandardUnitHelper.js#L319)

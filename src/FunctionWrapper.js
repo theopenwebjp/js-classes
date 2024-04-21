@@ -1,5 +1,4 @@
-import { Utility } from '@theopenweb/js-functions'
-import { traverseObject } from './Utility.js'
+import { isLogFunction, traverseObject } from '@theopenweb/js-functions/src/utilities.js'
 
 // TODO: Quite a few major type issues. Increase specification and improve types.
 
@@ -640,12 +639,12 @@ export default class FunctionWrapper {
     }
 
     // Disallow special functions used in wrapper function
-    if (func === Utility.isLogFunction) {
+    if (func === isLogFunction) {
       return true
     }
 
     // Disallow all forms of logging by default
-    if (Utility.isLogFunction(func)) {
+    if (isLogFunction(func)) {
       return true
     }
 

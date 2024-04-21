@@ -1,8 +1,9 @@
-import DomHelper from './DomHelper.js'
+import { DomElementSettings, appendChildren, getElementsBySelectors } from '@theopenweb/js-functions/src/dom-helpers.js'
+import { createTag, handleSubmit, inputTypesToSelectors, setInputAsRequired } from '@theopenweb/js-functions/src/form-helpers.js'
 
 /**
  * Collection of functions for handling forms.
- * Static class.
+ * Instantiable class for custom handling. Allows custom input elements.
  */
 export default class FormManager {
 
@@ -10,11 +11,6 @@ export default class FormManager {
    * @param {Partial<import('./types/ts').FormManagerSettings>} [settings]
    */
   constructor(settings = {}) {
-    this.domHelper = DomHelper
-
-    this.constants = {
-      REQUIRED_ATTR: 'data-required'
-    }
 
     /**
      * @type {import('./types/ts').FormManagerSettings}
@@ -25,7 +21,7 @@ export default class FormManager {
     }, settings)
 
     /**
-     * @type {Object<string, Partial<import('./types/ts').InputType>>}
+     * @type {Object<string, Partial<import('@theopenweb/js-functions/declarations/types/ts').InputType>>}
      */
     this.inputTypes = {
       text: {
@@ -123,7 +119,7 @@ export default class FormManager {
       boolean: {
         type: 'checkbox',
         /**
-         * @param {import('./types/ts').InputType} inputType
+         * @param {import('@theopenweb/js-functions/declarations/types/ts').InputType} inputType
          */
         override: function (inputType) {
           inputType.multiple = false
@@ -132,36 +128,9 @@ export default class FormManager {
     }
   }
 
-  /**
-   * @return {import('./types/ts').InputObject}
-   */
-  inputObject() {
-    return {
-      type: '',
-      tag: '',
-      attributes: {},
-      key: '', // Specifies unique key. Currently used as name attribute.
-      label: '',
-      values: [],
-      rowHeader: '',
-      initialSelection: '',
-      required: false
-    }
-  }
 
   /**
-   * @return {import('./types/ts').FormSettings}
-   */
-  formSettings() {
-    return {
-      action: '',
-      actionType: '',
-      inputs: []
-    }
-  }
-
-  /**
-   * @param {import('./types/ts').FormSettings} settings
+   * @param {import('@theopenweb/js-functions/declarations/types/ts').FormSettings} settings
    * @return {HTMLFormElement}
    */
   settingsToForm(settings) {
@@ -169,19 +138,19 @@ export default class FormManager {
     const form = document.createElement('form')
     const action = settings.action
     const actionType = settings.actionType
-    form.addEventListener('submit', this.handleSubmit)
+    form.addEventListener('submit', handleSubmit)
     form.setAttribute('action', action)
     form.setAttribute('actionType', actionType)
 
     // Inside
     const inputs = this.createInputs(settings.inputs)
-    this.appendChildren(form, inputs)
+    appendChildren(form, inputs)
 
     return form
   }
 
   /**
-   * @param {import('./types/ts').InputObject[]} settings
+   * @param {import('@theopenweb/js-functions/declarations/types/ts').InputObject[]} settings
    * @return {HTMLElement[]}
    */
   createInputs(settings) {
@@ -209,12 +178,12 @@ export default class FormManager {
 
   /**
    * Input: <div><label>name</label> <div>{INPUT}</div></div>
-   * @param {import('./types/ts').InputObject} settings
+   * @param {import('@theopenweb/js-functions/declarations/types/ts').InputObject} settings
    * @return {HTMLElement}
    */
   createInput(settings) {
     /**
-     * @type {import('./types/ts').DomElementSettings[]}
+     * @type {import('@theopenweb/js-functions/declarations/types/ts').DomElementSettings[]}
      */
     const children = []
     /**
@@ -256,14 +225,14 @@ export default class FormManager {
         attributes.placeholder = name
       }
 
-      el = this.createTag(
+      el = createTag(
         settings.tag,
         attributes,
         children
       )
     } else if (settings.tag === 'radio') { // Radio
       for (let i = 0; i < settings.values.length; i++) {
-        children.push(DomHelper.DomElementSettings({
+        children.push(DomElementSettings({
           tag: settings.tag,
           attributes: {
             type: 'radio',
@@ -272,10 +241,10 @@ export default class FormManager {
           }
         }))
       }
-      el = this.createTag('div', {}, children)
+      el = createTag('div', {}, children)
     } else if (settings.tag === 'checkbox') { // Checkbox
       for (let i = 0; i < settings.values.length; i++) {
-        children.push(DomHelper.DomElementSettings({
+        children.push(DomElementSettings({
           tag: settings.tag,
           attributes: {
             type: 'checkbox',
@@ -284,17 +253,17 @@ export default class FormManager {
           },
         }))
       }
-      el = this.createTag('div', {}, children)
+      el = createTag('div', {}, children)
     } else if (settings.tag === 'select') { // Select
       for (let i = 0; i < settings.values.length; i++) {
-        children.push(DomHelper.DomElementSettings({
+        children.push(DomElementSettings({
           tag: 'option',
           attributes: {
             value: settings.values[i],
           },
         }))
       }
-      el = this.createTag('select', { name: settings.key }, children)
+      el = createTag('select', { name: settings.key }, children)
     }
 
     if (!el) {
@@ -302,96 +271,12 @@ export default class FormManager {
     }
 
     if (settings.required) {
-      this.setInputAsRequired(el)
+      setInputAsRequired(el)
     }
 
     input.appendChild(el)
 
     return input
-  }
-
-  /**
-   * @param {HTMLElement} el
-   */
-  setInputAsRequired(el) {
-    el.setAttribute(this.constants.REQUIRED_ATTR, '')
-  }
-
-  /**
-   * @param {HTMLFormElement} form
-   * TODO
-   */
-  getRequiredInputs(form) {
-    return this.domHelper.getElementsWithAttribute(this.constants.REQUIRED_ATTR)
-  }
-
-  /**
-   * @param {Event} ev
-   * @return {boolean}
-   */
-  handleSubmit(ev) { // TODO: Not called bug.
-    const form = ev.target
-    if (!(form instanceof HTMLFormElement)) throw new Error('Not form')
-    const bool = this.checkRequiredInputs(form)
-    if (!bool || bool) {
-      window.alert('Please fill in all required inputs.')
-    }
-
-    return bool
-  }
-
-  /**
-     * @param {HTMLFormElement} form
-     * @return {boolean}
-     */
-  checkRequiredInputs(form) {
-    const inputs = this.getRequiredInputs(form)
-    for (let i = 0; i < inputs.length; i++) {
-      // FAILED
-      if (!this.checkRequiredInput(inputs[i])) {
-        return false
-      }
-    }
-
-    // PASSED
-    return true
-  }
-
-  /**
-   * @param {HTMLElement} el
-   */
-  checkRequiredInput(el) {
-    /*
-    checkbox: .checked length > 0
-    radio: .checked has true
-    select: always selected.
-    */
-
-    const type = el.getAttribute('type')
-
-    // Checked
-    if (
-      el.tagName === 'input' &&
-      (type === 'radio' || type === 'checkbox') &&
-      this.getCheckedElements(el).length === 0
-    ) {
-      return false
-    } else if (el instanceof HTMLInputElement && !el.value) { // Input default
-      return false
-    }
-
-    // PASSED
-    return true
-  }
-
-  /**
-   * @param {HTMLElement} el
-   * @return {Element[]}
-   */
-  getCheckedElements(el) {
-    const elements = [...Array.from(el.children)]
-
-    return elements.filter(element => (element instanceof HTMLInputElement) && element.checked)
   }
 
   /**
@@ -407,213 +292,12 @@ export default class FormManager {
   }
 
   /**
-   * @param {any[]} arr
-   * @return {any[]}
-   */
-  arrayifyAll(arr) {
-    for (let i = 0; i < arr.length; i++) {
-      arr[i] = [arr[i]]
-    }
-
-    return arr
-  }
-
-  /**
-   * @param {string} tagName
-   * @param {import('./types/ts').Dictionary} attributes
-   * @param {import('./types/ts').DomElementSettings[]} children
-   * @return {HTMLElement}
-   */
-  createTag(tagName, attributes, children = []) {
-    return this.domHelper.createElement({
-      tag: tagName,
-      attributes: attributes,
-      children: children
-    })
-  }
-
-  /**
-   * @param {HTMLElement} el
-   * @param {HTMLElement[]} children
-   */
-  appendChildren(el, children) {
-    this.domHelper.appendChildren(el, children)
-  }
-
-  /**
-   * @param {HTMLElement} el
-   * @param {import('./types/ts').Dictionary} attributes
-   */
-  setAttributes(el, attributes) {
-    this.domHelper.setAttributes(el, attributes)
-  }
-
-  /**
-   * @param {HTMLElement} el
-   * @return {string}
-   */
-  getTableHeaderValue(el) {
-    const parentEl = this.domHelper.getClosestParent(el, 'th')
-    return (parentEl ? parentEl.textContent || '' : '')
-  }
-
-  /**
-   * @param {import('./types/ts').Dictionary} obj
-   * @return {Array<[string, *]>}
-   */
-  keyValueObjToArrays(obj) {
-    /*
-    {
-      key1, val1,
-      keyn, valn,
-      ...
-    }
-
-    >>
-
-    [
-      [key1, val1]
-      [keyn, valn]
-      ....
-    ]
-    */
-
-    /**
-     * @type {Array<[string, *]>}
-     */
-    const arr = []
-
-    for (let key in obj) {
-      arr.push(
-        [key, obj[key]]
-      )
-    }
-
-    return arr
-  }
-
-  /**
-   * @param {import('./types/ts').Dictionary} attributes
-   * @return {string}
-   */
-  attributesToSelector(attributes) {
-    let selector = ''
-    for (let key in attributes) {
-      selector += '[' + key + '=' + attributes[key] + ']'
-    }
-
-    return selector
-  }
-
-  /**
-   * @param {Object<string, Partial<import('./types/ts').InputType>>} inputTypes
-   * @return {string[]}
-   */
-  inputTypesToSelectors(inputTypes) {
-    /**
-     * @type {string[]}
-     */
-    const selectors = []
-    for (let key in inputTypes) {
-      let inputType = inputTypes[key]
-      let selector = ''
-
-      if (inputType.tag) { selector += ' ' + inputType.tag }
-      if (inputType.attributes) { selector += this.attributesToSelector(inputType.attributes) }
-
-      selectors.push(selector)
-    }
-
-    return selectors
-  }
-
-  /**
-   * @param {HTMLElement[]} elements
-   * @return {import('./types/ts').InputObject[]}
-   */
-  elementsToInputObjects(elements) {
-    const inputs = []
-    for (let i = 0; i < elements.length; i++) {
-      inputs.push(this.elementToInputObject(elements[i]))
-    }
-
-    return inputs
-  }
-
-  /**
-   * Should keep only necessary information for editing
-   * @param {HTMLElement} element
-   * @return {import('./types/ts').InputObject}
-   */
-  elementToInputObject(element) {
-    const obj = this.inputObject()
-
-    obj.tag = element.tagName
-    obj.attributes = this.domHelper.getElementAttributes(element)
-
-    if (element instanceof HTMLInputElement || element instanceof HTMLSelectElement) {
-      obj.values.push(element.value)
-    }
-
-    obj.label = this.getLabel(element)
-    obj.rowHeader = this.getTableHeaderValue(element)
-    if (element instanceof HTMLSelectElement && obj.tag === 'select' && element.options.length > 0) {
-      const initialSelection = element.options[0];
-      obj.initialSelection = initialSelection.getAttribute('name') || '' // OK?
-    }
-
-    return obj
-  }
-
-  /**
-   * @param {HTMLElement} element
-   * @return {HTMLElement|undefined}
-   */
-  getLabelElement(element) {
-    let labelEl
-
-    // By wrap
-    const p = element.parentElement
-    if (p && p.tagName === 'label') {
-      labelEl = p
-    }
-
-    // By id
-    const id = element.getAttribute('id')
-    if (id) {
-      // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/label
-      // Not connected to form by spec.
-      const elements = /** @type {HTMLLabelElement[]} */ ([...Array.from(document.querySelectorAll('[for=' + id + ']'))].filter(el => el instanceof HTMLLabelElement))
-      if (elements[0]) {
-        labelEl = elements[0]
-      }
-    }
-
-    return labelEl
-  }
-
-  /**
-   * @param {HTMLElement} element
-   * @return {string}
-   */
-  getLabel(element) {
-    let label = ''
-    const labelEl = this.getLabelElement(element)
-
-    if (labelEl) {
-      label = labelEl.textContent || ''
-    }
-
-    return label
-  }
-
-  /**
    * @param {Partial<import('./types/ts').PageInputOptions>} options
    * @return {HTMLElement[]}
    */
   getCurrentPageInputs(options = {}) {
     /**
-     * @type {Record<string, Partial<import('./types/ts').InputType>>}
+     * @type {Record<string, Partial<import('@theopenweb/js-functions/declarations/types/ts').InputType>>}
      */
     let settings
     if (options.noHidden) {
@@ -623,8 +307,8 @@ export default class FormManager {
       settings = this.inputTypes
     }
 
-    const selectors = this.inputTypesToSelectors(settings)
-    const elements = /** @type {HTMLElement[]} */ (this.domHelper.getElementsBySelectors(selectors).filter(element => element instanceof HTMLElement))
+    const selectors = inputTypesToSelectors(settings)
+    const elements = /** @type {HTMLElement[]} */ (getElementsBySelectors(selectors).filter(element => element instanceof HTMLElement))
 
     return elements
   }
@@ -632,7 +316,7 @@ export default class FormManager {
   /**
    * Gets input type from element
    * @param {HTMLElement} el
-   * @return {Partial<import('./types/ts').InputType> | null} InputType. Default if not found.
+   * @return {Partial<import('@theopenweb/js-functions/declarations/types/ts').InputType> | null} InputType. Default if not found.
    */
   getElementInputType(el) {
     const settings = this.inputTypes
@@ -745,69 +429,4 @@ export default class FormManager {
     return !this.getElementInputType(el)
   }
 
-/**
-* Clicks many radio inputs for when want to automatically test large radio input lists.
-* Even works in frameworks such as React = MUI.
-* @example clickRadioInputs(document.querySelector('form'))
-* @param {HTMLElement} wrapper Usually a form.
-*/
-clickRadioInputs(wrapper) {
-    const radioInputs = /** @type {HTMLInputElement[]} */ (Array.from(wrapper.querySelectorAll('input[type=radio]')))
-
-    // Group by name
-    /**
-    * @type {Record<string, HTMLInputElement[]>}
-    */
-    const radioInputsByName = {}
-    radioInputs.forEach(r => {
-      const name = r.getAttribute('name') || ''
-      if (!radioInputsByName[name]) {
-        radioInputsByName[name] = []
-      }
-
-      radioInputsByName[name].push(r)
-    })
-
-    // Randomly click grouped
-    Object.entries(radioInputsByName).forEach(([name, inputs]) => {
-      const input = getRandomItemFromArray(inputs)
-      input.click()
-    })
-  }
-  
-  /**
-  * @example enterTextInputs(document.querySelector('form'))
-  * @param {HTMLElement} wrapper Usually a form.
-  */
-  enterTextInputs(wrapper) {
-    const selectors = ['input[type=text]', 'textarea']
-    const inputs = /** @type {HTMLInputElement[]} */ (Array.from(wrapper.querySelectorAll(selectors.join(', '))))
-    inputs.forEach(input => {
-      const createRandomText = () => {
-        return (Math.random() + 1).toString(36).substring(7)
-      }
-
-      input.value = createRandomText()
-      input.dispatchEvent(new Event('change', {bubbles:true}));
-    })
-  }
-
-  /**
-  * Randomly inputs form inputs.
-  * @example enterTextInputs(document.querySelector('form'))
-  * @param {HTMLElement} wrapper Usually a form.
-  */
-  enterFormInputs(wrapper) {
-    this.clickRadioInputs(wrapper)
-    this.enterTextInputs(wrapper)
-  }
-}
-
-/**
-/* TODO: js-functions:
-* @param {any[]} items
-*/
-function getRandomItemFromArray(items) {
-  const index = Math.floor(Math.random() * items.length)
-  return items[index]
 }

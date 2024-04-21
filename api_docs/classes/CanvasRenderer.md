@@ -48,7 +48,7 @@ Extra features:
 
 #### Defined in
 
-CanvasRenderer.js:32
+[CanvasRenderer.js:32](https://github.com/theopenwebjp/js-classes/blob/3046fa5/src/CanvasRenderer.js#L32)
 
 ## Properties
 
@@ -58,9 +58,9 @@ CanvasRenderer.js:32
 
 #### Defined in
 
-CanvasRenderer.js:70
+[CanvasRenderer.js:70](https://github.com/theopenwebjp/js-classes/blob/3046fa5/src/CanvasRenderer.js#L70)
 
-CanvasRenderer.js:74
+[CanvasRenderer.js:74](https://github.com/theopenwebjp/js-classes/blob/3046fa5/src/CanvasRenderer.js#L74)
 
 ___
 
@@ -70,7 +70,7 @@ ___
 
 #### Defined in
 
-CanvasRenderer.js:36
+[CanvasRenderer.js:36](https://github.com/theopenwebjp/js-classes/blob/3046fa5/src/CanvasRenderer.js#L36)
 
 ___
 
@@ -88,7 +88,7 @@ ___
 
 #### Defined in
 
-CanvasRenderer.js:38
+[CanvasRenderer.js:38](https://github.com/theopenwebjp/js-classes/blob/3046fa5/src/CanvasRenderer.js#L38)
 
 ## Methods
 
@@ -102,7 +102,7 @@ CanvasRenderer.js:38
 
 #### Defined in
 
-CanvasRenderer.js:69
+[CanvasRenderer.js:69](https://github.com/theopenwebjp/js-classes/blob/3046fa5/src/CanvasRenderer.js#L69)
 
 ___
 
@@ -116,7 +116,7 @@ ___
 
 #### Defined in
 
-CanvasRenderer.js:54
+[CanvasRenderer.js:54](https://github.com/theopenwebjp/js-classes/blob/3046fa5/src/CanvasRenderer.js#L54)
 
 ___
 
@@ -130,7 +130,7 @@ ___
 
 #### Defined in
 
-CanvasRenderer.js:94
+[CanvasRenderer.js:94](https://github.com/theopenwebjp/js-classes/blob/3046fa5/src/CanvasRenderer.js#L94)
 
 ___
 
@@ -144,7 +144,7 @@ ___
 
 #### Defined in
 
-CanvasRenderer.js:61
+[CanvasRenderer.js:61](https://github.com/theopenwebjp/js-classes/blob/3046fa5/src/CanvasRenderer.js#L61)
 
 ___
 
@@ -158,7 +158,7 @@ ___
 
 #### Defined in
 
-CanvasRenderer.js:77
+[CanvasRenderer.js:77](https://github.com/theopenwebjp/js-classes/blob/3046fa5/src/CanvasRenderer.js#L77)
 
 ___
 
@@ -172,7 +172,7 @@ ___
 
 #### Defined in
 
-CanvasRenderer.js:73
+[CanvasRenderer.js:73](https://github.com/theopenwebjp/js-classes/blob/3046fa5/src/CanvasRenderer.js#L73)
 
 ___
 
@@ -192,4 +192,4 @@ ___
 
 #### Defined in
 
-CanvasRenderer.js:87
+[CanvasRenderer.js:87](https://github.com/theopenwebjp/js-classes/blob/3046fa5/src/CanvasRenderer.js#L87)
