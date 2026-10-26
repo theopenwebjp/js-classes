@@ -246,9 +246,11 @@ export default class I18n {
   }
 
   setLanguageFromBrowserLanguage() {
-    const l = navigator.language
-    const key = l.split('-')[0]
-    this.setLanguage(key)
+    const candidates = [navigator.language, navigator.language.split('-')[0]]
+    const key = candidates.find(code => this.settings.languages[code])
+    if (key) {
+      this.setLanguage(key)
+    }
   }
 
   /**

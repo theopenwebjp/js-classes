@@ -230,7 +230,7 @@ export default class FormManager {
         attributes,
         children
       )
-    } else if (settings.tag === 'radio') { // Radio
+    } else if (settings.type === 'radio') { // Radio
       for (let i = 0; i < settings.values.length; i++) {
         children.push(DomElementSettings({
           tag: settings.tag,
@@ -242,7 +242,7 @@ export default class FormManager {
         }))
       }
       el = createTag('div', {}, children)
-    } else if (settings.tag === 'checkbox') { // Checkbox
+    } else if (settings.type === 'checkbox') { // Checkbox
       for (let i = 0; i < settings.values.length; i++) {
         children.push(DomElementSettings({
           tag: settings.tag,
@@ -331,11 +331,14 @@ export default class FormManager {
 
       // Attributes
       if (setting.attributes) {
-        for (let kkey in setting.attributes) {
-          if (el.getAttribute(key) !== setting.attributes[kkey]) {
-            continue
+        let matches = true
+        for (const [attribute, value] of Object.entries(setting.attributes)) {
+          if (el.getAttribute(attribute) !== value) {
+            matches = false
+            break
           }
         }
+        if (!matches) continue
       }
 
       type = setting

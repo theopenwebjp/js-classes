@@ -245,6 +245,7 @@ export default class FunctionWrapper {
    * @param {import('./types/ts').WrapperOptions} options
    */
   createWrapFunction(func, options) {
+    const manager = this
     /**
      * func = old function
      * wrapperFunction = wrapping function
@@ -252,55 +253,42 @@ export default class FunctionWrapper {
      * @type {import('./types/ts').WrapperFunction}
      */
     const wrapperFunction = function () {
-      // TODO: bug: loopObject has no func.__wrapStatus. Why?
-      const ctx = this
-      if (func.name === 'loopObject' || !wrapperFunction.__wrapStatus) {
-        /*
-        console.log(func.name)
-        console.log(wrapperFunction.__wrapStatus)
-        */
+      const ignoreWrap = Boolean(
+        wrapperFunction.__wrapStatus &&
+        wrapperFunction.__wrapStatus.status.executingWrappedFunction
+      )
+
+      if (options.stackTrace && !manager.status.disableStackTrace && !manager.status.wrap.preparing) {
+        manager.stackTrace(func)
       }
 
-      let ignoreWrap = false
-      const ignoreStackTrace = false
-      ignoreWrap = (!!(wrapperFunction.__wrapStatus && wrapperFunction.__wrapStatus.status.executingWrappedFunction)) // TODO: This is preventing nested functions from being stackTraced.
-
-      if (!ignoreStackTrace) {
-        if (options.stackTrace && !ctx.status.disableStackTrace && !ctx.status.wrap.preparing) {
-          ctx.stackTrace(func)
-        } else {
-          //
-        }
+      if (ignoreWrap) {
+        return func.apply(this, arguments)
       }
 
-      if (!ignoreWrap) {
-        console.log('not ignored', func.name)
-        ctx.status.wrap.executingWrappedFunction = true
-
-        // Arguments wrap
+      const wasExecutingWrappedFunction = manager.status.wrap.executingWrappedFunction
+      manager.status.wrap.executingWrappedFunction = true
+      try {
+        const args = Array.from(arguments)
         if (options.wrapFunctionArguments) {
-          ctx.wrapObjectFunctions(arguments)
+          manager.wrapObjectFunctions(args, options)
         }
 
-        const startData = ctx.getFunctionData(func, arguments)
-        ctx.handleEvent('start', [startData, options])
-      }
+        const startData = manager.getFunctionData(func, args)
+        manager.handleEvent('start', [startData, options])
 
-      let returnVal = func.apply(ctx, arguments)
+        let returnVal = func.apply(this, args)
+        const completeData = manager.getFunctionData(func, args, returnVal)
+        manager.handleEvent('complete', [completeData, options])
 
-      if (!ignoreWrap) {
-        const completeData = ctx.getFunctionData(func, arguments, returnVal)
-        ctx.handleEvent('complete', [completeData, options])
-
-        // Return wrap
         if (options.wrapReturnFunctions) {
-          returnVal = ctx.attemptWrapFunction(returnVal, null, options) // Return function can not have object/key because unknown.
+          returnVal = manager.attemptWrapFunction(returnVal, manager.Reference(), options)
         }
 
-        ctx.status.wrap.executingWrappedFunction = false
+        return returnVal
+      } finally {
+        manager.status.wrap.executingWrappedFunction = wasExecutingWrappedFunction
       }
-
-      return returnVal
     }
 
     // Status
@@ -499,7 +487,7 @@ export default class FunctionWrapper {
   }
 
   /**
-     * @param {() => void} func
+     * @param {Function} func
      */
   stackTrace(func) {
     const trace = this.stackTraceData()
@@ -691,8 +679,9 @@ export default class FunctionWrapper {
      * @param {import('./types/ts').CommonEventData} obj
      */
   handleCommonEvent(obj) {
-    if (obj.options.events && obj.event && obj.options.events[obj.event]) {
-      obj.options.events[obj.data].apply(this, [obj.data])
+    const handler = obj.event && obj.options.events[obj.event]
+    if (handler) {
+      handler.call(this, obj.data)
     }
 
     if (obj.options.log) {

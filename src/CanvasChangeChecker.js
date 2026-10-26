@@ -11,8 +11,8 @@ export default class CanvasChangeChecker {
     const curDataURL = this.canvas.toDataURL()
     const prevDataURL = this.prevDataURL
 
-    this.prevDataURL = prevDataURL
+    this.prevDataURL = curDataURL
 
-    return prevDataURL === curDataURL
+    return prevDataURL !== curDataURL
   }
 }

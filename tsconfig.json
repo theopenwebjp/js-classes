@@ -28,7 +28,8 @@
     }
   },
   "include": [
-    "src/*.js",
+    "src/**/*.js",
+    "src/**/*.ts",
     "test/*.js"
   ],
   "exclude": [
