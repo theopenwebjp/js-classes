@@ -1,15 +1,8 @@
 export function onClickOutside(element: Element, onClick: () => void): (ev: Event) => void {
   const handle = (ev: Event) => {
       const { target } = ev
-      ev.stopImmediatePropagation()
 
-      if (!target || !(target instanceof Element)) {
-      console.warn('target not Element')
-      return
-      }
-
-      if (element !== target && !Array.from(element.querySelectorAll('*')).includes(target)) {
-      console.debug('clicked outside', { element, target })
+      if (!(target instanceof Node) || !element.contains(target)) {
       onClick()
       }
   }

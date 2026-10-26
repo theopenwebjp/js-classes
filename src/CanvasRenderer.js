@@ -14,7 +14,7 @@
  * @return {import('./types/ts').CanvasRenderOptions} 
  */
 function CanvasRenderOptions(options = {}) {
-  return Object.assign(options, defaultCanvasRenderer)
+  return Object.assign({}, defaultCanvasRenderer, options)
 }
 
 /**
@@ -29,7 +29,7 @@ export default class CanvasRenderer {
   /**
      * @param {Partial<import('./types/ts').CanvasRenderOptions>} settings
      */
-  constructor(settings) {
+  constructor(settings = {}) {
     /**
      * @type {import('./types/ts').CanvasRenderOptions}
      */
@@ -43,7 +43,7 @@ export default class CanvasRenderer {
       /**
        * @type {HTMLCanvasElement|null}
        */
-      canvas: null,
+      canvas,
       /**
        * @type {CanvasRenderingContext2D|null}
        */
@@ -59,23 +59,23 @@ export default class CanvasRenderer {
      * @return {number}
      */
   start() {
-    if (!this.state.interval) {
-      this.state.interval = window.setInterval(this.render, this.settings.rate)
+    if (this.state.interval === null) {
+      this.state.interval = window.setInterval(() => this.render(), this.settings.rate)
     }
 
     return this.state.interval
   }
 
   mute() {
-    this.muted = true
+    this.settings.muted = true
   }
 
   unmute() {
-    this.muted = false
+    this.settings.muted = false
   }
 
   stop() {
-    if (this.state.interval) {
+    if (this.state.interval !== null) {
       window.clearInterval(this.state.interval)
       this.state.interval = null
     }
@@ -92,7 +92,7 @@ export default class CanvasRenderer {
    * @return {undefined|false}
    */
   render() {
-    if (this.muted) {
+    if (this.settings.muted) {
       return false
     }
 
@@ -103,7 +103,7 @@ export default class CanvasRenderer {
 
     const { renderable } = this.settings
     if (renderable) {
-      context.drawImage(renderable, canvas.width, canvas.height)
+      context.drawImage(renderable, 0, 0, canvas.width, canvas.height)
     }
   }
 }

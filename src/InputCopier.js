@@ -203,8 +203,9 @@ export default class InputCopier {
     }
 
     page.getRows = () => {
-      const list = /** @type {HTMLElement[]} */ (page.elements.list || [])
-      return list
+      return page.elements.list
+        ? Array.from(page.elements.list.children).filter((el) => el instanceof HTMLElement)
+        : []
     }
 
     /**

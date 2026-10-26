@@ -93,7 +93,7 @@ export type StackTraceData = {
   caller: any;
   callerName: string | null;
   name: string | null;
-  function: (() => void) | null;
+  function: Function | null;
   time: number | null;
 };
 export type Reference = {

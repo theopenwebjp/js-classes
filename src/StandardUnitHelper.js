@@ -266,8 +266,11 @@ export default class StandardUnitHelper {
      * @param {number} num
      */
     getNumberParts (num) {
+        if (!Number.isFinite(num)) {
+            throw new RangeError('Expected a finite number')
+        }
         const str = (num).toExponential()
-        const strParts = str.split('e+')
+        const strParts = str.split('e')
 
         const parts = {
             mantissa: strParts[0],

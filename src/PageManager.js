@@ -93,7 +93,7 @@
 
             a = document.createElement('a')
             a.textContent = key
-            a.setAttribute('href', setUriParam(window.location.href, 'page', key))
+            a.setAttribute('href', setUriParam(window.location.href, this.settings.param, key))
 
             li.appendChild(a)
 
